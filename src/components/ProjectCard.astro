@@ -1,0 +1,107 @@
+---
+import ImageSlot from './ImageSlot.astro';
+import type { CollectionEntry } from 'astro:content';
+import { getLangFromUrl, localizePath } from '../i18n/ui';
+import { localizeProject } from '../i18n/project';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const data = localizeProject(project.data, lang);
+const href = localizePath(`/work/${project.id}/`, lang);
+---
+
+<article class="project-card" data-cat={data.category}>
+  <a
+    href={href}
+    class="card-link"
+    data-project-link
+    data-project-name={data.title}
+    data-astro-reload
+  >
+    {/* Fixed 16/10 tile so every card in the grid is the same size — the source
+        covers range from 1.20 to 2.08, and letting each keep its own ratio left
+        the row ragged and the titles off one baseline. Images fill the tile with
+        object-fit: cover. Coverless projects get the same tile as a placeholder. */}
+    <ImageSlot
+      src={data.cover}
+      alt={data.title}
+      aspect="16 / 10"
+      radius={10}
+      placeholder={`Drop ${data.title} mockup`}
+    />
+    <div class="meta">
+      <span class="name">
+        <span class="pswipe" aria-hidden="true"></span>
+        <span class="name-text">{data.title}</span>
+      </span>
+      <span class="tags">
+        {data.tags.slice(0, 2).map((t) => <span>{t}</span>)}
+      </span>
+    </div>
+  </a>
+</article>
+
+<style>
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .card-link {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-decoration: none;
+    color: inherit;
+  }
+  /* Slow zoom on the cover when hovering the card. Only bites when a real image
+     is present (the placeholder has no <img>); .imgslot already clips overflow. */
+  .card-link :global(.imgslot img) {
+    transition: transform 0.55s var(--ease-brand);
+  }
+  .card-link:hover :global(.imgslot img),
+  .card-link:focus-visible :global(.imgslot img) {
+    transform: scale(1.04);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card-link :global(.imgslot img) {
+      transition: none;
+    }
+    .card-link:hover :global(.imgslot img),
+    .card-link:focus-visible :global(.imgslot img) {
+      transform: none;
+    }
+  }
+  /* Title over tags rather than beside them: the two ran into each other on
+     narrow cards, and stacking keeps every card's title on the same baseline
+     regardless of how long its tag list is. */
+  .meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 0 2px;
+  }
+  .name {
+    font-size: 15px;
+    font-weight: 600;
+    position: relative;
+    display: inline-block;
+    padding: 0 4px;
+  }
+  .name-text {
+    position: relative;
+    z-index: 1;
+  }
+  .tags {
+    display: flex;
+    gap: 18px;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-muted);
+  }
+</style>

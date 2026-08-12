@@ -1,0 +1,519 @@
+@import 'tailwindcss';
+
+/* self-hosted Poppins, no CDN. Poppins ships only static weights (no official
+   variable font), so we pull the four we use: 400/500/600/700. */
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/poppins/700.css';
+
+/* Poppins has no Arabic glyphs, so the Arabic pages would fall back to whatever
+   the OS ships. IBM Plex Sans Arabic is the closest geometric match. Only the
+   `arabic` subsets are pulled — Latin still comes from Poppins, including inside
+   Arabic pages (product names, "Power BI", years). */
+@import '@fontsource/ibm-plex-sans-arabic/arabic-400.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-500.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-600.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-700.css';
+
+/* ---- Design tokens exposed to Tailwind via @theme ----
+   Reference these as utilities (bg-canvas, text-ink, border-hairline …).
+   Never hardcode hex in components. */
+@theme {
+  --color-canvas: #f7f3ea;
+  --color-surface: #ffffff;
+  --color-ink: #0e0e0e;
+  --color-ink-muted: #6b6b6b;
+  --color-hairline: #e6e4df;
+  --color-hairline-2: #d9d6cd;
+  --color-accent: #e8f544;
+  --color-hero: #1c1c1c;
+  --color-preloader: #0e0e0e;
+
+  --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  /* Poppins stays first so Latin runs inside Arabic text keep the brand face;
+     the browser only reaches Plex for codepoints Poppins doesn't cover. */
+  --font-ar: 'Poppins', 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 20px;
+
+  --ease-brand: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---- Base ---- */
+:root {
+  color-scheme: light;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  overscroll-behavior-y: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Visible, on-brand focus ring for keyboard users only */
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+a {
+  color: inherit;
+}
+
+/* ---- Lenis smooth scroll ----
+   Required by lenis: native smooth-scroll must be off while it interpolates, and
+   html/body must not be height-locked. Classes are added by Lenis itself, so none
+   of this applies when smooth scroll is skipped (reduced motion / touch). */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Grayscale is a CSS filter, never baked into the asset */
+.is-grayscale {
+  filter: grayscale(1);
+}
+
+/* ---- Flowing borders ----
+   Every hairline on the site is alive: a tint drifts around box edges and slides
+   along rules. Two shared shapes, consumed as custom properties so component
+   styles can opt in without a specificity fight:
+
+     border: 1px solid transparent;
+     background: linear-gradient(FILL, FILL) padding-box, var(--flow-ring) border-box;
+     animation: var(--flow-spin);        ← boxes (radius safe)
+
+     border-top: 1px solid transparent;
+     border-image: var(--flow-rule-x) 1;
+     animation: var(--flow-slide);       ← single-side rules (no radius)
+
+   The angle/offset are registered @property values, which is the only reason a
+   gradient can be tweened at all. Where @property is unsupported the border
+   simply renders static at its initial value — a tinted hairline, never blank. */
+@property --flow-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --flow-pos {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: -20%;
+}
+
+:root {
+  --flow-dur: 18s;
+
+  /* Deco hues pulled most of the way back to the hairline — at 1px this reads as
+     a hairline that breathes, not as a rainbow outline. */
+  --flow-a: color-mix(in srgb, var(--color-accent) 62%, var(--color-hairline));
+  --flow-b: color-mix(in srgb, #5ad7ff 42%, var(--color-hairline));
+  --flow-c: color-mix(in srgb, #ff7ae0 34%, var(--color-hairline));
+  --flow-d: color-mix(in srgb, #9dff5c 40%, var(--color-hairline));
+
+  /* Flat hairline stretches between the tints so the colour reads as something
+     travelling around the edge rather than a static four-stop gradient. */
+  --flow-ring: conic-gradient(
+    from var(--flow-angle),
+    var(--flow-a),
+    var(--flow-b) 18%,
+    var(--color-hairline) 34%,
+    var(--flow-c) 52%,
+    var(--flow-d) 68%,
+    var(--color-hairline) 84%,
+    var(--flow-a)
+  );
+
+  /* A single soft highlight sweeping along a rule. Stops run past 0/100% on
+     purpose: that is what carries the head and tail off each end. */
+  --flow-rule-x: linear-gradient(
+    90deg,
+    var(--color-hairline) calc(var(--flow-pos) - 30%),
+    var(--flow-a) var(--flow-pos),
+    var(--color-hairline) calc(var(--flow-pos) + 30%)
+  );
+  --flow-rule-y: linear-gradient(
+    180deg,
+    var(--color-hairline) calc(var(--flow-pos) - 30%),
+    var(--flow-a) var(--flow-pos),
+    var(--color-hairline) calc(var(--flow-pos) + 30%)
+  );
+
+  --flow-spin: flow-spin var(--flow-dur) linear infinite;
+  --flow-slide: flow-slide var(--flow-dur) linear infinite;
+}
+
+@keyframes flow-spin {
+  to {
+    --flow-angle: 360deg;
+  }
+}
+@keyframes flow-slide {
+  to {
+    --flow-pos: 120%;
+  }
+}
+
+/* One switch kills every flowing border — the gradients stay, frozen at their
+   initial angle/offset, so nothing loses its edge. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --flow-spin: none;
+    --flow-slide: none;
+  }
+}
+
+/* ---- Motion primitives ----
+   Hidden state is gated behind `.js` (added by an inline script the instant the
+   document runs) and cleared by GSAP. If JS is disabled OR the bundle fails to
+   load, nothing is ever gated hidden and a body-end failsafe force-shows anyway,
+   so content is never trapped invisible or out of the a11y tree. */
+.js [data-reveal],
+.js [data-reveal-item],
+.js [data-gallery-item] {
+  visibility: hidden;
+}
+
+/* Hero shapes stay hidden until they pop in. Bar-wipe headline text (hero + every
+   section H2) is hidden until `.play`; cleared by JS (GSAP shapes / .play class). */
+.js [data-shape] {
+  visibility: hidden;
+}
+.js [data-hero-title] .lt,
+.js [data-headline] .hl {
+  opacity: 0;
+}
+
+/* ---- Section-title bar-wipe — same reveal as the hero headline ----
+   Accent bar sweeps L→R, white bar chases, text surfaces at 23% underneath. */
+[data-headline] {
+  position: relative;
+}
+[data-headline] .hl {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+}
+/* Bars sit on the .hl text span (inline-block = text width) so the sweep only
+   covers the text, not the full-width h2 — works regardless of h2 alignment. */
+[data-headline] .hl::before,
+[data-headline] .hl::after {
+  content: '';
+  position: absolute;
+  inset: -4px 0;
+  z-index: 2;
+  clip-path: inset(0 100% 0 0);
+  pointer-events: none;
+}
+[data-headline] .hl::before {
+  background: var(--color-accent);
+}
+[data-headline] .hl::after {
+  background: #fff;
+}
+[data-headline].play .hl::before {
+  animation: barSweep 1.25s var(--ease-brand) both;
+}
+[data-headline].play .hl::after {
+  animation: barSweep 1.25s var(--ease-brand) 0.12s both;
+}
+[data-headline].play .hl {
+  animation: htextIn 1.25s linear both;
+}
+@keyframes barSweep {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+  45% {
+    clip-path: inset(0 0 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+@keyframes htextIn {
+  0%,
+  22% {
+    opacity: 0;
+  }
+  23%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ---- Scroll tile-dissolve ----
+   Cream tiles are built at runtime by tileDissolve.js, so they never carry Astro's
+   component-scope hash — this rule MUST be global to reach them. The same-cream
+   box-shadow bleeds each tile 1.5px so the filled field shows no hairline seams;
+   the negative inset lives on .pxt in Hero.astro. Tiles start hidden; GSAP
+   autoAlpha fades them in on scroll. */
+.pxt i {
+  background: #f7f3ea;
+  box-shadow: 0 0 0 1.5px #f7f3ea;
+  visibility: hidden;
+}
+
+/* First-paint cover while arriving from a card-click transition */
+html[data-arriving]::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--color-canvas);
+  z-index: 998;
+  pointer-events: none;
+}
+
+/* ---- Preloader ---- */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: var(--color-preloader);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.preloader.is-done {
+  display: none;
+}
+.pl-name {
+  position: relative;
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.pl-name .base {
+  color: #4a4a48;
+}
+.pl-name .fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #fff;
+  clip-path: inset(0 100% 0 0);
+}
+.pl-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+.pl-bar i {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* ---- Nav collapse (Module 5) ---- */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+  max-width: 400px;
+  opacity: 1;
+  transition:
+    max-width 0.46s var(--ease-brand),
+    opacity 0.3s linear;
+}
+[data-nav].is-collapsed .nav-links {
+  max-width: 0;
+  opacity: 0;
+}
+
+/* ---- Project card highlighter swipe (Module 3, CSS) ---- */
+.pswipe {
+  position: absolute;
+  inset: 8% -5px;
+  background: var(--color-accent);
+  z-index: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.42s var(--ease-brand);
+}
+.project-card:hover .pswipe,
+.project-card:focus-within .pswipe {
+  transform: scaleX(1);
+}
+
+/* ---- Filter pills ---- */
+.filter-pill {
+  font-family: inherit;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--color-canvas), var(--color-canvas)) padding-box,
+    var(--flow-ring) border-box;
+  animation: var(--flow-spin);
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+  transition:
+    color 0.2s linear,
+    opacity 0.2s linear;
+}
+.filter-pill:hover {
+  color: var(--color-ink);
+}
+/* Selected pill drops out of the flow: solid ink, no ring. The one element that
+   is not moving is the one that is currently true. */
+.filter-pill.is-on {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  animation: none;
+  color: var(--color-canvas);
+}
+
+/* Static highlighter behind a word (headings) — hand-cut tape block: slightly
+   tilted, with non-parallel edges so it reads as a torn swatch, not a <mark>. */
+.mark {
+  position: relative;
+  display: inline-block;
+  padding: 0 0.09em;
+}
+.mark > .mark-text {
+  position: relative;
+  z-index: 1;
+}
+.mark > .mark-bg {
+  position: absolute;
+  inset: -0.02em -0.01em -0.16em -0.01em;
+  background: var(--color-accent);
+  z-index: 0;
+  transform: rotate(-1.8deg);
+  clip-path: polygon(0.6% 5%, 99.4% 0%, 100% 93%, 0% 100%);
+}
+
+/* Reduced motion: nothing hides, nothing animates. */
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal],
+  .js [data-reveal-item],
+  .js [data-gallery-item],
+  .js [data-shape] {
+    visibility: visible !important;
+  }
+  .js [data-hero-title] .lt,
+  .js [data-headline] .hl {
+    opacity: 1;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ================================================================
+   RTL — Arabic (/ar/*)
+   Layout mostly mirrors itself: the site is built out of flexbox and
+   grid with no physical margins, so `dir="rtl"` on <html> flips it for
+   free. What does NOT flip on its own is anything written in physical
+   terms — clip-path insets, transform-origin, and the two hand-placed
+   borders on the project rail — so those are re-stated here.
+   ================================================================ */
+[dir='rtl'] body {
+  font-family: var(--font-ar);
+}
+/* Arabic script has no uppercase and joins its letters: the display
+   tracking that tightens Poppins headlines pulls Arabic glyphs into each
+   other, and uppercasing eyebrows does nothing but widen them. */
+[dir='rtl'] h1,
+[dir='rtl'] h2,
+[dir='rtl'] h3,
+[dir='rtl'] .pl-name {
+  letter-spacing: 0;
+}
+[dir='rtl'] .eyebrow,
+[dir='rtl'] .m-value.strong {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+/* Arabic needs a touch more leading than Latin at the same size — the
+   descenders and dots below the baseline collide otherwise. */
+[dir='rtl'] p,
+[dir='rtl'] .body p {
+  line-height: 1.85;
+}
+
+/* --- Bar-wipe reveals: sweep with the reading direction (R→L) --- */
+[dir='rtl'] [data-headline] .hl::before,
+[dir='rtl'] [data-headline] .hl::after,
+[dir='rtl'] [data-hero-title] .lt::before,
+[dir='rtl'] [data-hero-title] .lt::after {
+  clip-path: inset(0 0 0 100%);
+}
+[dir='rtl'] [data-headline].play .hl::before,
+[dir='rtl'] [data-headline].play .hl::after,
+[dir='rtl'] [data-hero-title].play .line .lt::before,
+[dir='rtl'] [data-hero-title].play .line .lt::after {
+  animation-name: barSweepRtl;
+}
+@keyframes barSweepRtl {
+  0% {
+    clip-path: inset(0 0 0 100%);
+  }
+  45% {
+    clip-path: inset(0 0 0 0);
+  }
+  100% {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
+/* --- Preloader: name fill and progress bar both fill R→L --- */
+[dir='rtl'] .pl-name .fill {
+  left: auto;
+  right: 0;
+  clip-path: inset(0 0 0 100%);
+}
+[dir='rtl'] .pl-bar i {
+  transform-origin: right center;
+}
+
+/* --- Project card highlighter swipe --- */
+[dir='rtl'] .pswipe {
+  transform-origin: right center;
+}
+
+/* --- Tape highlight behind a heading word --- */
+/* The block is deliberately off-square; mirroring the tilt keeps the torn
+   edge on the same side of the reading flow as in English. */
+[dir='rtl'] .mark > .mark-bg {
+  transform: rotate(1.8deg);
+  clip-path: polygon(0.6% 0%, 99.4% 5%, 100% 100%, 0% 93%);
+}

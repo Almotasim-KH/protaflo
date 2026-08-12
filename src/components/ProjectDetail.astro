@@ -1,0 +1,299 @@
+---
+// Shared by /work/<slug>/ and /ar/work/<slug>/ — the two route files differ only
+// in which paths they emit, so the page itself lives here.
+import type { CollectionEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ImageSlot from './ImageSlot.astro';
+import { getLangFromUrl, localizePath, t } from '../i18n/ui';
+import { localizeProject } from '../i18n/project';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const data = localizeProject(project.data, lang);
+const copy = t(lang).detail;
+
+// Analysis work is one artefact — a dashboard or a report — so it shows a single
+// full-width image: its own shot if given, else the cover used on the work card.
+// Build work pads to 6 slots so the layout still matches the design until real
+// shots land; once supplied, show exactly those — no trailing placeholders, and
+// each keeps its native proportions.
+const gallery = data.gallery ?? [];
+const single = data.category === 'analysis';
+const slots = single
+  ? [gallery[0] ?? data.cover]
+  : gallery.length
+    ? gallery
+    : Array.from({ length: 6 }, () => undefined);
+---
+
+<Base title={`${data.title} — ${t(lang).nav.brand}`} description={data.summary}>
+  <main class="detail">
+    <div class="inner">
+      <div class="topbar">
+        <a href={localizePath('/#work', lang)} class="pill" data-astro-reload>{copy.back}</a>
+      </div>
+
+      <div class="intro">
+        <aside class="rail" aria-label={copy.stack}>
+          <div class="meta">
+            <div class="m-label">{copy.client}</div>
+            <div class="m-value strong">{copy.clientValue[data.client]}</div>
+          </div>
+          <div class="meta">
+            <div class="m-label">{copy.industry}</div>
+            <div class="m-value strong">{data.industry}</div>
+          </div>
+          <div class="meta">
+            <div class="m-label">{copy.stack}</div>
+            <div class="chips">
+              {data.stack.map((s) => <span>{s}</span>)}
+            </div>
+          </div>
+          <div class="meta">
+            <div class="m-label">{copy.year}</div>
+            <div class="m-value strong">{data.year}</div>
+          </div>
+          {
+            data.link && (
+              <div class="meta">
+                <div class="m-label">{copy.link}</div>
+                <a class="m-value strong m-link" href={data.link} target="_blank" rel="noopener">
+                  {data.link.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+                </a>
+              </div>
+            )
+          }
+        </aside>
+
+        <div class="lead">
+          <h1 data-headline><span class="hl">{data.headline}</span></h1>
+          <div class="body">
+            {data.body.map((p) => <p>{p}</p>)}
+          </div>
+        </div>
+      </div>
+
+      <div class:list={['gallery', single && 'is-single']} data-gallery>
+        {
+          slots.map((img, i) => (
+            <ImageSlot
+              src={img}
+              alt={copy.screen(data.title, i + 1)}
+              aspect={img ? 'auto' : '4 / 3'}
+              grayscale={!img}
+              sizes={single ? '100vw' : '(max-width: 820px) 100vw, 46vw'}
+              placeholder={copy.shot(i + 1)}
+              data-gallery-item
+            />
+          ))
+        }
+      </div>
+
+      <div class="cta">
+        <div class="cta-text">{copy.ctaText}</div>
+        <a href={localizePath('/#contact', lang)} class="pill accent" data-astro-reload>{copy.cta}</a>
+      </div>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .detail {
+    padding: 40px clamp(24px, 7vw, 120px) 120px;
+  }
+  .inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+  }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .pill {
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    padding: 10px 22px;
+    background:
+      linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+      var(--flow-ring) border-box;
+    animation: var(--flow-spin);
+    white-space: nowrap;
+    color: var(--color-ink);
+  }
+  /* Accent pill is the primary action — solid fill, no travelling ring, so it
+     stays the loudest thing on the row. */
+  .pill.accent {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    animation: none;
+  }
+  .intro {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: clamp(40px, 6vw, 96px);
+    align-items: start;
+  }
+  .rail {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    /* Logical so the rail sits on the reading-flow side in both directions. */
+    border-inline-end: 1px solid transparent;
+    border-image: var(--flow-rule-y) 1;
+    animation: var(--flow-slide);
+    padding-inline-end: 32px;
+  }
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .m-label {
+    font-size: 13px;
+    color: var(--color-ink-muted);
+  }
+  .m-value.strong {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  /* The website value is the rail's only interactive field — underline marks it
+     as a link without breaking the uppercase rhythm of the values above it. */
+  .m-link {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    /* URLs are Latin and must stay LTR even inside the Arabic rail. */
+    direction: ltr;
+    unicode-bidi: isolate;
+    width: fit-content;
+    transition: color 0.2s ease;
+  }
+  .m-link:hover {
+    color: var(--color-accent);
+  }
+  /* One service per line. Wrapping put two or three chips on a row and the
+     rail's other fields (client, industry, year) are all single stacked values —
+     the services were the only entry that read as a cloud instead of a list. */
+  .chips {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .chips span {
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 6px 10px;
+    background:
+      linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+      var(--flow-ring) border-box;
+    animation: var(--flow-spin);
+    white-space: nowrap;
+  }
+  /* Chips are a cluster; staggering their phase keeps them from pulsing as one
+     block. */
+  .chips span:nth-child(2n) {
+    animation-delay: calc(var(--flow-dur) / -3);
+  }
+  .chips span:nth-child(3n) {
+    animation-delay: calc(var(--flow-dur) / -1.6);
+  }
+  .lead {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+  /* Headlines are full sentences, not two-word titles — at display size a long
+     one ate the fold and read as a banner instead of a sentence. Smaller type
+     with looser leading and a narrower measure keeps it a headline you read. */
+  h1 {
+    margin: 0;
+    font-size: clamp(28px, 3.2vw, 44px);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.22;
+    max-width: 780px;
+  }
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 880px;
+  }
+  .body p {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--color-ink-muted);
+  }
+  /* Masonry columns rather than a row grid: shots range from tall app screens
+     (0.8) to wide dashboards (1.4), and a row grid leaves a ragged gap under
+     whichever tile in a pair is shorter. Columns pack each shot against the one
+     above it, so nothing is cropped and no row-sized holes open up. */
+  .gallery {
+    columns: 2;
+    column-gap: 32px;
+  }
+  /* Analysis work is one artefact — shown whole, no column split. */
+  .gallery.is-single {
+    columns: 1;
+  }
+  .gallery.is-single :global(.imgslot) {
+    margin-bottom: 0;
+  }
+  /* The tile is a child component, so its root needs :global to be reached. */
+  .gallery :global(.imgslot) {
+    break-inside: avoid;
+    margin-bottom: 32px;
+  }
+  .cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    border-top: 1px solid transparent;
+    border-image: var(--flow-rule-x) 1;
+    animation: var(--flow-slide);
+    padding-top: 40px;
+  }
+  .cta-text {
+    font-size: clamp(26px, 3vw, 34px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    max-width: 620px;
+  }
+  @media (max-width: 820px) {
+    .intro {
+      grid-template-columns: 1fr;
+    }
+    /* Stacked layout: the rail's rule turns from a vertical edge into a
+       horizontal one, so the sweep has to change axis with it. */
+    .rail {
+      border-inline-end: none;
+      padding-inline-end: 0;
+      border-bottom: 1px solid transparent;
+      border-image: var(--flow-rule-x) 1;
+      padding-bottom: 32px;
+    }
+    .gallery {
+      columns: 1;
+    }
+  }
+</style>

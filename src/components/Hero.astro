@@ -1,0 +1,396 @@
+---
+import { getLangFromUrl, t } from '../i18n/ui';
+
+const copy = t(getLangFromUrl(Astro.url)).hero;
+---
+
+<section class="hero" data-hero aria-labelledby="hero-title">
+  {/* A. Bar-wipe headline — each line is its own accent+white sweep (hero-intro.ts
+      adds .play on loader complete; the animation itself is pure CSS below). */}
+  {/* Title leads (speed > 1): safe to parallax directly — its intro is pure CSS,
+      nothing else writes transform on it. */}
+  <h1
+    id="hero-title"
+    class="title"
+    data-hero-title
+    data-speed="1.18"
+    data-parallax-start="top top"
+  >
+    <span class="line"><span class="lt">{copy.line1}</span></span>
+    <span class="line"
+      ><span class="lt">{copy.line2Pre}<span class="muted">{copy.line2Muted}</span>{copy.line2Post}</span
+      ></span
+    >
+  </h1>
+
+  <p class="subline" data-reveal="loader" data-reveal-delay="0.85">
+    {copy.sublinePre}<span class="scramble" data-scramble={copy.sublineScramble}
+      >{copy.sublineScramble}</span
+    >{copy.sublinePost}
+  </p>
+
+  {/* Parallax rides an OUTER wrapper: reveal.ts tweens `y` on [data-reveal] itself,
+      and two systems on one element's y would fight. Portrait lags (speed < 1). */}
+  <div class="p-layer" data-speed="0.8" data-parallax-start="top top">
+  <div class="portrait-wrap" data-reveal="loader" data-reveal-delay="1.0">
+    {/* D. Mind scratches — hero-intro.ts cycles work-derived marks over the head. */}
+    <svg class="scribble" viewBox="0 0 200 70" fill="none" aria-hidden="true" data-scribble></svg>
+    {/* Portrait — SVG wrapper around a PNG, drawn at its own 355×631 ratio.
+        The photo still carries its own hallway background, so it is graded and
+        edge-masked (see .portrait) to sit inside the hero instead of on top of
+        it, with a glow pool behind and a floor shadow under. */}
+    <img class="portrait" src="/me.svg" alt="Portrait of Almotasim" width="355" height="631" />
+  </div>
+  </div>
+
+  {/* C. 13 background shapes — sourced from /public/deco/*.svg, tinted through a
+      CSS mask so each one can carry its own gradient + glow (c-* classes below).
+      Pop in once on loader (hero-intro.ts). No parallax, no scroll movement. */}
+  <div class="deco" aria-hidden="true">
+    {/* sparkles */}
+    <span data-shape class="d s-sparkle c-accent" style="left:7%;top:16%;width:31px;opacity:.85"></span>
+    <span data-shape class="d s-sparkle c-cyan" style="left:22%;top:9%;width:19px;opacity:.7"></span>
+    <span data-shape class="d s-sparkle c-lime" style="right:11%;top:12%;width:39px;opacity:.8"></span>
+    <span data-shape class="d s-sparkle c-pink" style="right:26%;top:26%;width:21px;opacity:.65"></span>
+    <span data-shape class="d s-sparkle c-white" style="left:46%;top:7%;width:17px;opacity:.6"></span>
+
+    {/* sprouts */}
+    <span data-shape class="d s-sprout c-lime" style="left:5%;bottom:20%;width:71px;opacity:.75"></span>
+    <span data-shape class="d s-sprout c-cyan" style="right:6%;bottom:30%;width:53px;opacity:.6"></span>
+
+    {/* squiggles */}
+    <span data-shape class="d s-squiggle c-pink" style="right:14%;bottom:12%;width:85px;opacity:.62"></span>
+    <span data-shape class="d s-squiggle c-accent" style="left:19%;bottom:34%;width:69px;opacity:.66"></span>
+
+    {/* bursts */}
+    <span data-shape class="d s-burst c-orange" style="right:4%;top:44%;width:57px;opacity:.6"></span>
+    <span data-shape class="d s-burst c-white" style="right:32%;top:6%;width:35px;opacity:.55"></span>
+
+    {/* dot grids */}
+    <span data-shape class="d s-dots c-accent" style="left:4%;top:31%;width:45px;opacity:.7"></span>
+    <span data-shape class="d s-dots c-violet" style="right:20%;bottom:44%;width:37px;opacity:.58"></span>
+  </div>
+
+  {/* E. Scroll tile-dissolve — filled + driven by tileDissolve.js */}
+  <div
+    class="pxt"
+    data-pixelated-scroll-transition
+    data-columns="16"
+    data-columns-tablet="10"
+    data-columns-mobile="6"
+    data-rows="8"
+    data-scroll-start="50% top"
+    aria-hidden="true"
+  >
+  </div>
+</section>
+
+<style>
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 200px clamp(24px, 7vw, 120px) 90px;
+    position: relative;
+    background: var(--color-hero);
+    overflow: hidden;
+    width: 100%;
+  }
+
+  /* ---- A. bar-wipe headline ---- */
+  .title {
+    margin: 0 0 28px;
+    font-size: clamp(38px, 6.2vw, 88px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    text-align: center;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  .line {
+    position: relative;
+    display: block;
+    --d: 0s;
+  }
+  .line:nth-of-type(2) {
+    --d: 0.28s;
+  }
+  .lt {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+  }
+  .title .muted {
+    color: #8c8c88;
+  }
+  /* accent bar leads, white bar chases; both clipped away before .play.
+     Bars sit on .lt (inline-block = text width) so each sweep covers only the
+     text, never the full line box. */
+  .lt::before,
+  .lt::after {
+    content: '';
+    position: absolute;
+    inset: -4px 0;
+    z-index: 2;
+    clip-path: inset(0 100% 0 0);
+    pointer-events: none;
+  }
+  .lt::before {
+    background: var(--color-accent);
+  }
+  .lt::after {
+    background: #fff;
+  }
+  .title.play .line .lt::before {
+    animation: barSweep 1.25s cubic-bezier(0.16, 1, 0.3, 1) var(--d) both;
+  }
+  .title.play .line .lt::after {
+    animation: barSweep 1.25s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--d) + 0.12s) both;
+  }
+  .title.play .lt {
+    animation: htextIn 1.25s linear var(--d) both;
+  }
+  @keyframes barSweep {
+    0% {
+      clip-path: inset(0 100% 0 0);
+    }
+    45% {
+      clip-path: inset(0 0 0 0);
+    }
+    100% {
+      clip-path: inset(0 0 0 100%);
+    }
+  }
+  @keyframes htextIn {
+    0%,
+    22% {
+      opacity: 0;
+    }
+    23%,
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .subline {
+    margin: 0 0 32px;
+    font-size: 18px;
+    color: #a8a8a2;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+  }
+  .scramble {
+    display: inline-block;
+    color: var(--color-accent);
+    font-weight: 600;
+    white-space: pre;
+  }
+  /* parallax-only wrapper — carries the scrub transform, no layout of its own */
+  .p-layer {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    will-change: transform;
+  }
+  .portrait-wrap {
+    position: relative;
+    z-index: 1;
+    margin: 56px auto 0;
+    width: min(355px, 74vw);
+    display: flex;
+    justify-content: center;
+    isolation: isolate;
+  }
+  /* Light pool behind the figure — gives the cutout something to stand in, so
+     the masked edges read as falloff rather than as a crop. */
+  .portrait-wrap::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 4%;
+    width: 150%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    background: radial-gradient(
+      circle at 50% 42%,
+      rgba(232, 245, 68, 0.13) 0%,
+      rgba(232, 245, 68, 0.05) 34%,
+      rgba(28, 28, 28, 0) 66%
+    );
+    pointer-events: none;
+    z-index: -1;
+  }
+  /* Contact shadow so the figure sits ON the section instead of floating. */
+  .portrait-wrap::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -2%;
+    width: 78%;
+    height: 9%;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 70%);
+    filter: blur(6px);
+    pointer-events: none;
+    z-index: -1;
+  }
+  /* Sits in the band above the head. In the 355×631 portrait the head starts
+     ~13% down, so a 60%-wide mark (21% of the width tall) offset 1% from the top
+     lands its bottom edge on the hairline. */
+  .scribble {
+    position: absolute;
+    top: 1%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    pointer-events: none;
+    z-index: 3;
+    filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.55));
+  }
+  /* Two-part blend:
+     1. grade — desaturate + darken so the photo's own colour temperature stops
+        fighting the monochrome-plus-accent hero.
+     2. mask — feather all four edges (hardest at the bottom, where the frame is
+        widest) so the rectangle never announces itself. Two gradients composited
+        with intersect: one vertical, one horizontal. */
+  .portrait {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(0.62) saturate(1.08) contrast(1.06) brightness(0.88);
+    -webkit-mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 9%, #000 78%, transparent 100%),
+      linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 9%, #000 78%, transparent 100%),
+      linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+  .deco {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  /* Each shape is a mask of a file in /public/deco, so its colour stays CSS.
+     The mask lives on ::before, never on .d itself: CSS applies filters BEFORE
+     masking, so a glow on a masked element would be clipped to the shape. */
+  .deco .d {
+    position: absolute;
+    display: block;
+    filter: drop-shadow(0 0 6px var(--glow)) drop-shadow(0 0 16px var(--glow));
+  }
+  .deco .d::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(125deg, var(--c1) 0%, var(--c2) 38%, #fff 50%, var(--c1) 62%, var(--c2) 100%);
+    background-size: 300% 300%;
+    background-position: 0% 50%;
+    -webkit-mask-image: var(--src);
+    mask-image: var(--src);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    animation: decoShine 6s linear infinite var(--shine-delay, 0s);
+  }
+  /* the sweep is the "shine" — the white stop travelling across the gradient */
+  @keyframes decoShine {
+    to {
+      background-position: 300% 50%;
+    }
+  }
+
+  /* palettes: c1 → c2 gradient, glow is the halo colour */
+  .deco .c-accent {
+    --c1: var(--color-accent);
+    --c2: #b4ff3d;
+    --glow: rgba(232, 245, 68, 0.55);
+  }
+  .deco .c-lime {
+    --c1: #9dff5c;
+    --c2: #37e0a8;
+    --glow: rgba(85, 240, 160, 0.5);
+  }
+  .deco .c-cyan {
+    --c1: #5ad7ff;
+    --c2: #7b8cff;
+    --glow: rgba(90, 200, 255, 0.5);
+  }
+  .deco .c-pink {
+    --c1: #ff7ae0;
+    --c2: #ff9b6a;
+    --glow: rgba(255, 122, 224, 0.45);
+  }
+  .deco .c-orange {
+    --c1: #ffb347;
+    --c2: #ff6f61;
+    --glow: rgba(255, 150, 70, 0.45);
+  }
+  .deco .c-violet {
+    --c1: #b98bff;
+    --c2: #6ad3ff;
+    --glow: rgba(170, 130, 255, 0.45);
+  }
+  .deco .c-white {
+    --c1: #fff;
+    --c2: #d8e8ff;
+    --glow: rgba(255, 255, 255, 0.5);
+  }
+
+  /* stagger the sweeps so they never shine in lockstep */
+  .deco .d:nth-of-type(3n) {
+    --shine-delay: -2s;
+  }
+  .deco .d:nth-of-type(3n + 1) {
+    --shine-delay: -4s;
+  }
+
+  .deco .s-sparkle {
+    aspect-ratio: 1;
+    --src: url('/deco/sparkle.svg');
+  }
+  .deco .s-sprout {
+    aspect-ratio: 140 / 195;
+    --src: url('/deco/vectorized.svg');
+  }
+  .deco .s-squiggle {
+    aspect-ratio: 72 / 40;
+    --src: url('/deco/squiggle.svg');
+  }
+  .deco .s-burst {
+    aspect-ratio: 1;
+    --src: url('/deco/burst.svg');
+  }
+  .deco .s-dots {
+    aspect-ratio: 1;
+    --src: url('/deco/dots.svg');
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .deco .d::before {
+      animation: none;
+      background-position: 50% 50%;
+    }
+  }
+  .pxt {
+    position: absolute;
+    inset: -2px;
+    pointer-events: none;
+    z-index: 6;
+  }
+</style>

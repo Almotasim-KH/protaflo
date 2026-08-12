@@ -1,0 +1,205 @@
+---
+// Floating centered pill (name + CV), flanked by two frameless buttons: the
+// language switch on the left, "Let's Talk" on the right. Hides on scroll-down
+// past the hero (Module 5).
+import { getLangFromUrl, localizePath, t } from '../i18n/ui';
+
+const lang = getLangFromUrl(Astro.url);
+const copy = t(lang).nav;
+const cvHref = '/cv.pdf';
+
+// The switch points at the same page in the other language — localizePath drops
+// or adds the /ar prefix, so /work/budgettr/ ↔ /ar/work/budgettr/ instead of
+// bouncing the reader back to the home page.
+const other = lang === 'en' ? 'ar' : 'en';
+const otherHref = localizePath(Astro.url.pathname, other);
+---
+
+<div class="navbar">
+  {/* Left and right here are physical, not logical: the pill stays centred and
+      these two keep their sides in both reading directions, so the switch is
+      always in the same corner whichever language you are in. */}
+  {/* Full reload: direction, fonts and every motion module are set up at
+      document level, so a client-side swap would leave the old dir in place. */}
+  <a
+    href={otherHref}
+    class="float lang"
+    lang={other}
+    hreflang={other}
+    aria-label={copy.switchLabel}
+    data-astro-reload>{copy.switchTo}</a
+  >
+
+  <nav data-nav aria-label="Primary">
+    <a href={localizePath('/', lang)} class="brand">{copy.brand}</a>
+    <div class="nav-links">
+      <a href={cvHref} class="link">{copy.cv}</a>
+    </div>
+  </nav>
+
+  <a href={localizePath('/#contact', lang)} class="float cta">{copy.cta}</a>
+</div>
+
+<style>
+  .navbar {
+    position: fixed;
+    top: 24px;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+  }
+  nav {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    /* Translucent glass so headlines scrolling under the pill read as intentional
+       depth, not a hard white block slicing them in half. */
+    background:
+      linear-gradient(
+          color-mix(in srgb, var(--color-surface) 72%, transparent),
+          color-mix(in srgb, var(--color-surface) 72%, transparent)
+        )
+        padding-box,
+      var(--flow-ring) border-box;
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border: 1px solid transparent;
+    border-radius: 999px;
+    animation: var(--flow-spin);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding: 10px 12px 10px 28px;
+    will-change: transform;
+    /* Asymmetric on purpose: each state owns the transition INTO it. This one runs
+       on the way back — slower and softer, so the nav settles rather than snaps. */
+    transition:
+      transform 0.78s cubic-bezier(0.22, 1, 0.32, 1),
+      opacity 0.55s ease-out;
+  }
+  /* nav.ts toggles this while scrolling down past the hero — leaving is quicker,
+     it should get out of the reader's way without drawing attention. */
+  nav.is-hidden {
+    transform: translateY(calc(-100% - 32px));
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.28s ease;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    nav {
+      transition: none;
+    }
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--color-ink);
+  }
+  .link {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-ink);
+    padding: 6px 12px;
+    text-decoration: none;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .link:hover {
+    background: var(--color-accent);
+  }
+
+  /* ---- The two flanking buttons ----
+     Closer to the hero's deco marks than to the pill: a travelling hairline, a
+     coloured halo, and a pane thin enough that whatever is behind shows through,
+     so they sit IN the background rather than on top of it. The fill is not
+     decoration — the nav floats over both the dark hero and the cream sections,
+     and it is what keeps one ink label legible on both. */
+  .float {
+    pointer-events: auto;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-ink);
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 10px 20px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background:
+      linear-gradient(var(--pane), var(--pane)) padding-box,
+      var(--flow-ring) border-box;
+    --pane: color-mix(in srgb, var(--color-surface) 58%, transparent);
+    backdrop-filter: blur(10px) saturate(1.3);
+    -webkit-backdrop-filter: blur(10px) saturate(1.3);
+    animation: var(--flow-spin);
+    /* The same halo the deco shapes carry, at a fraction of the strength. */
+    filter: drop-shadow(0 0 10px rgba(232, 245, 68, 0.3));
+    /* --pane is not registered with @property, so it cannot tween; the halo
+       carries the hover instead and the pane snaps under it. */
+    transition: filter 0.28s var(--ease-brand);
+  }
+  .float:hover,
+  .float:focus-visible {
+    --pane: color-mix(in srgb, var(--color-surface) 86%, transparent);
+    filter: drop-shadow(0 0 18px rgba(232, 245, 68, 0.55));
+  }
+  .lang {
+    left: clamp(16px, 4vw, 48px);
+    /* Always labelled in the language it leads to, so it always renders in the
+       other script — pin a stack that covers both. */
+    font-family: var(--font-ar);
+  }
+  /* The primary action carries a wash of accent inside the pane, so it reads as
+     the loud one without becoming a solid yellow chip. */
+  .cta {
+    right: clamp(16px, 4vw, 48px);
+    --pane: color-mix(in srgb, var(--color-accent) 62%, transparent);
+  }
+  .cta:hover,
+  .cta:focus-visible {
+    --pane: var(--color-accent);
+  }
+  /* Both flanks leave with the pill — nav.ts only touches [data-nav], so :has
+     relays the state across to its siblings. */
+  .navbar:has([data-nav].is-hidden) .float {
+    transform: translateY(calc(-50% - 120px));
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.28s ease;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .float {
+      animation: none;
+      transition: none;
+    }
+  }
+  @media (max-width: 720px) {
+    .float {
+      padding: 8px 14px;
+      font-size: 13px;
+    }
+  }
+  @media (max-width: 520px) {
+    nav {
+      gap: 16px;
+      padding: 8px 10px 8px 18px;
+    }
+    .brand {
+      font-size: 13px;
+    }
+    .float {
+      padding: 7px 12px;
+      font-size: 12px;
+    }
+  }
+</style>

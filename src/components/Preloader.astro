@@ -1,0 +1,27 @@
+---
+// Module 1 mount. Dark cover, gray name with a white fill, bottom progress bar.
+// Behavior + once-per-session gating live in src/scripts/preloader.ts.
+import { getLangFromUrl, t } from '../i18n/ui';
+
+const copy = t(getLangFromUrl(Astro.url)).preloader;
+const name = copy.name;
+---
+
+<div class="preloader" data-preloader aria-hidden="true">
+  <div class="pl-name">
+    <span class="base">{name}</span>
+    <span class="fill" data-fill>{name}</span>
+  </div>
+  <div class="tagline">{copy.tagline}</div>
+  <div class="pl-bar"><i data-bar></i></div>
+</div>
+
+<style>
+  .tagline {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #7a7a76;
+    font-weight: 500;
+  }
+</style>

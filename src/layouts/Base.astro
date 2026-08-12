@@ -1,0 +1,95 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { getLangFromUrl, isRtl, localizePath, t, languages, type Lang } from '../i18n/ui';
+
+interface Props {
+  title: string;
+  description?: string;
+  lang?: Lang;
+}
+
+// The locale is read off the URL, so no page has to thread it down manually; the
+// prop is an escape hatch for a route that renders a locale other than its path.
+const lang = Astro.props.lang ?? getLangFromUrl(Astro.url);
+const copy = t(lang);
+const dir = isRtl(lang) ? 'rtl' : 'ltr';
+
+const { title, description = copy.meta.description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+
+// Strip the locale prefix once, then rebuild one canonical URL per language so
+// search engines see the pages as translations of each other rather than as
+// duplicates. x-default points at English, the unprefixed default.
+const bare = Astro.url.pathname.replace(/^\/ar(?=\/|$)/, '') || '/';
+const alternates = (Object.keys(languages) as Lang[]).map((l) => ({
+  lang: l,
+  href: new URL(localizePath(bare, l), Astro.site).toString(),
+}));
+---
+
+<!doctype html>
+<html lang={lang} dir={dir}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL(bare, Astro.site).toString()} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'ar' ? 'ar_SA' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    {/* Mark JS available so motion elements may hide. Without JS they never do. */}
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+
+    {/* First-paint cover: if we arrived from a card click, hold a cream screen
+        until page-transition.ts hands off to the animated band — no bare frame. */}
+    <script is:inline>
+      try {
+        if (sessionStorage.getItem('hl-wipe') === '1') {
+          document.documentElement.setAttribute('data-arriving', '');
+          setTimeout(function () {
+            document.documentElement.removeAttribute('data-arriving');
+          }, 2000);
+        }
+      } catch (e) {}
+    </script>
+
+    <ClientRouter />
+  </head>
+  <body>
+    <slot />
+    <script>
+      import '../scripts/main.ts';
+    </script>
+    {/* Failsafe: if the motion bundle never completes (import error, blocked JS),
+        force every gated element visible so nothing is trapped hidden. */}
+    <script is:inline>
+      setTimeout(function () {
+        if (!window.__loaderDone) {
+          document
+            .querySelectorAll(
+              '[data-reveal],[data-reveal-item],[data-gallery-item],[data-headline],[data-shape]'
+            )
+            .forEach(function (el) {
+              el.style.visibility = 'visible';
+            });
+          document.querySelectorAll('[data-hero-title],[data-headline]').forEach(function (el) {
+            el.classList.add('play');
+          });
+          var pl = document.querySelector('[data-preloader]');
+          if (pl) pl.classList.add('is-done');
+        }
+      }, 3000);
+    </script>
+  </body>
+</html>
