@@ -1,0 +1,314 @@
+---
+// City footer. The content reads first; a dithered profile of Yanbu is pinned
+// to the bottom of the viewport and slides up out of the floor over the last
+// stretch of scroll, landing exactly at the end of the page.
+//
+// The artwork is a raster served straight from /public rather than through
+// astro:assets. The plate is a 1-bit dither in a small PNG palette: WebP turns
+// those dots to grey mush, and re-encoding the PNG through sharp drops the
+// palette and inflates 170kB to 1.5MB. The only live parts are the birds,
+// drawn as SVG over the top.
+import { getLangFromUrl, localizePath, t } from '../i18n/ui';
+
+interface Props {
+  // Resting reveal, 0–1: how far the plate has settled before the scroll-driven
+  // reveal takes over.
+  minReveal?: number;
+}
+
+// Full-bleed and in flow, so the plate always shows whole: a viewport-pinned
+// band taller than the viewport would clip the plate's header off the top, and
+// at 2200×1400 it is taller than the viewport on any wide screen.
+const { minReveal = 0.08 } = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const copy = t(lang).footer;
+
+const email = 'Asomy1630@gmail.com';
+const linkedin = 'https://www.linkedin.com/in/almotasim-khairullah-73ab52166/';
+const github = 'https://github.com/Almotasim-KH';
+
+const sections = [
+  { label: copy.work, href: localizePath('/#work', lang) },
+  { label: copy.about, href: localizePath('/#about', lang) },
+  { label: copy.experience, href: localizePath('/#experience', lang) },
+  { label: copy.contact, href: localizePath('/#contact', lang) },
+];
+
+// Birds drift across the sky on their own clocks; the wings flap faster, and
+// each one is offset so the flock never beats in unison. Positions are in the
+// overlay's own viewBox, kept high and to the right of the skyline.
+const birds = [
+  { x: 1180, y: 150, s: 1, flap: 0.62, drift: 58, delay: -6 },
+  { x: 1310, y: 112, s: 0.76, flap: 0.5, drift: 71, delay: -24 },
+  { x: 1050, y: 196, s: 0.62, flap: 0.72, drift: 64, delay: -38 },
+];
+---
+
+<footer class="site-footer" aria-label={copy.label}>
+  <div class="inner">
+    <div class="top">
+      {/* The name already closes the footer in the copyright line, so this
+          column carries the one-line descriptor on its own. */}
+      <div class="brand-col">
+        <p class="tagline">{copy.tagline}</p>
+      </div>
+
+      <nav class="cols" aria-label={copy.label}>
+        <div class="col">
+          <h2 class="col-title">{copy.sections}</h2>
+          <ul>
+            {sections.map((s) => (
+              <li>
+                <a href={s.href}>{s.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="col">
+          <h2 class="col-title">{copy.elsewhere}</h2>
+          <ul>
+            <li><a href="/cv.pdf">{copy.cv}</a></li>
+            <li><a href={`mailto:${email}`}>{copy.email}</a></li>
+            <li><a href={linkedin} rel="noopener">LinkedIn ↗</a></li>
+            <li><a href={github} rel="noopener">GitHub ↗</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="base">
+      <span>{copy.rights}</span>
+      <span class="place">{copy.place}</span>
+    </div>
+  </div>
+
+  {/* Full-bleed block at the end of the document. It holds the plate's aspect
+      ratio, so the artwork is never cropped; the reveal moves the image inside
+      it rather than the block itself, which would leave a gap in the flow. */}
+  <div class="band" data-footer-band data-min-reveal={minReveal} aria-hidden="true">
+    <img
+      class="city"
+      src="/yanbu-city-dither-notext.png"
+      width="2200"
+      height="1400"
+      alt=""
+      loading="lazy"
+      decoding="async"
+    />
+    <svg class="birds" viewBox="0 0 1600 700" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+      {birds.map((b) => (
+        <g class="bird-drift" style={`--dur:${b.drift}s; --delay:${b.delay}s`}>
+          <g transform={`translate(${b.x} ${b.y}) scale(${b.s})`}>
+            {/* Each wing is drawn outward from (0,0), so a bare rotate pivots
+                at the bird's body without any transform-origin bookkeeping. */}
+            <g class="wing wing-l" style={`--flap:${b.flap}s`}>
+              <path d="M0 0 Q -9 -9 -21 -6" />
+            </g>
+            <g class="wing wing-r" style={`--flap:${b.flap}s`}>
+              <path d="M0 0 Q 9 -9 21 -6" />
+            </g>
+          </g>
+        </g>
+      ))}
+    </svg>
+  </div>
+
+  {/* Resting reveal, so the skyline is already correct on the first frame —
+      the reveal script only takes over once it runs. */}
+  <script is:inline define:vars={{ minReveal }}>
+    document.querySelectorAll('[data-footer-band]').forEach(function (el) {
+      el.style.setProperty('--reveal', String(minReveal));
+    });
+  </script>
+</footer>
+
+<style>
+  .site-footer {
+    position: relative;
+    border-top: 1px solid transparent;
+    border-image: var(--flow-rule-x) 1;
+    animation: var(--flow-slide);
+  }
+  .inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 64px clamp(24px, 7vw, 120px) 0;
+  }
+  .top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 48px;
+    justify-content: space-between;
+  }
+  .brand-col {
+    max-width: 34ch;
+  }
+  .tagline {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.6;
+  }
+  .cols {
+    display: flex;
+    gap: clamp(40px, 8vw, 96px);
+  }
+  .col-title {
+    margin: 0 0 16px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  /* inline-flex + padding rather than a bare inline link: the row needs a real
+     box before a height can apply to it. 30px clears the 24px WCAG 2.5.8 target
+     on a mouse; touch gets the full 44 below. */
+  .col a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding-block: 4px;
+    font-size: 14px;
+    color: var(--color-ink);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+  .col a:hover {
+    opacity: 0.55;
+  }
+  /* Touch pointers get the full 44px target. Gated on `pointer: coarse` so the
+     desktop footer keeps its tight rhythm instead of growing 50% taller. */
+  @media (pointer: coarse) {
+    .col a {
+      min-height: 44px;
+      /* Short labels ("CV", "Work") are only ~35px of text — the box has to be
+         widened too, or the target is 44 tall and 35 wide. */
+      min-width: 44px;
+    }
+  }
+  .base {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+    margin-top: 56px;
+    padding: 20px 0 28px;
+    border-top: 1px solid var(--color-hairline);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-muted);
+  }
+  /* Names what the artwork below is, so the skyline reads as a place rather
+     than decoration. */
+  .place {
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .band {
+    position: relative;
+    /* Full-bleed: the footer's inner column is padded, the plate is not. */
+    width: 100%;
+    /* The plate's own proportions, so `contain` never letterboxes it. */
+    aspect-ratio: 2200 / 1400;
+    margin-top: 8px;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .band .city {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* The band carries the plate's own aspect ratio, so nothing is cropped —
+       `contain` just guards against a rounding sliver on odd viewport widths. */
+    object-fit: contain;
+    /* The reveal rides the image inside the block: moving the block itself
+       would open a gap in the flow above it. Kept unscaled so the plate stays
+       whole; the travel only ever hides sky at the top edge. --reveal is
+       written by the scroll module. */
+    transform: translateY(calc((1 - var(--reveal, 0)) * 7%));
+    will-change: transform;
+    /* The plate's paper is a cooler, darker grey than the site canvas, so a
+       plain image sits in a visible rectangle. Lifting it to white first, then
+       multiplying, drops the paper out entirely and leaves only the ink over
+       the page colour. */
+    filter: brightness(1.09);
+    mix-blend-mode: multiply;
+  }
+  .birds {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .wing path {
+    fill: none;
+    stroke: #0e0e0e;
+    stroke-opacity: 0.55;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+  }
+  .wing-l {
+    animation: flap-l var(--flap) ease-in-out infinite;
+  }
+  .wing-r {
+    animation: flap-r var(--flap) ease-in-out infinite;
+  }
+  @keyframes flap-l {
+    0%,
+    100% {
+      transform: rotate(22deg);
+    }
+    50% {
+      transform: rotate(-20deg);
+    }
+  }
+  @keyframes flap-r {
+    0%,
+    100% {
+      transform: rotate(-22deg);
+    }
+    50% {
+      transform: rotate(20deg);
+    }
+  }
+  .bird-drift {
+    animation: bird-cross var(--dur) linear infinite;
+    animation-delay: var(--delay);
+  }
+  /* Kept short on purpose: a full-width crossing would park the flock off frame
+     for most of the cycle, so they drift within the sky instead. */
+  @keyframes bird-cross {
+    from {
+      transform: translate(-620px, 34px);
+    }
+    to {
+      transform: translate(300px, -26px);
+    }
+  }
+
+  /* Stillness for readers who asked for it: the scene sits fully revealed and
+     nothing moves. */
+  @media (prefers-reduced-motion: reduce) {
+    .band .city {
+      transform: none;
+    }
+    .wing-l,
+    .wing-r,
+    .bird-drift {
+      animation: none;
+    }
+  }
+</style>
