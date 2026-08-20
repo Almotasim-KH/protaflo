@@ -44,9 +44,9 @@ export function t(lang: Lang) {
 export const ui = {
   en: {
     meta: {
-      home: 'Almotasim Khairullah — Developer & Data Analyst',
+      home: 'Almotasim Khairullah',
       description:
-        'Almotasim Khairullah — developer and data analyst in Yanbu. I build the interface and the model behind it.',
+        'Almotasim Khairullah',
     },
     nav: {
       brand: 'Almotasim Khairullah',
@@ -55,20 +55,21 @@ export const ui = {
       // Label for the switch, written in the language it switches TO.
       switchTo: 'العربية',
       switchLabel: 'Switch language',
+      // Keyboard-only shortcut past the nav, first thing in the tab order.
+      skip: 'Skip to content',
     },
     preloader: {
       name: 'Almotasim Khairullah',
-      tagline: 'Developer & Data Analyst — Yanbu RCY',
+      tagline: 'Worth every pixel',
     },
     hero: {
-      line1: 'Storefronts that sell.',
+      line1: 'Storefronts that build identity',
       line2Pre: 'Data that ',
-      line2Muted: 'says',
-      line2Post: ' why',
+      line2Muted: 'explains',
+      line2Post: ' itself',
       sublinePre: 'We are the ',
       sublineScramble: 'vision',
       sublinePost: ' of 2030',
-      portraitAlt: 'Portrait of Almotasim',
     },
     work: {
       eyebrow: 'Selected work',
@@ -84,43 +85,74 @@ export const ui = {
       titleSecond: 'half ',
       titleMark: 'analyst.',
       paragraphs: [
-        "Hi, I'm Almotasim — a developer and data analyst based in Yanbu. I hold a diploma in Web & Tech Development and I'm in the final year of my Data Science bachelor's degree.",
-        'I build the interface and the model behind it, so what I ship answers the question someone actually asked.',
-        'Most of my work starts with a messy spreadsheet and ends as something a team opens every morning.',
+        "Hi, I'm Almotasim — I work between web development and data analysis.",
+        'I hold a diploma in Web & Tech Development and Im in the final year of my Data Science bachelors degree. Working across both makes me see projects differently the data and what it means, and the interface people actually use.',
+        'I plan before writing the first line, and I use AI as a tool that speeds the work up — not a replacement for the decision.',
+        'A project starts as a messy spreadsheet and ends as a tool the team opens every morning.',
       ],
       skills: [
         { title: 'UI / UX Design', desc: 'Figma, design systems, prototyping' },
         { title: 'Data Analysis', desc: 'Python, SQL, Power BI' },
-        { title: 'Web Development', desc: 'React, APIs, front-end architecture' },
+        { title: 'Web Development', desc: 'React, APIs, full-stack' },
         { title: 'Excel', desc: 'Modelling, automation, dashboards' },
+        { title: 'AI', desc: 'Claude, prompt design, automation' },
       ],
     },
     experience: {
       eyebrow: 'Experience',
       titleLead: 'The short',
       titleMark: 'version.',
+      // The job is one row; the analytics and engineering work built alongside
+      // it gets its own, because none of it is front-desk duty.
       rows: [
         {
-          when: '2024 — now',
-          role: 'Developer & Data Analyst — Yanbu RCY',
-          desc: 'Own the reporting stack and the internal tools on top of it: ingest, model, dashboard, front end.',
+          when: '2026',
+          role: 'Freelance full-stack — Webste Coffee Store',
+          desc: 'A live e-commerce site with an admin dashboard: Node.js and SQL behind it, React and TypeScript in front. Companion mobile app for pickup orders and loyalty points in progress.',
         },
         {
-          when: '2023 — 2024',
-          role: 'Freelance web development',
-          desc: 'Client sites, portals, and booking flows — design through deployment, mostly React.',
+          when: '2025',
+          role: 'Revenue dashboards — Power BI',
+          desc: 'Twelve-plus internal Excel sources folded into one Power BI view: Python for the prep, Figma for the layout. The 2025 rebuild added average performance rates and faster drill-down.',
         },
         {
-          when: '2022 — 2023',
-          role: 'Analytics projects',
-          desc: 'Fleet utilisation, enrollment forecasting, and reporting automation built out of spreadsheets nobody wanted to touch.',
+          when: '2025',
+          role: 'Sales Analytics Challenge',
+          desc: 'Open LinkedIn data challenge, around 300 participants. Cleaned and modelled a raw sales dataset into a Power BI read on revenue and product performance.',
         },
         {
-          when: 'Ongoing',
-          role: 'Learning in public',
-          desc: 'Side builds around AI tooling and data products. Toniq AI is the current one.',
+          when: '2025 — now',
+          role: 'Front Desk Group Leader — Namariq',
+          desc: 'Lead the front desk team, and work with the other departments to answer their questions.',
+        },
+        {
+          when: '2024 — 2025',
+          role: 'Front Desk Clerk — Namariq',
+          desc: 'Handled guest and visitor services, managed reservation correspondence, responded to emails, and performed night audit operations.',
+        },
+        {
+          when: '2023 — 2025',
+          role: 'UI/UX Designer',
+          desc: 'Designed wireframes, web interfaces, and mobile applications for clients using Figma.',
         },
       ],
+    },
+    // Footer. `links` mirrors the page sections; hrefs live in Footer.astro so
+    // they can be localised, only the labels translate.
+    footer: {
+      label: 'Footer',
+      tagline: 'Personal website',
+      sections: 'Sections',
+      elsewhere: 'Elsewhere',
+      work: 'Work',
+      about: 'About',
+      experience: 'Experience',
+      contact: 'Contact',
+      cv: 'CV',
+      email: 'Email',
+      rights: '© 2026 Almotasim Khairullah',
+      // Captions the dithered city plate at the foot of the page.
+      place: 'Yanbu · Red Sea Coast',
     },
     contact: {
       eyebrow: 'Connect with me',
@@ -129,21 +161,25 @@ export const ui = {
       titleMark: 'shipping.',
       linkedin: 'LinkedIn ↗',
       github: 'GitHub ↗',
-      note: 'Yanbu RCY · usually replies within a day',
+      note: 'Usually replies within a day',
     },
     detail: {
       // Points back toward where the reader came from; mirrored in Arabic.
       back: '← All work',
-      cta: "Let's Talk",
+      // Label on the fold that hides the long-form body on a project page.
+      caseStudy: 'Case study',
       // The rail's first field is the kind of engagement, not a client name —
       // both values come from here so a project file only stores the key.
       client: 'Project Type',
       clientValue: { client: 'Client Work', personal: 'Personal Project' },
-      industry: 'Industry',
       stack: 'Stack',
       year: 'Year',
       link: 'Website',
-      ctaText: 'Want the same for your product?',
+      // Full-screen gallery viewer.
+      zoom: 'View full screen',
+      lbClose: 'Close',
+      lbPrev: 'Previous image',
+      lbNext: 'Next image',
       shot: (n: number) => `Drop shot ${n}`,
       screen: (title: string, n: number) => `${title} — screen ${n}`,
     },
@@ -151,30 +187,30 @@ export const ui = {
 
   ar: {
     meta: {
-      home: 'المعتصم خير الله — مطوّر ومحلل بيانات',
+      home: 'المعتصم خير الله',
       description:
-        'المعتصم خير الله — مطوّر ومحلل بيانات في ينبع. أبني الواجهة والنموذج الذي خلفها.',
+        'المعتصم خير الله مطوّر ومحلل بيانات في ينبع. أبني الواجهة والنموذج الذي خلفها.',
     },
     nav: {
       brand: 'المعتصم خير الله',
       cv: 'السيرة الذاتية',
-      cta: 'لنتحدث',
+      cta: 'تواصل',
       switchTo: 'English',
       switchLabel: 'تغيير اللغة',
+      skip: 'تخطٍ إلى المحتوى',
     },
     preloader: {
       name: 'المعتصم خير الله',
-      tagline: 'مطوّر ومحلل بيانات — الهيئة الملكية بينبع',
+      tagline: 'يستاهل كل بكسل',
     },
     hero: {
-      line1: 'متاجر تبيع.',
+      line1: 'متاجر تصنع هوية',
       line2Pre: 'وبيانات ',
-      line2Muted: 'تقول',
-      line2Post: ' لماذا',
+      line2Muted: 'تشرح',
+      line2Post: ' نفسها',
       sublinePre: 'نحن ',
       sublineScramble: 'رؤية',
       sublinePost: ' 2030',
-      portraitAlt: 'صورة المعتصم',
     },
     work: {
       eyebrow: 'أعمال مختارة',
@@ -190,15 +226,20 @@ export const ui = {
       titleSecond: 'ونصف ',
       titleMark: 'محلل.',
       paragraphs: [
-        'مرحبًا، أنا المعتصم — مطوّر ومحلل بيانات مقيم في ينبع. أحمل دبلومًا في تطوير الويب والتقنية، وأنا في السنة الأخيرة من بكالوريوس علم البيانات.',
-        'أبني الواجهة والنموذج الذي خلفها، حتى يجيب ما أسلّمه عن السؤال الذي طُرح فعلًا.',
-        'معظم أعمالي تبدأ بجدول بيانات فوضوي وتنتهي بشيء يفتحه الفريق كل صباح.',
+        'أهلا، أنا المعتصم أشتغل بين تطوير الويب وتحليل البيانات.',
+        ' حاصل على دبلوم في تطوير الويب والتقنية، وحاليًا بسنتي الأخيرة في بكالوريوس علم البيانات، الدمج بين الاثنين خلاني أشوف المشاريع بنظرة مختلفة البيانات وإيش تعني، والواجهة اللي يستخدمها الناس',
+        'أفضل أخطط قبل ما أكتب أول سطر، وأستخدم الذكاء الاصطناعي كأداة تسرع الشغل، مو كبديل عن القرار.',
+        'مشروع يبدأ بجدول بيانات مخربط، وينتهي بأداة الفريق يفتحها كل صباح.',
       ],
+      // Skills stay in English on the Arabic side too — these are tool and
+      // discipline names, and transliterating them read worse than leaving the
+      // Latin script the industry actually uses.
       skills: [
-        { title: 'تصميم الواجهات وتجربة المستخدم', desc: 'فيجما، أنظمة التصميم، النماذج الأولية' },
-        { title: 'تحليل البيانات', desc: 'بايثون، SQL، Power BI' },
-        { title: 'تطوير الويب', desc: 'رياكت، واجهات برمجية، معمارية الواجهة' },
-        { title: 'إكسل', desc: 'النمذجة، الأتمتة، لوحات المعلومات' },
+        { title: 'UI / UX Design', desc: 'Figma, design systems, prototyping' },
+        { title: 'Data Analysis', desc: 'Python, SQL, Power BI' },
+        { title: 'Web Development', desc: 'React, APIs, full-stack' },
+        { title: 'Excel', desc: 'Modelling, automation, dashboards' },
+        { title: 'AI', desc: 'Claude, prompt design, automation' },
       ],
     },
     experience: {
@@ -207,35 +248,68 @@ export const ui = {
       titleMark: 'المختصرة.',
       rows: [
         {
-          when: '2024 — الآن',
-          role: 'مطوّر ومحلل بيانات — الهيئة الملكية بينبع',
-          desc: 'أدير منظومة التقارير والأدوات الداخلية فوقها: الاستيعاب، والنمذجة، ولوحات المعلومات، والواجهة.',
+          when: '2026',
+          role: 'عمل حر —  Coffee Store',
+          desc: 'متجر إلكتروني يعمل فعليًا مع لوحة إدارة: Node.js وSQL في الخلفية، وReact وTypeScript في الواجهة. وتطبيق جوال لطلبات الاستلام ونقاط الولاء قيد التطوير.',
         },
         {
-          when: '2023 — 2024',
-          role: 'تطوير ويب مستقل',
-          desc: 'مواقع عملاء وبوابات ومسارات حجز — من التصميم حتى النشر، غالبًا برياكت.',
+          when: '2025',
+          role: 'لوحات الإيرادات — Power BI',
+          desc: 'دمج أكثر من 12 مصدر Excel داخلي في لوحة واحدة: Python للتحضير وFigma للتصميم. نسخة 2025 أضافت معدلات الأداء المتوسطة وتنقّلًا أسرع في تفاصيل البيانات.',
         },
         {
-          when: '2022 — 2023',
-          role: 'مشاريع تحليلية',
-          desc: 'استغلال الأسطول، وتوقّع التسجيل، وأتمتة التقارير — مبنية من جداول لم يرغب أحد بلمسها.',
+          when: '2025',
+          role: 'تحدي تحليل المبيعات',
+          desc: 'تحد على LinkedIn بمشاركة نحو 300 شخص. تنظيف بيانات مبيعات خام ونمذجتها في لوحة Power BI تُبرز الإيرادات وأداء المنتجات.',
         },
         {
-          when: 'مستمر',
-          role: 'التعلّم علنًا',
-          desc: 'مشاريع جانبية حول أدوات الذكاء الاصطناعي ومنتجات البيانات، وToniq AI هو الحالي.',
+          when: '2025 — الآن',
+          role: 'مسؤول قسم الاستقبال — نمارق',
+          desc: 'اشرف على فريق الاستقبال و التقارير، وأعمل مع بقية الأقسام للإجابة على استفساراتهم.',
+        },
+         {
+          when: '2024 ',
+          role: 'المشاركه في YCATThon',
+          desc:'المركز الرابع من بين أربعة وأربعين فريق فكرة المسابقة كانت في عدة قطاعات انا اخترت السياحي.',
+        },
+        {
+          when: '2023 — 2025',
+          role: 'موظف استقبال — نمارق',
+          desc: 'خدمة النزلاء والزوار، وإدارة الحجوزات، والرد على البريد الإلكتروني، وتنفيذ عمليات التدقيق الليلي.',
+        },
+        {
+          when: '2023 — 2025',
+          role: 'مصمم واجهات مستخدم',
+          desc: 'تصميم النماذج الأولية وواجهات الويب وتطبيقات الجوال للعملاء باستخدام Figma.',
+        },
+         {
+          when: '2018 — 2023',
+          role: 'اعمال مختلفة',
         },
       ],
     },
+    footer: {
+      label: 'تذييل',
+      tagline: 'موقع شخصي.', 
+      sections: 'الأقسام',
+      elsewhere: 'روابط أخرى',
+      work: 'الأعمال',
+      about: 'نبذة',
+      experience: 'الخبرة',
+      contact: 'تواصل',
+      cv: 'السيرة الذاتية',
+      email: 'البريد',
+      rights: '© 2026 المعتصم خير الله',
+      place: 'ينبع · ساحل البحر الأحمر',
+    },
     contact: {
-      eyebrow: 'تواصل معي',
+      eyebrow: 'تواصل',
       titleLead: 'لنبنِ شيئًا',
       titleSecond: 'يستحق ',
       titleMark: 'الإطلاق.',
-      linkedin: 'لينكدإن ↗',
-      github: 'غيت هَب ↗',
-      note: 'الهيئة الملكية بينبع · الرد عادةً خلال يوم',
+      linkedin: 'LinkedIn ↗',
+      github: 'GitHub ↗',
+      note: 'الرد عادةً خلال 1-2 يوم',
     },
     detail: {
       // In RTL "back" points right, so the arrow flips with the text direction.
@@ -243,14 +317,16 @@ export const ui = {
       // into the RTL run; without it the browser parks it at the far left of the
       // pill, pointing away from the label it belongs to.
       back: '‏→ كل الأعمال',
-      cta: 'لنتحدث',
+      caseStudy: 'رحلة المشروع',
       client: 'نوع المشروع',
       clientValue: { client: 'عمل لعميل', personal: 'مشروع شخصي' },
-      industry: 'القطاع',
       stack: 'الأدوات',
       year: 'السنة',
       link: 'الموقع',
-      ctaText: 'تريد الشيء نفسه لمنتجك؟',
+      zoom: 'عرض بملء الشاشة',
+      lbClose: 'إغلاق',
+      lbPrev: 'الصورة السابقة',
+      lbNext: 'الصورة التالية',
       shot: (n: number) => `أضف لقطة ${n}`,
       screen: (title: string, n: number) => `${title} — لقطة ${n}`,
     },

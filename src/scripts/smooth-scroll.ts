@@ -58,3 +58,12 @@ export function initSmoothScroll(): (() => void) | null {
     lenis = null;
   };
 }
+
+// Freeze the page behind a full-screen overlay (the gallery lightbox). Lenis owns
+// the scroll on pointer devices; the body class covers touch and reduced-motion,
+// where Lenis never starts.
+export function lockScroll(locked: boolean): void {
+  document.documentElement.classList.toggle('is-scroll-locked', locked);
+  if (locked) lenis?.stop();
+  else lenis?.start();
+}

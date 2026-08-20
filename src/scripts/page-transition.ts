@@ -3,11 +3,10 @@
 // name under a yellow highlighter stroke (~700ms cover). On arrival at the detail
 // page the band slides off (~780ms reveal). Returning to the index has NO
 // transition (only [data-project-link] arms it). Reduced-motion navigates plainly.
-import { prefersReduced } from './gsap-core';
+import { EASE, prefersReduced } from './gsap-core';
 
 const WIPE_KEY = 'hl-wipe';
 const NAME_KEY = 'hl-name';
-const EASE = 'cubic-bezier(0.16,1,0.3,1)';
 
 // Read live rather than cached: the band is built on both the index and the
 // detail page, and the two can be in different languages within one session.
@@ -21,9 +20,12 @@ function bandMarkup(name: string): HTMLElement {
     'pointer-events:none;display:flex;align-items:center;justify-content:center';
   if (name) {
     band.innerHTML =
-      '<div style="font-family:inherit;font-size:clamp(38px,5vw,72px);font-weight:700;' +
-      'letter-spacing:-0.02em;color:var(--color-ink,#0E0E0E);position:relative;padding:0 12px">' +
-      '<span style="position:absolute;inset:12% -4px;background:var(--color-accent,#E8F544);' +
+      // Long titles ("Camp Operations Dashboard") wrap on narrow viewports; without
+      // an explicit centre the extra lines sat left-aligned inside a centred box.
+      '<div style="font-family:inherit;font-size:clamp(32px,5vw,72px);font-weight:700;' +
+      'letter-spacing:-0.02em;line-height:1.08;color:var(--color-ink,#0E0E0E);position:relative;' +
+      'padding:0 12px;max-width:min(90vw,14ch);text-align:center;text-wrap:balance">' +
+      '<span style="position:absolute;inset:6% -4px;background:var(--color-accent,#E8F544);' +
       'transform:skew(-6deg) rotate(-1deg)"></span>' +
       '<span style="position:relative">' +
       name +

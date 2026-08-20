@@ -16,7 +16,6 @@ export function localizeProject(data: ProjectData, lang: Lang): ProjectData {
     role: tr.role ?? data.role,
     tags: tr.tags ?? data.tags,
     summary: tr.summary ?? data.summary,
-    industry: tr.industry ?? data.industry,
     headline: tr.headline ?? data.headline,
     body: tr.body ?? data.body,
     stack: tr.stack ?? data.stack,

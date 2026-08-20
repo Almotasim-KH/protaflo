@@ -36,8 +36,21 @@ export function initFilters(): void {
     });
   };
 
-  const initial = buttons.find((b) => b.classList.contains('is-on')) ?? buttons[0];
+  // A detail page's back link arrives as /?work=<category>#work so the grid
+  // reopens on the discipline the visitor was browsing. Unknown or absent value
+  // falls back to the default pill.
+  const wanted = new URLSearchParams(window.location.search).get('work');
+  const fromUrl = wanted ? buttons.find((b) => b.dataset.filter === wanted) : undefined;
+  const initial = fromUrl ?? buttons.find((b) => b.classList.contains('is-on')) ?? buttons[0];
   if (!initial) return;
+
+  // Drop the param once it's been consumed — it's a hand-off, not page state,
+  // and leaving it in makes a shared or reloaded URL look filter-locked.
+  if (wanted) {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('work');
+    history.replaceState(history.state, '', `${url.pathname}${url.search}${url.hash}`);
+  }
 
   buttons.forEach((b) =>
     b.addEventListener('click', () => apply(b.dataset.filter ?? initial.dataset.filter ?? ''))

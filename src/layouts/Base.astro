@@ -67,6 +67,11 @@ const alternates = (Object.keys(languages) as Lang[]).map((l) => ({
     <ClientRouter />
   </head>
   <body>
+    {/* First tab stop on every page: the nav pill, the language switch and the
+        CTA all come before the content in source order, so a keyboard user
+        would otherwise walk the whole bar on each navigation. Hidden until
+        focused. `data-astro-reload` is not needed — it is a same-page jump. */}
+    <a class="skip-link" href="#main">{copy.nav.skip}</a>
     <slot />
     <script>
       import '../scripts/main.ts';

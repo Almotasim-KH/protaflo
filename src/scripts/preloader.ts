@@ -25,6 +25,7 @@ export function initPreloader(): void {
   }
 
   const fill = pl.querySelector<HTMLElement>('[data-fill]');
+  const tagFill = pl.querySelector<HTMLElement>('[data-tag-fill]');
   const bar = pl.querySelector<HTMLElement>('[data-bar]');
 
   const tl = gsap.timeline({
@@ -51,9 +52,22 @@ export function initPreloader(): void {
   if (fill)
     tl.fromTo(
       fill,
-      { clipPath: rtl ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)' },
-      { clipPath: 'inset(0 0% 0 0)', duration: 0.7, ease: 'power2.out' },
+      // Every component carries a unit and the same unit: an inset() that mixes
+      // bare 0 with 0% does not interpolate — the RTL pair snapped from hidden to
+      // shown in one frame instead of wiping.
+      { clipPath: rtl ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)' },
+      { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.7, ease: 'power2.out' },
       0.15
+    );
+
+  // Tagline wipes a beat behind the name so the two read as one sweep down the
+  // panel rather than two things firing at once.
+  if (tagFill)
+    tl.fromTo(
+      tagFill,
+      { clipPath: rtl ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)' },
+      { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.6, ease: 'power2.out' },
+      0.4
     );
 
   // Panel swipes up 780ms, then fire completion so the headline reveal can chain.

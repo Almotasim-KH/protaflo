@@ -1,17 +1,12 @@
 ---
 // Arabic mirror of /work/<slug>/. ProjectDetail reads the locale off the URL, so
 // this file only has to emit the same slugs under the /ar prefix.
-import { getCollection } from 'astro:content';
-import type { GetStaticPaths } from 'astro';
 import ProjectDetail from '../../../components/ProjectDetail.astro';
+import { projectPaths } from '../../../lib/project-paths';
 
-export const getStaticPaths = (async () => {
-  const projects = await getCollection('projects');
-  return projects.map((project) => ({
-    params: { slug: project.id },
-    props: { project },
-  }));
-}) satisfies GetStaticPaths;
+export async function getStaticPaths() {
+  return await projectPaths();
+}
 
 const { project } = Astro.props;
 ---

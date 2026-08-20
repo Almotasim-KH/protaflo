@@ -2,17 +2,16 @@
 // scroll only (ScrollSmoother transforms the content and breaks position:sticky).
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SplitText } from 'gsap/SplitText';
 
-gsap.registerPlugin(ScrollTrigger, SplitText);
+gsap.registerPlugin(ScrollTrigger);
 
+// Shared Web Animations easing — the page transition band uses it on both ends.
 export const EASE = 'cubic-bezier(0.16,1,0.3,1)';
-export const EASE_GSAP = 'power4.out';
 
 export const prefersReduced = (): boolean =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-export { gsap, ScrollTrigger, SplitText };
+export { gsap, ScrollTrigger };
 
 // ---- Latched one-shot for loader completion ----
 // Late subscribers still fire, so the once-per-session preloader can't be missed.

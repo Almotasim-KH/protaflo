@@ -1,5 +1,5 @@
 // Hero intro — three of the four hero motion systems that fire on loader complete
-// (the fourth, the tile dissolve, is scroll-driven and lives in pixel-dissolve.ts).
+// (the fourth, the tile dissolve, is scroll-driven and lives in tileDissolve.js).
 //   A. bar-wipe headline — pure CSS, we just add `.play` when the loader lifts.
 //   C. the 13 background shapes — pop in ONCE, no parallax, random back.out stagger.
 //   D. the scribble over the portrait — redraws itself forever from 4 path sets.

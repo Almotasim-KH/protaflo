@@ -1,0 +1,89 @@
+---
+// Video twin of ImageSlot: same flow-ring tile, but the artefact is a screen
+// recording served straight from /public (astro:assets only handles images).
+// Intrinsic width/height come from frontmatter so the tile reserves its ratio
+// before the file loads — no layout shift on the detail page.
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'div'> {
+  src: string;
+  width: number;
+  height: number;
+  label?: string;
+  radius?: number;
+  // Tile ratio. Defaults to the file's own; the work grid overrides it to keep
+  // every card the same size, and pairs it with fit="cover" so the frame fills.
+  aspect?: string;
+  fit?: 'contain' | 'cover';
+}
+
+const {
+  src,
+  width,
+  height,
+  label = '',
+  radius = 20,
+  aspect = `${width} / ${height}`,
+  fit = 'contain',
+  class: className = '',
+  ...rest
+} = Astro.props;
+---
+
+<div
+  class:list={['imgslot vidslot', className]}
+  style={`--r:${radius}px;--aspect:${aspect};--fit:${fit}`}
+  {...rest}
+>
+  {/* No controls — this reads as a moving screenshot, not a player: muted, looping,
+      and inert to clicks (pointer-events off below). autoplay is dropped under
+      reduced-motion by the inline guard. */}
+  <video
+    src={src}
+    width={width}
+    height={height}
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    aria-label={label}></video>
+</div>
+
+<script>
+  // Reduced motion: stop the loop and hand the viewer a paused first frame.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll<HTMLVideoElement>('.vidslot video').forEach((v) => {
+      v.autoplay = false;
+      v.loop = false;
+      v.pause();
+    });
+  }
+</script>
+
+<style>
+  /* Mirrors .imgslot in ImageSlot.astro — scoped styles don't cross components,
+     so the tile chrome is repeated here rather than shared through global.css. */
+  .vidslot {
+    position: relative;
+    border-radius: var(--r);
+    overflow: hidden;
+    aspect-ratio: var(--aspect);
+    border: 1px solid transparent;
+    background:
+      linear-gradient(var(--fill, transparent), var(--fill, transparent)) padding-box,
+      var(--flow-ring) border-box;
+    animation: var(--flow-spin);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Inert: no controls, no click-to-pause, no context menu handle. */
+  .vidslot video {
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    object-fit: var(--fit, contain);
+    display: block;
+  }
+</style>

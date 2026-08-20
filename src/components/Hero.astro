@@ -100,7 +100,7 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
   /* ---- A. bar-wipe headline ---- */
   .title {
     margin: 0 0 28px;
-    font-size: clamp(38px, 6.2vw, 88px);
+    font-size: clamp(27px, 5vw, 71px);
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.05;
@@ -178,7 +178,7 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
   }
 
   .subline {
-    margin: 0 0 32px;
+    margin: 0 0 18px;
     font-size: 18px;
     color: #a8a8a2;
     line-height: 1.6;
@@ -203,7 +203,10 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
   .portrait-wrap {
     position: relative;
     z-index: 1;
-    margin: 56px auto 0;
+    /* The portrait's own mask fades its top 9% out and the head only starts
+       ~13% down, so the visual gap runs well past whatever margin sits here —
+       kept small on purpose. */
+    margin: 24px auto 0;
     width: min(355px, 74vw);
     display: flex;
     justify-content: center;

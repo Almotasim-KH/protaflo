@@ -28,6 +28,11 @@ const marks = [
     // above so the two rectangles don't read as the same mark
     path: 'M16 24 L204 18 L208 102 L20 106 Z M18 50 L206 45 M84 21 L86 105 M148 19 L150 103',
   },
+  {
+    // AI: the four-point spark, drawn twice — one large, one small trailing it.
+    // Curves instead of straight rays so it stays hand-drawn like the rest.
+    path: 'M92 20 C 97 50, 106 58, 144 64 C 106 70, 97 78, 92 108 C 87 78, 78 70, 40 64 C 78 58, 87 50, 92 20 Z M180 16 C 182 29, 186 32, 199 34 C 186 36, 182 39, 180 52 C 178 39, 174 36, 161 34 C 174 32, 178 29, 180 16 Z',
+  },
 ];
 
 const skills = marks.map((m, i) => ({ ...m, ...copy.skills[i] }));
@@ -118,10 +123,12 @@ const skills = marks.map((m, i) => ({ ...m, ...copy.skills[i] }));
     line-height: 1.6;
     max-width: 460px;
   }
+  /* No top offset: the prose and the skill marks are two halves of one row, so
+     they start on the same line rather than the list hanging below the text. */
   .skills {
     list-style: none;
     margin: 0;
-    padding: 56px 0 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 32px;

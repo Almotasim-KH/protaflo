@@ -25,12 +25,17 @@ const projects = defineCollection({
       // myself. Free text here used to produce odd rail values ("Client:
       // Personal project"), so the label and both values now live in i18n.
       client: z.enum(['client', 'personal']),
-      industry: z.string(),
       headline: z.string(),
       body: z.array(z.string()).min(1),
       // what the thing was actually built with, not the services sold
       stack: z.array(z.string()).min(1),
       gallery: z.array(image()).max(12).optional(),
+      // A screen recording shown in place of the gallery on the detail page.
+      // Lives in /public (astro:assets is images-only); width/height are the
+      // file's real pixels so the tile can reserve its ratio.
+      video: z
+        .object({ src: z.string(), width: z.number(), height: z.number() })
+        .optional(),
       // live site, shown in the detail rail next to the year when present
       link: z.string().url().optional(),
 
@@ -45,7 +50,6 @@ const projects = defineCollection({
           role: z.string().optional(),
           tags: z.array(z.string()).optional(),
           summary: z.string().optional(),
-          industry: z.string().optional(),
           headline: z.string().optional(),
           body: z.array(z.string()).optional(),
           stack: z.array(z.string()).optional(),

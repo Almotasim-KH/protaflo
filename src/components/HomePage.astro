@@ -10,25 +10,30 @@ import WorkGrid from './WorkGrid.astro';
 import About from './About.astro';
 import Experience from './Experience.astro';
 import Contact from './Contact.astro';
+import Footer from './Footer.astro';
 import { getLangFromUrl, t } from '../i18n/ui';
 
 const copy = t(getLangFromUrl(Astro.url)).meta;
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
-// Only projects with real artwork reach the grid — a coverless card is an empty
-// placeholder tile, and a row of those reads as unfinished rather than as work.
-// The entries still exist, so their detail pages keep building.
-const shown = projects.filter((p) => p.data.cover);
+// Only projects with real artwork reach the grid — a card with neither a cover
+// nor a recording is an empty placeholder tile, and a row of those reads as
+// unfinished rather than as work. A screen recording counts as artwork: the card
+// plays it in the tile. The entries still exist, so their detail pages keep building.
+const shown = projects.filter((p) => p.data.cover || p.data.video);
 ---
 
 <Base title={copy.home}>
   <Preloader />
   <Nav />
-  <main>
+  <main id="main">
     <Hero />
     <WorkGrid projects={shown} />
     <About />
     <Experience />
     <Contact />
   </main>
+  {/* Outside <main>: the glow is position: fixed, and a transformed ancestor
+      (page transitions, parallax) would capture it. */}
+  <Footer />
 </Base>

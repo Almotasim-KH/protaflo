@@ -4,6 +4,8 @@
 import type { CollectionEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import ImageSlot from './ImageSlot.astro';
+import VideoSlot from './VideoSlot.astro';
+import Footer from './Footer.astro';
 import { getLangFromUrl, localizePath, t } from '../i18n/ui';
 import { localizeProject } from '../i18n/project';
 
@@ -22,7 +24,9 @@ const copy = t(lang).detail;
 // shots land; once supplied, show exactly those — no trailing placeholders, and
 // each keeps its native proportions.
 const gallery = data.gallery ?? [];
-const single = data.category === 'analysis';
+// A project with a screen recording shows that instead of stills.
+const video = data.video;
+const single = Boolean(video) || data.category === 'analysis';
 const slots = single
   ? [gallery[0] ?? data.cover]
   : gallery.length
@@ -31,10 +35,15 @@ const slots = single
 ---
 
 <Base title={`${data.title} — ${t(lang).nav.brand}`} description={data.summary}>
-  <main class="detail">
+  <main id="main" class="detail">
     <div class="inner">
       <div class="topbar">
-        <a href={localizePath('/#work', lang)} class="pill" data-astro-reload>{copy.back}</a>
+        {/* Carry this project's discipline back to the grid so "all work" lands
+            on the filter the visitor came from, not on the default pill.
+            filters.ts reads ?work= and then strips it from the URL. */}
+        <a href={localizePath(`/?work=${data.category}#work`, lang)} class="pill" data-astro-reload
+          >{copy.back}</a
+        >
       </div>
 
       <div class="intro">
@@ -42,10 +51,6 @@ const slots = single
           <div class="meta">
             <div class="m-label">{copy.client}</div>
             <div class="m-value strong">{copy.clientValue[data.client]}</div>
-          </div>
-          <div class="meta">
-            <div class="m-label">{copy.industry}</div>
-            <div class="m-value strong">{data.industry}</div>
           </div>
           <div class="meta">
             <div class="m-label">{copy.stack}</div>
@@ -71,34 +76,102 @@ const slots = single
 
         <div class="lead">
           <h1 data-headline><span class="hl">{data.headline}</span></h1>
-          <div class="body">
-            {data.body.map((p) => <p>{p}</p>)}
+          {/* The case study is long-form and most visitors came for the shots, so
+              it starts folded behind a toggle. Without JS the panel is simply
+              open (the collapse rules only apply under html.js), so the text is
+              never unreachable. */}
+          <div class="case">
+            <button
+              type="button"
+              class="cs-toggle"
+              data-case-toggle
+              aria-expanded="false"
+              aria-controls="case-study"
+            >
+              <span class="cs-dot" aria-hidden="true"></span>
+              <span class="cs-label">{copy.caseStudy}</span>
+              <svg class="cs-chev" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M6 9.5 L12 15.5 L18 9.5"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"></path>
+              </svg>
+            </button>
+            <div class="cs-panel" id="case-study" data-case-panel>
+              <div class="body">
+                {data.body.map((p, i) => <p style={`--i:${i}`}>{p}</p>)}
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <div class:list={['gallery', single && 'is-single']} data-gallery>
         {
-          slots.map((img, i) => (
-            <ImageSlot
-              src={img}
-              alt={copy.screen(data.title, i + 1)}
-              aspect={img ? 'auto' : '4 / 3'}
-              grayscale={!img}
-              sizes={single ? '100vw' : '(max-width: 820px) 100vw, 46vw'}
-              placeholder={copy.shot(i + 1)}
+          video ? (
+            <VideoSlot
+              src={video.src}
+              width={video.width}
+              height={video.height}
+              label={copy.screen(data.title, 1)}
               data-gallery-item
             />
-          ))
+          ) : (
+            slots.map((img, i) => (
+              <ImageSlot
+                src={img}
+                alt={copy.screen(data.title, i + 1)}
+                aspect={img ? 'auto' : '4 / 3'}
+                grayscale={!img}
+                sizes={single ? '100vw' : '(max-width: 820px) 100vw, 46vw'}
+                placeholder={copy.shot(i + 1)}
+                data-gallery-item
+                {...img
+                  ? {
+                      'data-zoom': true,
+                      role: 'button',
+                      tabindex: 0,
+                      'aria-label': `${copy.zoom} — ${copy.screen(data.title, i + 1)}`,
+                    }
+                  : {}}
+              />
+            ))
+          )
         }
       </div>
 
-      <div class="cta">
-        <div class="cta-text">{copy.ctaText}</div>
-        <a href={localizePath('/#contact', lang)} class="pill accent" data-astro-reload>{copy.cta}</a>
+      {/* Full-screen viewer for the shots above. Markup ships with the page and
+          stays hidden until a tile is clicked; src is filled in by lightbox.ts
+          so nothing full-size is fetched on load. Placeholder tiles and the
+          video aren't zoomable, so a project with neither gets an inert node. */}
+      <div class="lightbox" data-lightbox hidden>
+        <div class="lb-scrim" data-lightbox-backdrop></div>
+        <button class="lb-btn lb-close" type="button" data-lightbox-close aria-label={copy.lbClose}
+          >✕</button
+        >
+        <button
+          class="lb-btn lb-prev"
+          type="button"
+          data-lightbox-step="-1"
+          aria-label={copy.lbPrev}>‹</button
+        >
+        <img class="lb-img" data-lightbox-img alt="" />
+        <button
+          class="lb-btn lb-next"
+          type="button"
+          data-lightbox-step="1"
+          aria-label={copy.lbNext}>›</button
+        >
+        <div class="lb-count" data-lightbox-count></div>
       </div>
+
     </div>
   </main>
+  {/* Outside <main> for the same reason as on the home page: the glow is fixed,
+      and a transformed ancestor would capture it. */}
+  <Footer />
 </Base>
 
 <style>
@@ -119,6 +192,9 @@ const slots = single
     gap: 24px;
   }
   .pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
     font-size: 14px;
     font-weight: 500;
     text-decoration: none;
@@ -131,13 +207,6 @@ const slots = single
     animation: var(--flow-spin);
     white-space: nowrap;
     color: var(--color-ink);
-  }
-  /* Accent pill is the primary action — solid fill, no travelling ring, so it
-     stays the loudest thing on the row. */
-  .pill.accent {
-    background: var(--color-accent);
-    border-color: var(--color-accent);
-    animation: none;
   }
   .intro {
     display: grid;
@@ -187,7 +256,7 @@ const slots = single
     color: var(--color-accent);
   }
   /* One service per line. Wrapping put two or three chips on a row and the
-     rail's other fields (client, industry, year) are all single stacked values —
+     rail's other fields (client, year) are all single stacked values —
      the services were the only entry that read as a cloud instead of a list. */
   .chips {
     display: flex;
@@ -230,6 +299,123 @@ const slots = single
     letter-spacing: -0.015em;
     line-height: 1.22;
     max-width: 780px;
+    /* Headlines may carry authored line breaks (YAML block scalars); pre-line
+       honours them while still wrapping long lines normally. */
+    white-space: pre-line;
+  }
+  /* ---- Case study toggle ------------------------------------------------
+     The panel opens with the 0fr → 1fr grid-row trick rather than a measured
+     max-height: the row resolves to the content's real height, so everything
+     under the intro is pushed down by exactly the right amount and the close
+     runs the same curve in reverse. */
+  .case {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .cs-toggle {
+    display: none;
+    align-items: center;
+    min-height: 40px;
+    gap: 10px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-ink);
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    /* Logical so the dot keeps its tighter edge on the reading side in RTL. */
+    padding-block: 9px;
+    padding-inline: 14px 18px;
+    background:
+      linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+      var(--flow-ring) border-box;
+    animation: var(--flow-spin);
+    transition: transform 0.2s ease;
+  }
+  :global(html.js) .cs-toggle {
+    display: inline-flex;
+  }
+  @media (pointer: coarse) {
+    .cs-toggle,
+    .pill {
+      min-height: 44px;
+    }
+  }
+  .cs-toggle:hover {
+    transform: translateY(-1px);
+  }
+  /* The dot is the "there is more here" tell — it pulses while the panel is
+     shut and goes solid accent once you have opened it. */
+  .cs-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    animation: csPulse 2.4s ease-in-out infinite;
+  }
+  .cs-chev {
+    width: 15px;
+    height: 15px;
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .cs-toggle[aria-expanded='true'] .cs-dot {
+    animation: none;
+  }
+  .cs-toggle[aria-expanded='true'] .cs-chev {
+    transform: rotate(180deg);
+  }
+  @keyframes csPulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.35;
+      transform: scale(0.7);
+    }
+  }
+  :global(html.js) .cs-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    margin-top: 0;
+    transition:
+      grid-template-rows 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+      margin-top 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  :global(html.js) .cs-panel.is-open {
+    grid-template-rows: 1fr;
+    margin-top: 28px;
+  }
+  /* min-height:0 is what lets the 0fr row actually collapse. */
+  :global(html.js) .cs-panel > .body {
+    min-height: 0;
+    overflow: hidden;
+  }
+  /* Paragraphs pop in on their own stagger once the row is on its way open,
+     so the text arrives after the space exists rather than sliding with it. */
+  :global(html.js) .cs-panel p {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.4s ease,
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  :global(html.js) .cs-panel.is-open p {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(var(--i) * 60ms + 140ms);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .cs-panel,
+    :global(html.js) .cs-panel p,
+    .cs-chev,
+    .cs-dot {
+      transition: none;
+      animation: none;
+    }
   }
   .body {
     display: flex;
@@ -263,22 +449,6 @@ const slots = single
     break-inside: avoid;
     margin-bottom: 32px;
   }
-  .cta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    border-top: 1px solid transparent;
-    border-image: var(--flow-rule-x) 1;
-    animation: var(--flow-slide);
-    padding-top: 40px;
-  }
-  .cta-text {
-    font-size: clamp(26px, 3vw, 34px);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    max-width: 620px;
-  }
   @media (max-width: 820px) {
     .intro {
       grid-template-columns: 1fr;
@@ -294,6 +464,123 @@ const slots = single
     }
     .gallery {
       columns: 1;
+    }
+  }
+
+  /* ---- Full-screen gallery viewer ---- */
+  /* Tiles advertise themselves as zoomable; the placeholder tiles don't get this. */
+  .gallery :global([data-zoom]) {
+    cursor: zoom-in;
+  }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    justify-items: center;
+    padding: clamp(12px, 3vw, 40px);
+    opacity: 0;
+    transition: opacity 0.22s var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+  .lightbox.is-open {
+    opacity: 1;
+  }
+  .lb-scrim {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--color-ink) 92%, transparent);
+    backdrop-filter: blur(6px);
+  }
+  /* The picture fills whatever the arrows and padding leave, never crops. */
+  .lb-img {
+    position: relative;
+    grid-column: 2;
+    max-width: 100%;
+    max-height: calc(100dvh - clamp(24px, 6vw, 80px));
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.65);
+    transform: scale(0.98);
+    transition: transform 0.22s var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+  .lightbox.is-open .lb-img {
+    transform: scale(1);
+  }
+  .lb-btn {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--color-paper, #fff) 30%, transparent);
+    background: color-mix(in srgb, var(--color-ink) 55%, transparent);
+    color: #fff;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      background 0.2s ease,
+      transform 0.2s ease;
+  }
+  .lb-btn:hover {
+    background: color-mix(in srgb, var(--color-accent) 85%, transparent);
+    color: var(--color-ink);
+    transform: scale(1.06);
+  }
+  .lb-prev {
+    grid-column: 1;
+  }
+  .lb-next {
+    grid-column: 3;
+  }
+  .lb-close {
+    position: absolute;
+    top: clamp(12px, 3vw, 28px);
+    inset-inline-end: clamp(12px, 3vw, 28px);
+    font-size: 18px;
+  }
+  .lb-count {
+    position: absolute;
+    bottom: clamp(12px, 3vw, 28px);
+    left: 50%;
+    transform: translateX(-50%);
+    color: color-mix(in srgb, #fff 75%, transparent);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+  }
+  /* Phones: arrows sit over the bottom corners so the picture keeps the width. */
+  @media (max-width: 640px) {
+    .lightbox {
+      grid-template-columns: 1fr;
+    }
+    .lb-img {
+      grid-column: 1;
+    }
+    .lb-btn.lb-prev,
+    .lb-btn.lb-next {
+      position: absolute;
+      bottom: 18px;
+      grid-column: 1;
+    }
+    .lb-prev {
+      inset-inline-start: 18px;
+    }
+    .lb-next {
+      inset-inline-end: 18px;
+    }
+    .lb-count {
+      bottom: 32px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lightbox,
+    .lb-img {
+      transition: none;
     }
   }
 </style>

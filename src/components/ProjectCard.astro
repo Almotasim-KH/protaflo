@@ -1,8 +1,10 @@
 ---
 import ImageSlot from './ImageSlot.astro';
+import VideoSlot from './VideoSlot.astro';
 import type { CollectionEntry } from 'astro:content';
 import { getLangFromUrl, localizePath } from '../i18n/ui';
 import { localizeProject } from '../i18n/project';
+import { projectSlug } from '../i18n/slug';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -11,7 +13,7 @@ interface Props {
 const { project } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const data = localizeProject(project.data, lang);
-const href = localizePath(`/work/${project.id}/`, lang);
+const href = localizePath(`/work/${projectSlug(project.id)}/`, lang);
 ---
 
 <article class="project-card" data-cat={data.category}>
@@ -26,13 +28,31 @@ const href = localizePath(`/work/${project.id}/`, lang);
         covers range from 1.20 to 2.08, and letting each keep its own ratio left
         the row ragged and the titles off one baseline. Images fill the tile with
         object-fit: cover. Coverless projects get the same tile as a placeholder. */}
-    <ImageSlot
-      src={data.cover}
-      alt={data.title}
-      aspect="16 / 10"
-      radius={10}
-      placeholder={`Drop ${data.title} mockup`}
-    />
+    {/* The tile runs its own flow-ring animation, so the hover shake lives on a
+        wrapper — one `animation` property can't carry both. */}
+    <div class="card-media">
+      {
+        !data.cover && data.video ? (
+          <VideoSlot
+            src={data.video.src}
+            width={data.video.width}
+            height={data.video.height}
+            label={data.title}
+            radius={10}
+            aspect="16 / 10"
+            fit="cover"
+          />
+        ) : (
+          <ImageSlot
+            src={data.cover}
+            alt={data.title}
+            aspect="16 / 10"
+            radius={10}
+            placeholder={`Drop ${data.title} mockup`}
+          />
+        )
+      }
+    </div>
     <div class="meta">
       <span class="name">
         <span class="pswipe" aria-hidden="true"></span>
@@ -58,22 +78,45 @@ const href = localizePath(`/work/${project.id}/`, lang);
     text-decoration: none;
     color: inherit;
   }
-  /* Slow zoom on the cover when hovering the card. Only bites when a real image
-     is present (the placeholder has no <img>); .imgslot already clips overflow. */
-  .card-link :global(.imgslot img) {
-    transition: transform 0.55s var(--ease-brand);
+  /* Hovering the card gives the cover a short zigzag nudge that damps back to
+     rest — the swing halves each pass so it settles rather than stopping dead.
+     Runs once per hover; leaving mid-shake drops the animation and the wrapper
+     snaps back to its untransformed state. */
+  .card-media {
+    transform-origin: 50% 60%;
+    will-change: transform;
   }
-  .card-link:hover :global(.imgslot img),
-  .card-link:focus-visible :global(.imgslot img) {
-    transform: scale(1.04);
+  .card-link:hover .card-media,
+  .card-link:focus-visible .card-media {
+    animation: cardShake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+  @keyframes cardShake {
+    0% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    15% {
+      transform: translate3d(-5px, 0, 0) rotate(-0.7deg);
+    }
+    32% {
+      transform: translate3d(4px, 0, 0) rotate(0.55deg);
+    }
+    50% {
+      transform: translate3d(-2.5px, 0, 0) rotate(-0.35deg);
+    }
+    68% {
+      transform: translate3d(1.5px, 0, 0) rotate(0.2deg);
+    }
+    84% {
+      transform: translate3d(-0.6px, 0, 0) rotate(-0.08deg);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
   }
   @media (prefers-reduced-motion: reduce) {
-    .card-link :global(.imgslot img) {
-      transition: none;
-    }
-    .card-link:hover :global(.imgslot img),
-    .card-link:focus-visible :global(.imgslot img) {
-      transform: none;
+    .card-link:hover .card-media,
+    .card-link:focus-visible .card-media {
+      animation: none;
     }
   }
   /* Title over tags rather than beside them: the two ran into each other on

@@ -12,16 +12,46 @@ const name = copy.name;
     <span class="base">{name}</span>
     <span class="fill" data-fill>{name}</span>
   </div>
-  <div class="tagline">{copy.tagline}</div>
+  <div class="tagline">
+    <span class="base">{copy.tagline}</span>
+    <span class="fill" data-tag-fill>{copy.tagline}</span>
+  </div>
   <div class="pl-bar"><i data-bar></i></div>
 </div>
 
 <style>
+  /* Sits just above the progress bar rather than under the name, so the last
+     thing read before the panel lifts is the line, not empty space. */
   .tagline {
+    position: absolute;
+    bottom: 26px;
     font-size: 13px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #7a7a76;
     font-weight: 500;
+  }
+  /* Same two-layer wipe as the name: a dim copy underneath, a bright copy on top
+     revealed by clip-path. Both layers must sit in the same box, so the fill is
+     absolutely positioned over the base. */
+  .tagline .fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #cfcfc9;
+    clip-path: inset(0% 100% 0% 0%);
+    white-space: nowrap;
+  }
+  :global([dir='rtl']) .tagline .fill {
+    left: auto;
+    right: 0;
+    clip-path: inset(0% 0% 0% 100%);
+  }
+  /* Tracking + uppercase are Latin shaping rules; letter-spacing breaks Arabic
+     joining, so the RTL panel gets a plain, slightly larger line instead. */
+  :global([dir='rtl']) .tagline {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 15px;
   }
 </style>

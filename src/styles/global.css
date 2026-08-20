@@ -25,7 +25,6 @@
   --color-ink: #0e0e0e;
   --color-ink-muted: #6b6b6b;
   --color-hairline: #e6e4df;
-  --color-hairline-2: #d9d6cd;
   --color-accent: #e8f544;
   --color-hero: #1c1c1c;
   --color-preloader: #0e0e0e;
@@ -35,9 +34,11 @@
      the browser only reaches Plex for codepoints Poppins doesn't cover. */
   --font-ar: 'Poppins', 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
 
-  --radius-card: 20px;
-
   --ease-brand: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Two layers for image tiles: a tight contact shadow keeps the edge defined
+     on the warm canvas, a wide soft one does the actual lifting. */
+  --shadow-tile: 0 1px 2px rgba(28, 28, 28, 0.06), 0 14px 30px -12px rgba(28, 28, 28, 0.2);
 }
 
 /* ---- Base ---- */
@@ -313,7 +314,14 @@ html[data-arriving]::after {
   left: 0;
   top: 0;
   color: #fff;
-  clip-path: inset(0 100% 0 0);
+  clip-path: inset(0% 100% 0% 0%);
+}
+/* Mirror the hidden state too, or the RTL panel shows a left-anchored sliver of
+   white for the frames before GSAP takes the property over. */
+[dir='rtl'] .pl-name .fill {
+  left: auto;
+  right: 0;
+  clip-path: inset(0% 0% 0% 100%);
 }
 .pl-bar {
   position: absolute;
@@ -331,23 +339,6 @@ html[data-arriving]::after {
   background: var(--color-accent);
   transform: scaleX(0);
   transform-origin: left center;
-}
-
-/* ---- Nav collapse (Module 5) ---- */
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  overflow: hidden;
-  max-width: 400px;
-  opacity: 1;
-  transition:
-    max-width 0.46s var(--ease-brand),
-    opacity 0.3s linear;
-}
-[data-nav].is-collapsed .nav-links {
-  max-width: 0;
-  opacity: 0;
 }
 
 /* ---- Project card highlighter swipe (Module 3, CSS) ---- */
@@ -369,6 +360,9 @@ html[data-arriving]::after {
 .filter-pill {
   font-family: inherit;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
   font-size: 14px;
   font-weight: 500;
   padding: 10px 22px;
@@ -469,6 +463,13 @@ html[data-arriving]::after {
 [dir='rtl'] .body p {
   line-height: 1.85;
 }
+/* Display leading too: the hero/headline lines run at 1.05 for Poppins caps,
+   which is tighter than the Arabic face's own ascender+dot stack — the two
+   headline lines touch. Give the RTL display type room to breathe. */
+[dir='rtl'] [data-hero-title],
+[dir='rtl'] [data-headline] {
+  line-height: 1.4;
+}
 
 /* --- Bar-wipe reveals: sweep with the reading direction (R→L) --- */
 [dir='rtl'] [data-headline] .hl::before,
@@ -516,4 +517,44 @@ html[data-arriving]::after {
 [dir='rtl'] .mark > .mark-bg {
   transform: rotate(1.8deg);
   clip-path: polygon(0.6% 0%, 99.4% 5%, 100% 100%, 0% 93%);
+}
+
+/* Set while a full-screen overlay owns the viewport (gallery lightbox). Lenis is
+   stopped in parallel; this covers touch and reduced-motion, where it never runs. */
+html.is-scroll-locked,
+html.is-scroll-locked body {
+  overflow: hidden;
+}
+
+/* Touch pointers get 44px on every pill-shaped control (WCAG 2.5.5 / HIG).
+   Gated on `pointer: coarse` so mouse layouts keep their tighter rhythm. */
+@media (pointer: coarse) {
+  .filter-pill,
+  .pill {
+    min-height: 44px;
+  }
+}
+
+/* Skip link: off-canvas until it takes focus, then it parks under the top
+   edge, above the fixed nav (z-index 30). */
+.skip-link {
+  position: fixed;
+  top: 0;
+  inset-inline-start: 0;
+  z-index: 1000;
+  transform: translateY(-120%);
+  margin: 12px;
+  padding: 12px 20px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: var(--color-ink);
+  color: var(--color-canvas);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
