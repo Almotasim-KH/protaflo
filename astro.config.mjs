@@ -5,7 +5,7 @@ import tailwind from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://almotasim.example.com',
+  site: 'https://almotasim-kh.com',
   output: 'static',
   // English keeps the bare paths it already had (no /en/ prefix, no redirects to
   // break existing links); Arabic lives under /ar/. Route files are explicit
