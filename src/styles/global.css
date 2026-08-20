@@ -542,7 +542,9 @@ html.is-scroll-locked body {
   top: 0;
   inset-inline-start: 0;
   z-index: 1000;
-  transform: translateY(-120%);
+  /* Clears its own height plus the 12px margin, so no sliver of the pill
+     peeks below the top edge while it is unfocused. */
+  transform: translateY(calc(-100% - 24px));
   margin: 12px;
   padding: 12px 20px;
   min-height: 44px;
