@@ -17,3 +17,8 @@ pnpm-debug.log*
 
 # local agent settings
 .claude/settings.local.json
+
+# raw source media (the served copies live in public/)
+/Videos/
+/imgs/Screenshot*.png
+/imgs/yanbu-industrial-city-dither-notext.png
