@@ -4,10 +4,11 @@ role: Personal Work
 year: 2026
 category: developing
 tags: [Personal Project]
-order: 1
+order: 4
 summary: A dashboard that organises your spending at the start of every month, so you have a clear view of where it goes and a record you can go back to.
 cover: ../../../assets/budgettr/cover.png
 client: personal
+status: live
 headline: A dashboard that organises your spending at the start of every month, so you have a clear view of where it goes and a record you can go back to.
 stack: [React, TypeScript, PostgreSQL, Tailwind]
 gallery:
@@ -30,13 +31,16 @@ body:
   - I designed this platform based on a problem I personally faced, with the goal of creating a solution that is simple, intuitive, and easy to use.
   - The interface is available in both Arabic and English, with all amounts displayed in Saudi Riyals (SAR) across the platform. It also includes Dark Mode and Light Mode, along with many additional features and details that you can discover for yourself while exploring the platform.
 ar:
+  title: 'Budgettr'
   role: 'عمل خاص'
+  stack: [React, TypeScript, PostgreSQL, Tailwind]
   summary: 'لوحة إدارية تنظم فيها مصروفك في بداية كل شهر. بحيث توصل لرؤية واضحة للمصروفات في الشهر ودليل تقدر ترجع له.'
   headline: 'لوحة إدارية تنظم فيها مصروفك في بداية كل شهر. بحيث توصل لرؤية واضحة للمصروفات في الشهر ودليل تقدر ترجع له.'
   tags: ['مشروع شخصي']
   body:
   
-    - 'منصة تتيح لك التحكم في مصروفاتك وتنظيم دخلك بشكل أبسط. المطلوب منك في بداية كل شهر إنك تدخل دخلك الشهري، وبعدها تحدد الفئات أو الأشياء اللي عادةً تصرف عليها.'
+    - 'منصة تتيح لك التحكم في مصروفاتك وتنظيم دخلك بشكل أبسط.'
+    - 'المطلوب منك في بداية كل شهر إنك تدخل دخلك الشهري، وبعدها تحدد الفئات أو الأشياء اللي عادةً تصرف عليها.'
     - 'بعد كذا، تبدأ تدخل مصروفاتك بشكل بسيط، بحيث تدخل القيمة وتختار الفئة التابعة لها. وأيضًا يكون عندك إمكانية تحديد هدف، وكل ما تدخل مصروفاتك وبياناتك، يتحدث معك الهدف وتزيد نسبة الإنجاز بشكل تلقائي.'
     - 'وبعد كل هذا، راح يكون عندك Dashboard كاملة توضح لك وضعك المالي، وتبين لك وين راحت مصاريفك، كم صرفت، كم باقي لك، وكيف وضعك مع الهدف اللي حددته.'
     - 'صممته بناءً على مشكلة كنت أواجهها شخصيًا، وحاولت أخلي الحل بسيط وسهل في الاستخدام.'  

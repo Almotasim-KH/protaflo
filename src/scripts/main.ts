@@ -5,7 +5,6 @@ import { initPreloader } from './preloader';
 import { initHeadlineReveal } from './headline-reveal';
 import { initHeroIntro } from './hero-intro';
 import { initReveal } from './reveal';
-import { initFilters } from './filters';
 import { initNav } from './nav';
 import { initParallax } from './parallax';
 import { initScramble } from './scramble';
@@ -40,7 +39,6 @@ function boot(): void {
   initHeroIntro();
   initReveal();
   initScramble();
-  initFilters();
   initNav();
   initParallax();
   disposeTiles?.();

@@ -4,7 +4,7 @@ role: Product & Full-stack Development
 year: 2026
 category: developing
 tags: [initiative]
-order: 2
+order: 5
 summary: A single view of occupancy, capacity and night operations across every building.
 cover: ../../../assets/horizon/cover.png
 client: client
@@ -25,7 +25,9 @@ body:
   - 'Note: all data shown in the screenshots has been changed or replaced with non-real data, to protect the privacy of the organisation and its users.'
   - The project was volunteer work on my part. I wanted it to add experience and an extra point to my career, and at the same time deliver a real solution that makes the daily work easier.
 ar:
+  title: 'نظام الإدارة'
   role: 'المنتج والتطوير المتكامل'
+  stack: ['تصميم المنتج', 'تمثيل البيانات', 'تصميم لوحات المعلومات']
   summary: 'عرض واحد للإشغال والسعة وعمليات الليل في كل المباني.'
   headline: 'نظرة عامة على الإشغال والسعة وعمليات الليل في كل المباني.'
   tags: ['مبادرة']

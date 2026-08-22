@@ -20,7 +20,7 @@ const rows = copy.rows;
           <div class="when">{r.when}</div>
           <div class="body">
             <div class="role">{r.role}</div>
-            <p>{r.desc}</p>
+            {r.desc && <p>{r.desc}</p>}
           </div>
         </div>
       ))

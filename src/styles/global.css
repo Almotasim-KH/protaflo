@@ -356,40 +356,6 @@ html[data-arriving]::after {
   transform: scaleX(1);
 }
 
-/* ---- Filter pills ---- */
-.filter-pill {
-  font-family: inherit;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  min-height: 40px;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 10px 22px;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  background:
-    linear-gradient(var(--color-canvas), var(--color-canvas)) padding-box,
-    var(--flow-ring) border-box;
-  animation: var(--flow-spin);
-  color: var(--color-ink-muted);
-  white-space: nowrap;
-  transition:
-    color 0.2s linear,
-    opacity 0.2s linear;
-}
-.filter-pill:hover {
-  color: var(--color-ink);
-}
-/* Selected pill drops out of the flow: solid ink, no ring. The one element that
-   is not moving is the one that is currently true. */
-.filter-pill.is-on {
-  background: var(--color-ink);
-  border-color: var(--color-ink);
-  animation: none;
-  color: var(--color-canvas);
-}
-
 /* Static highlighter behind a word (headings) — hand-cut tape block: slightly
    tilted, with non-parallel edges so it reads as a torn swatch, not a <mark>. */
 .mark {
@@ -529,7 +495,6 @@ html.is-scroll-locked body {
 /* Touch pointers get 44px on every pill-shaped control (WCAG 2.5.5 / HIG).
    Gated on `pointer: coarse` so mouse layouts keep their tighter rhythm. */
 @media (pointer: coarse) {
-  .filter-pill,
   .pill {
     min-height: 44px;
   }

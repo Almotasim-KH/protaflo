@@ -10,13 +10,9 @@ interface Props {
 const { projects } = Astro.props;
 const copy = t(getLangFromUrl(Astro.url)).work;
 
-// Two categories only — no "all" pill, so the grid always shows one discipline.
-// The first entry is the default; filters.ts applies it on init. `value` is the
-// content-collection category and never translates; only the label does.
-const filters = [
-  { value: 'analysis', label: copy.analysis },
-  { value: 'developing', label: copy.developing },
-];
+// The grid shows every project, ordered by `order` in the frontmatter. There is
+// no discipline filter: with this few projects, hiding half the work behind a
+// pill cost more than it organised.
 ---
 
 <section id="work" class="work" aria-labelledby="work-title">
@@ -28,20 +24,6 @@ const filters = [
             class="mark-bg"></span></span></span
       >
     </h2>
-    <div class="filters" data-filters data-reveal role="group" aria-label={copy.filtersLabel}>
-      {
-        filters.map((f, i) => (
-          <button
-            type="button"
-            class:list={['filter-pill', i === 0 && 'is-on']}
-            data-filter={f.value}
-            aria-pressed={i === 0 ? 'true' : 'false'}
-          >
-            {f.label}
-          </button>
-        ))
-      }
-    </div>
   </div>
 
   <div class="grid" data-work-grid data-reveal>
@@ -74,11 +56,6 @@ const filters = [
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.05;
-  }
-  .filters {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
   }
   .grid {
     display: grid;
