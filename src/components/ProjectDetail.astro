@@ -62,7 +62,7 @@ slots.forEach((img, i) => {
 });
 ---
 
-<Base title={`${data.title} — ${t(lang).meta.home}`} description={data.summary}>
+<Base title={`${data.title} | ${t(lang).meta.home}`} description={data.summary}>
   <main id="main" class="detail">
     <div class="inner">
       <div class="topbar">
@@ -181,7 +181,7 @@ slots.forEach((img, i) => {
                             'data-zoom': true,
                             role: 'button',
                             tabindex: 0,
-                            'aria-label': `${copy.zoom} — ${captions[i] ?? copy.screen(data.title, i + 1)}`,
+                            'aria-label': `${copy.zoom}: ${captions[i] ?? copy.screen(data.title, i + 1)}`,
                           }
                         : {}}
                     />
