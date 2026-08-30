@@ -40,11 +40,11 @@ galleryGroups:
     label: "Empty states, because a new user's first screen has no data in it"
 link: 'https://budgettr.com/'
 body:
-  - "1. Context: Personal problem — spending was scattered across the month with no way to see where it went, so I built a tool to fix that for myself first."
+  - "1. Context: Personal problem. Spending was scattered across the month with no way to see where it went, so I built a tool to fix that for myself first."
   - "2. Problem: Without a clear monthly view, tracking expenses meant flipping between notes and bank statements, and a savings goal stayed a guess instead of something you could measure."
-  - "3. Approach: I built it around a monthly cycle — set income and categories at the start, log expenses against them, and watch a savings goal update as you go. I could have wrapped an existing budgeting app instead, but none of them fit Arabic/English and SAR the way this needed to, so I built it from scratch."
-  - "4. Result: A live dashboard — Budgettr — covering income, category budgets, bills and goals, in both Arabic and English, with dark and light mode."
-  - "5. Lesson: Using something you build for yourself every day surfaces the small annoyances — empty states, bill reminders — that a spec would never catch."
+  - "3. Approach: I built it around a monthly cycle: set income and categories at the start, log expenses against them, and watch a savings goal update as you go. I could have wrapped an existing budgeting app instead, but none of them fit Arabic/English and SAR the way this needed to, so I built it from scratch."
+  - "4. Result: A live dashboard, Budgettr, covering income, category budgets, bills and goals, in both Arabic and English, with dark and light mode."
+  - "5. Lesson: Using something you build for yourself every day surfaces the small annoyances, like empty states and bill reminders, that a spec would never catch."
 ar:
   title: 'Budgettr'
   role: 'عمل خاص'
@@ -53,11 +53,11 @@ ar:
   headline: 'لوحة إدارية تنظم فيها مصروفك في بداية كل شهر. بحيث توصل لرؤية واضحة للمصروفات في الشهر ودليل تقدر ترجع له.'
   tags: ['مشروع شخصي']
   body:
-    - "1. السياق: مشكلة شخصية — مصروفاتي كانت متوزعة على طول الشهر وما عندي طريقة أشوف وين راحت، فقررت أبني أداة تحلها لي أنا أول شيء."
+    - "1. السياق: مشكلة شخصية. مصروفاتي كانت متوزعة على طول الشهر وما عندي طريقة أشوف وين راحت، فقررت أبني أداة تحلها لي أنا أول شيء."
     - "2. المشكلة: بدون رؤية واضحة للشهر، تتبع المصروفات يعني تتنقل بين الملاحظات وكشف الحساب، وهدف الادخار يضل تخمين مو شي تقدر تقيسه."
-    - "3. القرار: بنيتها حول دورة شهرية — تحدد الدخل والفئات في البداية، تسجل مصروفاتك عليها، وتشوف هدف الادخار يتحدث أول بأول. كان ممكن أستخدم تطبيق ميزانية جاهز، بس ولا وحد منها يناسب العربي والإنجليزي والريال السعودي بالشكل اللي أحتاجه، فبنيتها من الصفر."
-    - "4. النتيجة: لوحة تعمل فعليًا — Budgettr — تغطي الدخل وميزانية كل فئة والفواتير والأهداف، بالعربي والإنجليزي، بوضع نهاري وليلي."
-    - "5. الدرس: لما تستخدم الشي اللي تبنيه بنفسك يوميًا، تكتشف التفاصيل الصغيرة — الحالات الفارغة، تذكير الفواتير — اللي أي مواصفة ما راح تلقطها."
+    - "3. القرار: بنيتها حول دورة شهرية: تحدد الدخل والفئات في البداية، تسجل مصروفاتك عليها، وتشوف هدف الادخار يتحدث أول بأول. كان ممكن أستخدم تطبيق ميزانية جاهز، بس ولا وحد منها يناسب العربي والإنجليزي والريال السعودي بالشكل اللي أحتاجه، فبنيتها من الصفر."
+    - "4. النتيجة: لوحة تعمل فعليًا اسمها Budgettr، تغطي الدخل وميزانية كل فئة والفواتير والأهداف، بالعربي والإنجليزي، بوضع نهاري وليلي."
+    - "5. الدرس: لما تستخدم الشي اللي تبنيه بنفسك يوميًا، تكتشف التفاصيل الصغيرة، مثل الحالات الفارغة وتذكير الفواتير، اللي أي مواصفة ما راح تلقطها."
   captions:
     - 'لوحة التحكم: صافي الشهر، والدخل مقابل المصروفات، وتقدّم كل فئة من الميزانية، وتذكيرات الفواتير، ونسب الأهداف في شاشة واحدة.'
     - 'المعاملات: كل عملية بفئتها وملاحظتها وتاريخها، مع فلترة بالشهر والفئة والنوع، ويعاد حساب الدخل والمصروفات والصافي فوق القائمة.'

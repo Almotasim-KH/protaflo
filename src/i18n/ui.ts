@@ -306,8 +306,8 @@ const copy = {
       {
         when: L('2026', '2026'),
         role: L(
-          'Freelance full-stack — Coffee Shop Website',
-          'عمل حر — موقع متجر القهوة'
+          'Freelance full-stack, Coffee Shop Website',
+          'عمل حر، موقع متجر القهوة'
         ),
         // Built and handed over, but never went live: the launch waits on API
         // access the client has to supply, so the copy says built, not live.
@@ -318,7 +318,7 @@ const copy = {
       },
       {
         when: L('2025', '2025'),
-        role: L('Revenue dashboards — Power BI', 'لوحات الإيرادات — Power BI'),
+        role: L('Revenue dashboards, Power BI', 'لوحات الإيرادات، Power BI'),
         desc: L(
           'Twelve-plus internal Excel sources folded into one Power BI view: Python for the prep, Figma for the layout. The 2025 rebuild added average performance rates and faster drill-down.',
           'دمج أكثر من 12 مصدر Excel داخلي في لوحة واحدة: Python للتحضير وFigma للتصميم. نسخة 2025 أضافت معدلات الأداء المتوسطة وتنقّلًا أسرع في تفاصيل البيانات.'
@@ -333,10 +333,10 @@ const copy = {
         ),
       },
       {
-        when: L('2025 — now', '2025 — الآن'),
+        when: L('2025 to now', '2025 إلى الآن'),
         role: L(
-          'Front Desk Group Leader — Namariq',
-          'مسؤول قسم الاستقبال — نمارق'
+          'Front Desk Group Leader, Namariq',
+          'مسؤول قسم الاستقبال، نمارق'
         ),
         desc: L(
           'Lead the front desk team and own the daily operational reports that other departments rely on in their decision-making.',
@@ -345,22 +345,22 @@ const copy = {
       },
       {
         when: L('2024', '2024'),
-        role: L('YCATThon — participant', 'المشاركة في YCATThon'),
+        role: L('YCATThon participant', 'المشاركة في YCATThon'),
         desc: L(
           'Fourth place out of forty-four teams. The hackathon ran across several sectors; I entered the tourism track.',
           'المركز الرابع من بين أربعة وأربعين فريقًا. فكرة المسابقة كانت في عدة قطاعات، وأنا اخترت السياحي.'
         ),
       },
       {
-        when: L('2023 — 2025', '2023 — 2025'),
-        role: L('Front Desk Clerk — Namariq', 'موظف استقبال — نمارق'),
+        when: L('2023 to 2025', '2023 إلى 2025'),
+        role: L('Front Desk Clerk, Namariq', 'موظف استقبال، نمارق'),
         desc: L(
           'Handled guest and visitor services, managed reservation correspondence, responded to emails, and performed night audit operations.',
           'خدمة النزلاء والزوار، وإدارة الحجوزات، والرد على البريد الإلكتروني، وتنفيذ عمليات التدقيق الليلي.'
         ),
       },
       {
-        when: L('2023 — 2025', '2023 — 2025'),
+        when: L('2023 to 2025', '2023 إلى 2025'),
         role: L('UI/UX Designer', 'مصمم واجهات مستخدم'),
         desc: L(
           'Designed wireframes, web interfaces, and mobile applications for clients using Figma.',
@@ -368,7 +368,7 @@ const copy = {
         ),
       },
       {
-        when: L('2018 — 2023', '2018 — 2023'),
+        when: L('2018 to 2023', '2018 إلى 2023'),
         role: L('Assorted work', 'أعمال مختلفة'),
         // Deliberately no detail line — this row is there for the timeline, not
         // for a story. `desc` is optional, and optional for both locales at

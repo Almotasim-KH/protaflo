@@ -32,9 +32,9 @@ galleryGroups:
     label: "Admin panel, what the owner runs the store from"
 body:
   - "1. Context: A client came with a product line and no way to sell it online or see where the business stood day to day."
-  - "2. Problem: Every sale, every stock check, every new customer was invisible to him — no storefront, no dashboard, no record of what was actually moving."
-  - "3. Approach: I built both sides at once — a storefront customers buy from, and an admin panel covering sales, orders, products, branches and an activity log, so nothing changes without a trace. A ready-made e-commerce platform would have gotten a store live faster, but the client needed his own control panel and a design built around his brand, not a template, so I built it full-stack instead."
-  - "4. Result: The build is finished and packaged in Docker as a portable unit; it's parked one step from launch — the payment gateway and delivery integration need API keys only the client can issue."
+  - "2. Problem: Every sale, every stock check, every new customer was invisible to him. No storefront, no dashboard, no record of what was actually moving."
+  - "3. Approach: I built both sides at once: a storefront customers buy from, and an admin panel covering sales, orders, products, branches and an activity log, so nothing changes without a trace. A ready-made e-commerce platform would have gotten a store live faster, but the client needed his own control panel and a design built around his brand, not a template, so I built it full-stack instead."
+  - "4. Result: The build is finished and packaged in Docker as a portable unit; it's parked one step from launch, because the payment gateway and delivery integration need API keys only the client can issue."
   - "5. Lesson: This is where I first used APIs, payment gateways and delivery interfaces for real, and learned to package a whole app with Docker so it's easy to hand off and move."
 ar:
   # The project's name, not a phrase — it stays Latin in Arabic like Budgettr,
@@ -47,9 +47,9 @@ ar:
   tags: ['طلب من عميل']
   body:
     - "1. السياق: عميل عنده منتجات وما عنده طريقة يبيعها أونلاين ولا يشوف وضع متجره يوم بيوم."
-    - "2. المشكلة: كل عملية بيع، وكل فحص مخزون، وكل عميل جديد كان غير مرئي له — لا متجر، ولا Dashboard، ولا سجل يوضح وش يتحرك فعليًا."
-    - "3. القرار: بنيت الطرفين مع بعض — واجهة يشتري منها العميل، ولوحة إدارية تغطي المبيعات والطلبات والمنتجات والفروع مع سجل نشاط، بحيث أي تعديل يترك أثر. كان ممكن أستخدم منصة تجارة إلكترونية جاهزة يطلع فيها المتجر أسرع، بس العميل يحتاج لوحة تحكم خاصة فيه وتصميم يناسب هويته مو قالب، فبنيتها متكاملة من الصفر."
-    - "4. النتيجة: العمل منتهي ومغلف بـDocker كوحدة متنقلة؛ واقف عند خطوة واحدة قبل الإطلاق — بوابة الدفع وربط التوصيل يحتاجون مفاتيح API ما يصدرها إلا العميل."
+    - "2. المشكلة: كل عملية بيع، وكل فحص مخزون، وكل عميل جديد كان غير مرئي له. لا متجر، ولا Dashboard، ولا سجل يوضح وش يتحرك فعليًا."
+    - "3. القرار: بنيت الطرفين مع بعض: واجهة يشتري منها العميل، ولوحة إدارية تغطي المبيعات والطلبات والمنتجات والفروع مع سجل نشاط، بحيث أي تعديل يترك أثر. كان ممكن أستخدم منصة تجارة إلكترونية جاهزة يطلع فيها المتجر أسرع، بس العميل يحتاج لوحة تحكم خاصة فيه وتصميم يناسب هويته مو قالب، فبنيتها متكاملة من الصفر."
+    - "4. النتيجة: العمل منتهي ومغلف بـDocker كوحدة متنقلة؛ واقف عند خطوة واحدة قبل الإطلاق، لأن بوابة الدفع وربط التوصيل يحتاجون مفاتيح API ما يصدرها إلا العميل."
     - "5. الدرس: هذا أول مشروع استخدمت فيه APIs وبوابات الدفع وواجهات التوصيل بشكل حقيقي، وتعلمت أغلف برنامج كامل بـDocker بحيث يكون سهل التسليم والنقل."
   captions:
     - 'الرئيسية: الواجهة، وثلاثة مداخل، والأكثر مبيعًا مع الإضافة للسلة من البطاقة نفسها، وقصة المنشأ في أربع خطوات.'
