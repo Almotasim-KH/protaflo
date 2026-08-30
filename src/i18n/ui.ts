@@ -88,9 +88,18 @@ function resolve<T>(node: T, lang: Lang): Resolve<T> {
 // script needs those spans in the markup, not inside a string.
 const copy = {
   meta: {
-    // Browser-tab title. The name already sits in the nav and the hero, so the
-    // tab says what the site is instead of repeating it.
-    home: L('Portfolio', 'موقع تعريفي'),
+    // Browser-tab title, search result and share-card headline — all three read
+    // this one string, so it has to answer who and what on its own. "Portfolio"
+    // alone did not: it carried no name, no discipline and no place, which is
+    // the single heaviest SEO signal on the page spent on nothing.
+    home: L(
+      'Almotasim Khairullah — Web Developer & Data Analyst · Yanbu',
+      'المعتصم خير الله — مطوّر ويب ومحلل بيانات · ينبع'
+    ),
+    // Suffix for inner pages: the project's own name leads and this follows, so
+    // a project tab reads "Budgettr — Almotasim Khairullah" rather than
+    // repeating the whole home title after every slug.
+    siteName: L('Almotasim Khairullah', 'المعتصم خير الله'),
     description: L(
       'Almotasim Khairullah, developer and data analyst in Yanbu. I build the interface and the model behind it.',
       'المعتصم خير الله مطوّر ومحلل بيانات في ينبع. أبني الواجهة والنموذج الذي خلفها.'
@@ -115,9 +124,17 @@ const copy = {
     line2Pre: L('Data that ', 'وبيانات '),
     line2Muted: L('explains', 'تشرح'),
     line2Post: L(' itself', ' نفسها'),
-    sublinePre: L('We are the ', 'نحن '),
-    sublineScramble: L('vision', 'رؤية'),
-    sublinePost: L(' of 2030', ' 2030'),
+    // The line under the title has to answer who / what / where before the
+    // reader decides to stay. It used to read "We are the vision of 2030",
+    // which named no person, no discipline and no place — and said "we" for one
+    // person. The sentence that replaces it is the one already written as the
+    // meta description, where only search engines were seeing it.
+    sublinePre: L('Web developer and data ', 'مطوّر ويب ومحلل '),
+    sublineScramble: L('analyst', 'بيانات'),
+    sublinePost: L(
+      ' in Yanbu. I build the interface and the model behind it.',
+      ' في ينبع. أبني الواجهة والنموذج الذي خلفها.'
+    ),
   },
   work: {
     // Chapter title. The old heading named the section; this one states what the
@@ -169,9 +186,11 @@ const copy = {
       },
       {
         id: 'hours',
-        count: '9',
-        value: L('9 hrs', '9 ساعات'),
-        label: L('Manual reporting saved every week', 'من التقارير اليدوية موفرة كل أسبوع'),
+        // One hour, not a countable climb — this line arrives rather than
+        // counting, same as the range above it.
+        count: null,
+        value: L('1 hr', 'ساعة واحدة'),
+        label: L('Manual reporting saved every morning', 'من التقارير اليدوية موفرة كل صباح'),
         source: L('Camp Operations Dashboard', 'لوحة العمليات التشغيلية'),
       },
       {

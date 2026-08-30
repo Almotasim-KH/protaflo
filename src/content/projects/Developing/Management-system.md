@@ -3,11 +3,20 @@ title: Management System
 role: Product & Full-stack Development
 year: 2026
 category: developing
-tags: [initiative]
+tags: [internal]
 order: 5
 summary: A single view of occupancy, capacity and night operations across every building.
 cover: ../../../assets/horizon/cover.png
-client: client
+# Built on the job, for the team — the body has always said "volunteer
+# initiative", so "Client Work" on the card and the spec row contradicted the
+# page's own first sentence. `internal` renders as "Internal Work".
+client: internal
+# The home page's evidence rail and the About section both state that a platform
+# I shipped is used by 30 people, and both name this project as the source — so
+# the number has to be visible on the page a reader opens to check it.
+stats:
+  - value: "30"
+    label: "People using it"
 headline: Overview of occupancy, capacity and night operations across every building.
 stack: [Product Design, Data Visualisation, Dashboard Design]
 gallery:
@@ -35,7 +44,10 @@ ar:
   stack: ['تصميم المنتج', 'تمثيل البيانات', 'تصميم لوحات المعلومات']
   summary: 'عرض واحد للإشغال والسعة وعمليات الليل في كل المباني.'
   headline: 'نظرة عامة على الإشغال والسعة وعمليات الليل في كل المباني.'
-  tags: ['مبادرة']
+  tags: ['عمل داخلي']
+  stats:
+    - value: "٣٠"
+      label: "شخصًا يستخدمونها"
   body:
     - "1. السياق: مبادرة تطوعية. موظفو منشأة سكنية كانوا يسوون عد النزلاء وحالة المباني يدويًا كل ليلة."
     - "2. المشكلة: الـNight Audit وفحص الإشغال كانا خطوات يدوية متفرقة، فالموظف يقضي الوردية يطارد الأرقام بدل ما يديرها، والإدارة ما عندها شاشة واحدة توضح وضع اليوم."

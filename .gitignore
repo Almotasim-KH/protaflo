@@ -28,3 +28,7 @@ lab/shots/
 lab/mobile/
 lab/reduced/
 lab/ar/
+
+# scratch work kept beside the repo, not part of the site
+/Projects/
+/scrollcraft/

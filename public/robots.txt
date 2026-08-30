@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://almotasim-kh.com/sitemap-index.xml

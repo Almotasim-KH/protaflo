@@ -62,7 +62,7 @@ slots.forEach((img, i) => {
 });
 ---
 
-<Base title={`${data.title} | ${t(lang).meta.home}`} description={data.summary}>
+<Base title={`${data.title} — ${t(lang).meta.siteName}`} description={data.summary}>
   <main id="main" class="detail">
     <div class="inner">
       <div class="topbar">
@@ -275,6 +275,12 @@ slots.forEach((img, i) => {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: clamp(16px, 3vw, 32px);
+  }
+  /* A project with one verified figure states one, rather than padding the bar
+     out to three. auto-fit would stretch a lone card the full page width and
+     read as a layout fault, so a single stat keeps a card's proportions. */
+  .stats:has(.stat:only-child) {
+    grid-template-columns: minmax(220px, 360px);
   }
   .stat {
     display: flex;
