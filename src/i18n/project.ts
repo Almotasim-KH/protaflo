@@ -21,5 +21,12 @@ export function localizeProject(data: ProjectData, lang: Lang): ProjectData {
     body: ar.body,
     stack: ar.stack,
     stats: ar.stats ?? data.stats,
+    captions: ar.captions ?? data.captions,
+    // `at` is shared — only the label is translated, and the two lists are the
+    // same length by schema, so index alignment is safe here.
+    galleryGroups: data.galleryGroups?.map((g, i) => ({
+      at: g.at,
+      label: ar.galleryGroups?.[i] ?? g.label,
+    })),
   };
 }

@@ -1,0 +1,65 @@
+---
+// The folio — a running head, not a nav bar.
+//
+// The page is set as a chaptered feature, so the top margin carries what a
+// printed feature's margin carries: whose page it is, which chapter you are in,
+// and the few places you can go, set as running text rather than as buttons.
+// A pill with a wordmark and a filled call to action is the shape this page is
+// specifically not.
+//
+// Its ink flips with the ground under it (the page hard-cuts between the cream
+// canvas and the dark plate) — chapters.ts owns that.
+import { getLangFromUrl, localizePath, t } from '../i18n/ui';
+
+const lang = getLangFromUrl(Astro.url);
+const copy = t(lang).nav;
+const cvHref = '/cv.pdf';
+
+// The switch points at the same page in the other language, so /work/budgettr/
+// goes to /ar/work/budgettr/ instead of bouncing the reader home.
+const other = lang === 'en' ? 'ar' : 'en';
+const otherHref = localizePath(Astro.url.pathname, other);
+
+// Under ~430px the full name cannot sit beside three links at a readable size.
+const brandShort = copy.brand.split(' ')[0];
+---
+
+<div class="folio" data-folio>
+  <a href={localizePath('/', lang)} class="folio-brand"
+    ><span class="b-full">{copy.brand}</span><span class="b-short">{brandShort}</span></a
+  >
+
+  {/* Position readout. Empty on the title plate, filled from chapter one on. */}
+  <div class="folio-here" data-folio-here aria-hidden="true">
+    <span class="n" data-folio-num></span>
+    <span class="t" data-folio-title></span>
+  </div>
+
+  <div class="folio-links">
+    <a href={cvHref}>{copy.cv}</a>
+    {/* Full reload: direction, fonts and every motion module are set up at
+        document level, so a client-side swap would leave the old dir in place. */}
+    <a href={otherHref} lang={other} hreflang={other} aria-label={copy.switchLabel} data-astro-reload
+      >{copy.switchTo}</a
+    >
+    <a href={localizePath('/#contact', lang)} class="is-ask">{copy.cta}</a>
+  </div>
+</div>
+
+{/* Page progress, drawn along the very top edge rather than counted out in a
+    percentage. Scaled, never width-animated. */}
+<div class="folio-rule" data-folio-rule aria-hidden="true"></div>
+
+<style>
+  .b-short {
+    display: none;
+  }
+  @media (max-width: 430px) {
+    .b-full {
+      display: none;
+    }
+    .b-short {
+      display: inline;
+    }
+  }
+</style>

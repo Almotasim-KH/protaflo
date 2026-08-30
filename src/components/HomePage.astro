@@ -4,13 +4,14 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Preloader from './Preloader.astro';
-import Nav from './Nav.astro';
+import Folio from './Folio.astro';
+import Ledger from './Ledger.astro';
+import Evidence from './Evidence.astro';
 import Hero from './Hero.astro';
 import WorkGrid from './WorkGrid.astro';
 import About from './About.astro';
 import Experience from './Experience.astro';
 import Contact from './Contact.astro';
-import Footer from './Footer.astro';
 import { getLangFromUrl, t } from '../i18n/ui';
 
 const copy = t(getLangFromUrl(Astro.url)).meta;
@@ -25,15 +26,20 @@ const shown = projects.filter((p) => p.data.cover || p.data.video);
 
 <Base title={copy.home}>
   <Preloader />
-  <Nav />
+  <Folio />
+  {/* The margin ledger sits outside <main>: it is fixed, and a transformed
+      ancestor (page transitions, parallax) would capture it. */}
+  <Ledger />
   <main id="main">
     <Hero />
     <WorkGrid projects={shown} />
     <About />
     <Experience />
+    <Evidence />
     <Contact />
   </main>
-  {/* Outside <main>: the glow is position: fixed, and a transformed ancestor
-      (page transitions, parallax) would capture it. */}
-  <Footer />
+  {/* No footer on the home page. The feature ends on its colophon, and a link
+      farm under it would overwrite the one screen the reader is meant to leave
+      with. The footer still closes the project pages, which are documents rather
+      than a feature and do want a way out at the bottom. */}
 </Base>

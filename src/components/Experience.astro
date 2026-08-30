@@ -1,75 +1,78 @@
 ---
+// Chapter three: the record.
+//
+// The dates are lifted out of the rows and set as a sticky column beside them,
+// so the list reads as a rail of years being walked past rather than as a table
+// with a date field. The year level with the reader is the one in full ink;
+// plate.ts owns that.
+//
+// Two rows carry release points for the margin ledger, and both figures are
+// stated in the row itself: fourth of forty-four teams at YCATThon, and around
+// three hundred participants in the LinkedIn challenge.
+import Chapter from './Chapter.astro';
 import { getLangFromUrl, t } from '../i18n/ui';
 
-const copy = t(getLangFromUrl(Astro.url)).experience;
+const lang = getLangFromUrl(Astro.url);
+const all = t(lang);
+const copy = all.experience;
 const rows = copy.rows;
+
+// Row index → ledger ids. Indexed rather than matched on text so a translation
+// can never move a release point off the row that states the figure.
+const stamps: Record<number, string> = { 2: 'participants', 4: 'teams' };
 ---
 
-<section id="experience" class="exp" aria-labelledby="exp-title">
-  <div class="head">
-    <div class="eyebrow" data-reveal>{copy.eyebrow}</div>
-    <h2 id="exp-title" data-headline data-speed="1.14"><span class="hl"
-        >{copy.titleLead}<br /><span class="mark"><span class="mark-text">{copy.titleMark}</span><span class="mark-bg"
-          ></span></span></span
-      ></h2>
-  </div>
-  <div class="rows" data-reveal-stagger>
-    {
-      rows.map((r) => (
-        <div class="row" data-reveal-item>
-          <div class="when">{r.when}</div>
-          <div class="body">
-            <div class="role">{r.role}</div>
-            {r.desc && <p>{r.desc}</p>}
-          </div>
-        </div>
-      ))
-    }
+<section id="experience" class="exp" data-ground="light" aria-label={all.chapters.three}>
+  <div class="exp-inner">
+    <Chapter numeral={all.chapters.numerals[2]} run={all.chapters.three} title={copy.chapterTitle} />
+
+    <div class="record">
+      {/* The year rail. aria-hidden: every date is also printed inside its own
+          row, where it belongs in the reading order. */}
+      <div class="record-years" data-record-years aria-hidden="true">
+        {rows.map((r) => <span>{r.when}</span>)}
+      </div>
+
+      <div class="rows" data-reveal-stagger>
+        {
+          rows.map((r, i) => (
+            <div class="row" data-reveal-item data-record-row data-stamp={stamps[i]}>
+              <div class="when">{r.when}</div>
+              <div class="body">
+                <div class="role">{r.role}</div>
+                {r.desc && <p>{r.desc}</p>}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
   .exp {
-    padding: 0 clamp(24px, 7vw, 120px) 64px;
-    max-width: 1440px;
+    padding: clamp(30px, 5vw, 60px) clamp(24px, 7vw, 120px) clamp(50px, 8vw, 96px);
+  }
+  .exp-inner {
+    max-width: 1240px;
     margin: 0 auto;
   }
-  .head {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 40px 0 16px;
-  }
-  .eyebrow {
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-ink-muted);
-    font-weight: 500;
-  }
-  h2 {
-    margin: 0;
-    font-size: clamp(34px, 5vw, 56px);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.05;
+  .record {
+    margin-top: clamp(30px, 5vw, 60px);
   }
   .rows {
     display: flex;
     flex-direction: column;
   }
   .row {
-    display: grid;
-    grid-template-columns: 120px 1fr;
-    gap: 32px;
-    padding: 28px 0;
+    padding: 26px 0;
     border-top: 1px solid transparent;
     border-image: var(--flow-rule-x) 1;
     animation: var(--flow-slide);
   }
   /* Each row starts its sweep later than the one above, so the highlight reads
-     as a single pulse running down the list instead of five in lockstep. The
-     divisors are one full cycle split five ways. */
+     as a single pulse running down the list instead of several in lockstep. */
   .row:nth-child(2) {
     animation-delay: calc(var(--flow-dur) / -5);
   }
@@ -85,11 +88,14 @@ const rows = copy.rows;
   .row:last-child {
     border-bottom: 1px solid transparent;
   }
+  /* The date lives in the rail at desktop widths and inside the row once the
+     rail is gone, so it is printed once on screen either way. */
   .when {
-    font-size: 13px;
-    letter-spacing: 0.04em;
+    font-size: 12px;
+    letter-spacing: 0.06em;
     color: var(--color-ink-muted);
-    padding-top: 6px;
+    margin-bottom: 6px;
+    display: none;
   }
   .body {
     display: flex;
@@ -97,7 +103,7 @@ const rows = copy.rows;
     gap: 8px;
   }
   .role {
-    font-size: clamp(20px, 2.4vw, 24px);
+    font-size: clamp(19px, 2.3vw, 23px);
     font-weight: 600;
     letter-spacing: -0.01em;
   }
@@ -106,12 +112,11 @@ const rows = copy.rows;
     font-size: 15px;
     color: var(--color-ink-muted);
     line-height: 1.6;
-    max-width: 520px;
+    max-width: 62ch;
   }
-  @media (max-width: 620px) {
-    .row {
-      grid-template-columns: 1fr;
-      gap: 8px;
+  @media (max-width: 760px) {
+    .when {
+      display: block;
     }
   }
 </style>

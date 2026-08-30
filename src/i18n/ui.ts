@@ -92,7 +92,7 @@ const copy = {
     // tab says what the site is instead of repeating it.
     home: L('Portfolio', 'موقع تعريفي'),
     description: L(
-      'Almotasim Khairullah — developer and data analyst in Yanbu. I build the interface and the model behind it.',
+      'Almotasim Khairullah, developer and data analyst in Yanbu. I build the interface and the model behind it.',
       'المعتصم خير الله مطوّر ومحلل بيانات في ينبع. أبني الواجهة والنموذج الذي خلفها.'
     ),
   },
@@ -120,31 +120,146 @@ const copy = {
     sublinePost: L(' of 2030', ' 2030'),
   },
   work: {
-    eyebrow: L('Selected work', 'أعمال مختارة'),
-    titleLead: L('Work ', 'الأعمال '),
-    titleMark: L('Features', 'المميزة'),
+    // Chapter title. The old heading named the section; this one states what the
+    // chapter is about, which is what a chapter title does in a printed feature.
+    chapterTitle: L('What I built, and what it changed.', 'ما الذي بنيته، وما الذي غيّره.'),
+  },
+  // Chapter folios. The page is set as a printed feature, so each section carries
+  // a number and a running head; the folio in the top margin shows whichever one
+  // the reader is currently inside.
+  chapters: {
+    one: L('The work', 'الأعمال'),
+    two: L('How I work', 'طريقة العمل'),
+    three: L('The record', 'السجل'),
+    four: L('The evidence', 'الدليل'),
+    // Roman numerals are language-independent, but Arabic sets its own digits, so
+    // the pair is written out rather than assumed.
+    numerals: [L('I', '١'), L('II', '٢'), L('III', '٣'), L('IV', '٤')],
+  },
+  // The margin ledger. Every verified figure the reader passes stamps one line
+  // into the rail, and the rail empties itself into the evidence plate at the end.
+  // `value` is rendered as written; `count` is the numeric target where one exists,
+  // and an entry without a count simply appears rather than counting.
+  ledger: {
+    label: L('Evidence', 'الدليل'),
+    // Four words under the heading, once. Without them the rail is a small block
+    // of numbers in the corner and nobody can tell what it is doing or why it is
+    // filling up.
+    caption: L('collected as you read', 'تُجمع أثناء القراءة'),
+    // Template rather than a function: the rail rewrites this string on every
+    // stamp, so the placeholders have to survive being handed to the browser as
+    // a data attribute.
+    of: L('{n} of {total}', '{n} من {total}'),
+    entries: [
+      {
+        id: 'sources',
+        count: '12',
+        value: L('12', '١٢'),
+        label: L('Excel sources merged into one dashboard', 'مصدر Excel مدمج في لوحة واحدة'),
+        source: L('Revenue Analysis 2024', 'تحليل الإيرادات 2024'),
+      },
+      {
+        id: 'minutes',
+        // A range, not a quantity: there is nothing here for a counter to count
+        // up to, so this line simply arrives.
+        count: null,
+        value: L('60 min → under 1', 'أكثر من 60 دقيقة ← أقل من دقيقة'),
+        label: L('Time to find one revenue number', 'الوقت للوصول إلى رقم إيراد واحد'),
+        source: L('Revenue Analysis 2024', 'تحليل الإيرادات 2024'),
+      },
+      {
+        id: 'hours',
+        count: '9',
+        value: L('9 hrs', '9 ساعات'),
+        label: L('Manual reporting saved every week', 'من التقارير اليدوية موفرة كل أسبوع'),
+        source: L('Camp Operations Dashboard', 'لوحة العمليات التشغيلية'),
+      },
+      {
+        id: 'people',
+        count: '30',
+        value: L('30', '٣٠'),
+        label: L('People using one platform I shipped', 'شخصًا يستخدمون منصة أطلقتها'),
+        source: L('Management System', 'نظام الإدارة'),
+      },
+      {
+        id: 'teams',
+        count: '44',
+        value: L('4th of 44', 'الرابع من 44'),
+        label: L('Teams at YCATThon, tourism track', 'فريقًا في YCATThon، المسار السياحي'),
+        source: L('YCATThon 2024', 'YCATThon 2024'),
+      },
+      {
+        id: 'participants',
+        count: '300',
+        value: L('~300', '~300'),
+        label: L('Participants in the LinkedIn data challenge', 'مشاركًا في تحدي البيانات على LinkedIn'),
+        source: L('Sales Analytics Challenge', 'تحدي تحليل المبيعات'),
+      },
+    ],
+  },
+  evidence: {
+    title: L('The evidence', 'الدليل'),
+    lead: L(
+      'Six figures, each one from a project on this page. Nothing here is an estimate.',
+      'ستة أرقام، كل واحد منها من مشروع في هذه الصفحة. لا شيء هنا تقديري.'
+    ),
+    sourceLabel: L('Source', 'المصدر'),
+  },
+  // The close is a colophon, not a call-to-action island: what the page is set in,
+  // what it was built with, and where it was written.
+  colophon: {
+    set: L(
+      'Set in Poppins and IBM Plex Sans Arabic.',
+      'مصفوف بخطي Poppins وIBM Plex Sans Arabic.'
+    ),
+    built: L('Built with Astro, GSAP and Lenis.', 'مبني بـAstro وGSAP وLenis.'),
+    place: L('Written in Yanbu, on the Red Sea coast.', 'كُتب في ينبع، على ساحل البحر الأحمر.'),
   },
   about: {
-    eyebrow: L('About me', 'نبذة عني'),
-    titleLead: L('Half builder,', 'نصف مطوّر،'),
-    titleSecond: L('half ', 'ونصف '),
-    titleMark: L('analyst.', 'محلل.'),
-    paragraphs: [
-      // Leads with the angle most portfolios can't claim: the work came out of
-      // the operation, not from a brief about it. Everything else follows from
-      // that, so it goes first.
+    chapterTitle: L('Half builder, half analyst.', 'نصف مطوّر، ونصف محلل.'),
+    // The proof line goes first and is set larger than the prose: it is the one
+    // claim in the section a reader can check, and every portfolio makes the
+    // claims in the paragraph below it.
+    proof: [
       L(
-        "Hi, I'm Almotasim — I work inside operations, so I saw first-hand where the numbers go missing, and I built the dashboard the team now opens every morning.",
-        'أهلًا، أنا المعتصم — أشتغل داخل العمليات، فشفت من جوّه وين تضيع الأرقام، وبنيت اللوحة اللي يفتحها الفريق كل صباح.'
+        'I worked in web development and data analysis before the AI tools, and after them.',
+        'اشتغلت في تطوير المواقع وتحليل البيانات قبل أدوات الذكاء الاصطناعي وبعدها.'
       ),
       L(
-        "I work between web development and data analysis. I hold a diploma in Web & Tech Development and I'm in the final year of my Data Science bachelor's degree. Working across both makes me see projects differently — the data and what it means, and the interface people actually use.",
-        'أشتغل بين تطوير الويب وتحليل البيانات. حاصل على دبلوم في تطوير الويب والتقنية، وحاليًا بسنتي الأخيرة في بكالوريوس علم البيانات. الدمج بين الاثنين خلّاني أشوف المشاريع بنظرة مختلفة — البيانات وإيش تعني، والواجهة اللي يستخدمها الناس.'
+        'One platform I shipped is used by 30 people, and the dashboards are still open in occupancy reviews.',
+        'إحدى المنصات التي أطلقتها يستخدمها ٣٠ شخصًا، ولوحات البيانات لا تزال تُستخدم في مراجعة حالة الإشغال.'
       ),
-      L(
-        'I plan before writing the first line, and I use AI as a tool that speeds the work up — not a replacement for the decision.',
-        'أفضّل أخطط قبل ما أكتب أول سطر، وأستخدم الذكاء الاصطناعي كأداة تسرّع الشغل، مو كبديل عن القرار.'
-      ),
+    ],
+    paragraph: L(
+      "Hi, I'm Almotasim. I started in tech in 2022, when building a project took weeks, sometimes months. Today it takes far less. The real difference isn't the speed, it's that I know what is happening underneath.",
+      'أهلًا، أنا المعتصم. بدأت أعمل في المجال التقني سنة ٢٠٢٢، لمّا كان بناء المشروع يستغرق أسابيع وأحيانًا أشهر. اليوم يستغرق مدة أقصر بكثير. والفرق الحقيقي مو في السرعة، في إني أعرف وش يصير تحت.'
+    ),
+    // Kept as its own line rather than folded into the paragraph above: the
+    // paragraph is the story, this is the record, and running them together
+    // made the studying read as part of the same sentence as the doing.
+    credentials: L(
+      "I hold a diploma in Web & Tech Development and I'm in the final year of my Data Science bachelor's degree.",
+      'حاصل على دبلوم في تطوير الويب والتقنية، وحاليًا بسنتي الأخيرة في بكالوريوس علم البيانات.'
+    ),
+    practiceTitle: L('How I work', 'طريقة العمل'),
+    // Label plus one rule each. These are working habits, not services — the
+    // label carries the moment, the line carries the rule.
+    practice: [
+      {
+        label: L('Before I start', 'قبل أبدأ'),
+        text: L(
+          'I work the problem by hand before I turn on any tool.',
+          'أفهم المشكلة يدويًا قبل ما أشغل أي أداة.'
+        ),
+      },
+      {
+        label: L('Planning', 'التخطيط'),
+        text: L('I plan before I write the first line.', 'أخطط قبل ما أكتب أول سطر.'),
+      },
+      {
+        label: L('Data', 'البيانات'),
+        text: L('I clean it before any chart.', 'أنظّف قبل أي رسم بياني.'),
+      },
     ],
     // Skills stay in English on the Arabic side too — these are tool and
     // discipline names, and transliterating them read worse than leaving the
@@ -183,9 +298,7 @@ const copy = {
     ],
   },
   experience: {
-    eyebrow: L('Experience', 'الخبرة'),
-    titleLead: L('The short', 'النسخة'),
-    titleMark: L('version.', 'المختصرة.'),
+    chapterTitle: L('The short version.', 'النسخة المختصرة.'),
     // The job is one row; the analytics and engineering work built alongside it
     // gets its own, because none of it is front-desk duty. One array for both
     // locales, so the two timelines always list the same rows in the same order.
@@ -199,8 +312,8 @@ const copy = {
         // Built and handed over, but never went live: the launch waits on API
         // access the client has to supply, so the copy says built, not live.
         desc: L(
-          'A storefront and admin dashboard built end to end: Node.js and SQL behind it, React and TypeScript in front, packaged with Docker. Not launched — the build stopped at the payment and delivery APIs, which are on the client side.',
-          'متجر إلكتروني ولوحة إدارة مبنيان بالكامل: Node.js وSQL في الخلفية، وReact وTypeScript في الواجهة، ومغلّف بـDocker. لم يُطلَق — العمل توقف عند واجهات الدفع والتوصيل، وهي من طرف العميل.'
+          'A storefront and admin dashboard built end to end: Node.js and SQL behind it, React and TypeScript in front, packaged with Docker. Not launched; the build stopped at the payment and delivery APIs, which are on the client side.',
+          'متجر إلكتروني ولوحة إدارة مبنيان بالكامل: Node.js وSQL في الخلفية، وReact وTypeScript في الواجهة، ومغلّف بـDocker. لم يُطلَق؛ العمل توقف عند واجهات الدفع والتوصيل، وهي من طرف العميل.'
         ),
       },
       {
@@ -281,7 +394,6 @@ const copy = {
     place: L('Yanbu · Red Sea Coast', 'ينبع · ساحل البحر الأحمر'),
   },
   contact: {
-    eyebrow: L('Connect with me', 'تواصل معي'),
     titleLead: L("Let's build something", 'لنبنِ شيئًا'),
     titleSecond: L('worth ', 'يستحق '),
     titleMark: L('shipping.', 'الإطلاق.'),
@@ -295,10 +407,10 @@ const copy = {
     // the arrow — a bidi-neutral character — into the RTL run; without it the
     // browser parks it at the far left of the pill, pointing away from its label.
     back: L('← All work', '‏→ كل الأعمال'),
-    // Label on the fold that hides the long-form body on a project page.
+    // Section heading above the long-form body on a project page.
     caseStudy: L('Case study', 'رحلة المشروع'),
-    // The rail's first field is the kind of engagement, not a client name — both
-    // values come from here so a project file only stores the key.
+    // The spec row's first field is the kind of engagement, not a client name —
+    // both values come from here so a project file only stores the key.
     client: L('Project Type', 'نوع المشروع'),
     clientValue: {
       client: L('Client Work', 'عمل لعميل'),
@@ -307,13 +419,16 @@ const copy = {
       // not a side project. The distinction is the point of these pages.
       internal: L('Internal Work', 'عمل داخلي'),
       challenge: L('Competition', 'مسابقة'),
+      // Work started on my own initiative against a real problem, not asked for
+      // by a client and not a side project.
+      initiative: L('Initiative', 'مبادرة'),
     },
-    // Ship state, shown in the rail. `built` is the honest label for work that
+    // Ship state, shown in the spec row. `built` is the honest label for work that
     // is finished on my side but never went live — it must not read as "live".
     status: L('Status', 'الحالة'),
     statusValue: {
       live: L('Live', 'منشور'),
-      built: L('Built — not launched', 'مكتمل — لم يُطلَق'),
+      built: L('Built, not launched', 'مكتمل، لم يُطلَق'),
       wip: L('In progress', 'قيد التطوير'),
     },
     stack: L('Stack', 'الأدوات'),
@@ -329,8 +444,8 @@ const copy = {
       (n: number) => `أضف لقطة ${n}`
     ),
     screen: L(
-      (title: string, n: number) => `${title} — screen ${n}`,
-      (title: string, n: number) => `${title} — لقطة ${n}`
+      (title: string, n: number) => `${title}, screen ${n}`,
+      (title: string, n: number) => `${title}، لقطة ${n}`
     ),
   },
 };

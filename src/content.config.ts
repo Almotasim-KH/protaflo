@@ -25,7 +25,7 @@ const projects = defineCollection({
       // a competition entry. Free text here used to produce odd rail values
       // ("Client: Personal project"), so the label and every value live in i18n
       // (detail.clientValue); adding a kind means adding it in both places.
-      client: z.enum(['client', 'personal', 'internal', 'challenge']),
+      client: z.enum(['client', 'personal', 'internal', 'challenge', 'initiative']),
       headline: z.string(),
       body: z.array(z.string()).min(1),
       // what the thing was actually built with, not the services sold
@@ -35,6 +35,18 @@ const projects = defineCollection({
       // never invented placeholders.
       stats: z.array(z.object({ value: z.string(), label: z.string() })).max(3).optional(),
       gallery: z.array(image()).max(12).optional(),
+      // One line per shot, same order as `gallery`. Without them the shots are
+      // decoration: the reader can see a screen but not what decision it was
+      // built for, and the deliberate work (empty states, disabled controls)
+      // reads as an accident. Either every shot has a line or none do.
+      captions: z.array(z.string()).max(12).optional(),
+      // Headings inside the gallery. `at` is the 1-based index of the shot that
+      // starts the group, so a run of shots can be named ("Empty states") and
+      // the point of the run stops depending on the reader noticing it.
+      galleryGroups: z
+        .array(z.object({ at: z.number().int().min(1), label: z.string() }))
+        .max(6)
+        .optional(),
       // A screen recording shown in place of the gallery on the detail page.
       // Lives in /public (astro:assets is images-only); width/height are the
       // file's real pixels so the tile can reserve its ratio.
@@ -64,6 +76,11 @@ const projects = defineCollection({
         body: z.array(z.string()).min(1),
         stack: z.array(z.string()).min(1),
         stats: z.array(z.object({ value: z.string(), label: z.string() })).max(3).optional(),
+        captions: z.array(z.string()).max(12).optional(),
+        // Labels only — which shot a group starts at is a layout fact, not a
+        // translated one, so `at` stays on the English side and these line up
+        // with it by index.
+        galleryGroups: z.array(z.string()).max(6).optional(),
       }),
     })
       // The list fields are rendered item for item in both locales, so an extra
@@ -84,6 +101,33 @@ const projects = defineCollection({
         // when the reader switches locale.
         const enStats = data.stats?.length ?? 0;
         const arStats = data.ar.stats?.length ?? 0;
+        // A caption list that doesn't match the gallery would silently slide:
+        // shot 4 would carry shot 3's line and nobody would notice.
+        const enCaps = data.captions?.length ?? 0;
+        if (enCaps && enCaps !== (data.gallery?.length ?? 0)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['captions'],
+            message: `captions has ${enCaps} entries but gallery has ${data.gallery?.length ?? 0} — one line per shot, in the same order.`,
+          });
+        }
+        const arCaps = data.ar.captions?.length ?? 0;
+        if (enCaps !== arCaps) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['ar', 'captions'],
+            message: `ar.captions has ${arCaps} entries but captions has ${enCaps} — the two languages must line up item for item.`,
+          });
+        }
+        const enGroups = data.galleryGroups?.length ?? 0;
+        const arGroups = data.ar.galleryGroups?.length ?? 0;
+        if (enGroups !== arGroups) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['ar', 'galleryGroups'],
+            message: `ar.galleryGroups has ${arGroups} labels but galleryGroups has ${enGroups} — the two languages must line up item for item.`,
+          });
+        }
         if (enStats !== arStats) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,

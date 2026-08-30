@@ -525,3 +525,656 @@ html.is-scroll-locked body {
 .skip-link:focus-visible {
   transform: translateY(0);
 }
+
+/* ================================================================
+   CHAPTERED EDITORIAL LAYER
+   The page is set as a printed feature: numbered chapters, hard ground
+   cuts between them, a folio in the top margin instead of a marketing
+   bar, and a colophon instead of a call-to-action island.
+
+   Grounds are painted per section and cut hard. There is deliberately
+   no drift here, because an interpolation between two chapter grounds
+   is exactly the softness this structure exists to refuse.
+   ================================================================ */
+:root {
+  /* Inverted ground, used by the title plate and the
+     evidence plate. One theme family with the cream canvas: the same warm
+     off-black the hero already stands on, one step deeper for the plate so
+     the two dark screens are not mistaken for each other. */
+  --color-plate: #141312;
+  --color-ink-invert: #f4f1ea;
+  --color-ink-invert-muted: #9c968c;
+  --color-hairline-invert: #322f2b;
+
+  /* Editorial measure. Body copy never runs wider than this, whatever
+     column it lands in. */
+  --measure: 62ch;
+
+  /* One easing for every UI transition on this layer. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Any subtree on the dark ground restates `color` alongside the tokens:
+   `color` inherits as a computed value, so redefining --color-ink alone
+   leaves text resolved against the cream body, and the section renders at
+   about 1.2:1 with no rule looking wrong. */
+.on-plate {
+  background: var(--color-plate);
+  color: var(--color-ink-invert);
+  --color-ink: var(--color-ink-invert);
+  --color-ink-muted: var(--color-ink-invert-muted);
+  --color-hairline: var(--color-hairline-invert);
+}
+
+/* ---- Chapter opener ----
+   A rule, a numeral, a running head, then the title. The numeral is
+   information here (this is a chaptered page and the reader is meant to
+   know where they are), which is the one case that earns a section number. */
+.chapter-open {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: 0 clamp(16px, 3vw, 34px);
+  padding-top: clamp(28px, 5vw, 56px);
+  border-top: 1px solid var(--color-hairline);
+}
+.chapter-num {
+  font-size: clamp(11px, 1.4vw, 13px);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--color-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+.chapter-run {
+  font-size: clamp(11px, 1.4vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+.chapter-title {
+  grid-column: 2;
+  margin: clamp(18px, 3vw, 34px) 0 0;
+  font-size: clamp(30px, 4.6vw, 58px);
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  line-height: 1.04;
+  text-wrap: balance;
+  max-width: 16ch;
+}
+@media (max-width: 620px) {
+  .chapter-open {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .chapter-title {
+    grid-column: 1;
+  }
+}
+
+/* ---- The folio ----
+   A running head, not a nav bar: the reader's position in the feature, set
+   in the top margin at footnote size, carrying the page's controls as
+   running text rather than as buttons. Its ink flips with whatever ground
+   is under it. See chapters.ts. */
+.folio {
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 28px);
+  padding: 14px clamp(16px, 7vw, 120px);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--folio-ink, var(--color-ink));
+  transition:
+    color 0.4s var(--ease-out),
+    border-color 0.4s var(--ease-out);
+  border-bottom: 1px solid transparent;
+  pointer-events: none;
+}
+/* Past the title plate the folio earns a hairline, so it separates from the
+   text it rides over instead of floating on it. */
+.folio.is-ruled {
+  border-bottom-color: color-mix(in srgb, var(--folio-ink, currentColor) 16%, transparent);
+  background: color-mix(in srgb, var(--folio-ground, var(--color-canvas)) 86%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.folio a {
+  pointer-events: auto;
+  color: inherit;
+}
+.folio-brand {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+}
+/* The live position readout. Empty on the title plate, filled from the first
+   chapter on. The numeral changes most often, so it leads. */
+.folio-here {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+}
+.folio-here.is-on {
+  opacity: 1;
+}
+.folio-here .n {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  opacity: 0.6;
+}
+.folio-here .t {
+  text-transform: uppercase;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.folio-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.6vw, 22px);
+  white-space: nowrap;
+}
+.folio-links a {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.16s var(--ease-out);
+}
+.folio-links a:hover {
+  border-bottom-color: currentColor;
+}
+.folio-links a.is-ask {
+  font-weight: 600;
+  border-bottom-color: var(--color-accent);
+}
+/* A hairline along the very top edge: the folio's page number, drawn rather
+   than counted. */
+.folio-rule {
+  position: fixed;
+  top: 0;
+  inset-inline-start: 0;
+  height: 2px;
+  width: 100%;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  z-index: 31;
+  pointer-events: none;
+}
+[dir='rtl'] .folio-rule {
+  transform-origin: right center;
+}
+@media (pointer: coarse) {
+  .folio-links a,
+  .folio-brand {
+    min-height: 44px;
+  }
+}
+@media (max-width: 700px) {
+  .folio {
+    padding-inline: 16px;
+    gap: 12px;
+  }
+  /* The running head is the first thing to go: on a phone the controls are
+     what the reader needs from the margin, and the chapter title is already
+     on screen a few hundred pixels below. */
+  .folio-here {
+    display: none;
+  }
+  /* The readout is also the flex spacer that holds the links against the
+     trailing edge. With it gone the links collapse into the brand, so the
+     margin has to be re-made explicitly. */
+  .folio-links {
+    margin-inline-start: auto;
+  }
+}
+
+/* ---- The evidence band ----
+   The signature move. Every verified figure the page passes stamps itself into a
+   band at the foot of the window, with the project it came from, and the band
+   hands the whole set to the evidence plate at the end.
+
+   It was built as a margin rail first, and that was wrong: this page runs at a
+   1240px measure inside clamp(24px, 7vw, 120px) gutters, so there is no outer
+   margin at any width a reader actually has. A rail in a margin that does not
+   exist sits on top of the reading column, which is what it did. A band along
+   the foot steals 40px of viewport, is legible over anything, and says what it
+   is on its face instead of being a block of numbers in a corner.
+
+   Only real numbers ever enter it. No figure in the content, no line here. */
+.ledger {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 25;
+  pointer-events: none;
+  display: flex;
+  align-items: baseline;
+  gap: clamp(10px, 2vw, 28px);
+  padding: 11px clamp(16px, 7vw, 120px) 12px;
+  background: var(--color-canvas);
+  border-top: 1px solid var(--color-hairline);
+  opacity: 0;
+  transform: translate3d(0, 100%, 0);
+  transition:
+    opacity 0.45s var(--ease-out),
+    transform 0.55s var(--ease-out),
+    background-color 0.4s var(--ease-out);
+}
+/* The band rises out of the bottom edge the first time a figure is stamped, so
+   its arrival is itself the first thing it says. */
+.ledger.is-on {
+  opacity: 1;
+  transform: none;
+}
+/* Over the dark chapters the band flips with the ground. */
+.ledger.on-dark {
+  background: var(--color-plate);
+  border-top-color: var(--color-hairline-invert);
+  --ledger-ink: var(--color-ink-invert);
+  --ledger-ink-muted: var(--color-ink-invert-muted);
+}
+.ledger-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ledger-ink-muted, var(--color-ink-muted));
+  white-space: nowrap;
+}
+.ledger-count {
+  font-variant-numeric: tabular-nums;
+  color: var(--ledger-ink, var(--color-ink));
+  font-weight: 600;
+}
+/* What the band is, said once, in the smallest type on it. */
+.ledger-caption {
+  margin: 0;
+  font-size: 11px;
+  color: var(--ledger-ink-muted, var(--color-ink-muted));
+  white-space: nowrap;
+}
+/* One row, holding whichever figure was stamped last. The rest of the record is
+   still in the DOM underneath it, which is what the plate collects at the end. */
+.ledger-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 17px;
+}
+.ledger-line {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  min-width: 0;
+  color: var(--ledger-ink, var(--color-ink));
+  /* Stamped, not faded in: it arrives already at size and settles the last few
+     percent, the way a stamp meets paper. */
+  opacity: 0;
+  transform: translateY(5px) scale(1.05);
+  transition:
+    opacity 0.3s var(--ease-out),
+    transform 0.3s var(--ease-out);
+}
+.ledger-line.is-stamped {
+  opacity: 1;
+  transform: none;
+}
+/* Only the newest is shown. An older line is still stamped, still counted, and
+   still collected by the plate; it has simply been read already. It leaves
+   faster than the new one arrives, because the two share one row and a
+   symmetrical crossfade renders both figures on top of each other. */
+.ledger-line.is-past {
+  opacity: 0;
+  transition: opacity 0.14s var(--ease-out);
+}
+.ledger-v {
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.ledger-s {
+  font-size: 11px;
+  color: var(--ledger-ink-muted, var(--color-ink-muted));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* The handoff. The band does not simply stop being there: it drops back out of
+   the bottom edge as the evidence plate takes its lines, so the two read as one
+   motion instead of two things happening at once. */
+.ledger.is-handoff {
+  transform: translate3d(0, 100%, 0);
+}
+@media (max-width: 700px) {
+  /* The caption has done its work by the time the band is this narrow, and the
+     figure is what has to survive. */
+  .ledger-caption {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ledger,
+  .ledger.is-handoff {
+    transform: none;
+  }
+  .ledger-line {
+    transform: none;
+  }
+}
+
+/* ---- Evidence plate, the peak ---- */
+/* The peak holds the most scroll room on the page: the plate is the one screen
+   the reader is meant to leave with, and the space under it is what keeps it on
+   screen while they read the last of it. */
+.evidence {
+  padding: clamp(70px, 11vw, 150px) clamp(24px, 7vw, 120px) clamp(120px, 18vw, 250px);
+}
+.evidence-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.evidence-lead {
+  margin: 18px 0 0;
+  max-width: 46ch;
+  font-size: clamp(15px, 1.8vw, 18px);
+  line-height: 1.6;
+  color: var(--color-ink-muted);
+}
+.evidence-list {
+  list-style: none;
+  margin: clamp(40px, 7vw, 84px) 0 0;
+  padding: 0;
+  display: grid;
+  /* Six across in threes leaves the last row with two, and the two take the
+     wider cells, so the grid resolves instead of trailing into an empty one. */
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  /* The plate's own ground, not the hairline: a cell that has not landed yet is
+     transparent, and a hairline-coloured field behind it renders every pending
+     cell as a grey hole. On the plate colour the same cell is simply not there
+     yet, which is what the arrival is supposed to look like. */
+  background: var(--color-plate);
+}
+.evidence-item {
+  grid-column: span 2;
+  background: var(--color-plate);
+  /* The rule travels with the cell rather than being painted under it, so it
+     arrives when the cell does. */
+  box-shadow: 0 0 0 1px var(--color-hairline);
+  padding: clamp(22px, 3vw, 34px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 220px;
+  /* The lines arrive from the rail: each one lands from the direction the
+     ledger sat in, which is what makes the plate read as the rail emptying
+     rather than as a grid fading in. */
+  opacity: 0;
+  transform: translate3d(-14px, 10px, 0);
+  transition:
+    opacity 0.5s var(--ease-out),
+    transform 0.6s var(--ease-out);
+}
+.evidence-item.is-landed {
+  opacity: 1;
+  transform: none;
+}
+[dir='rtl'] .evidence-item {
+  transform: translate3d(14px, 10px, 0);
+}
+[dir='rtl'] .evidence-item.is-landed {
+  transform: none;
+}
+.evidence-item:nth-child(5),
+.evidence-item:nth-child(6) {
+  grid-column: span 3;
+}
+.evidence-v {
+  font-size: clamp(30px, 4.4vw, 52px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.evidence-l {
+  font-size: 15px;
+  line-height: 1.5;
+  max-width: 30ch;
+}
+.evidence-src {
+  margin-top: auto;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+.evidence-src b {
+  display: block;
+  font-weight: 600;
+  color: var(--color-ink);
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-size: 12.5px;
+  margin-top: 3px;
+}
+@media (max-width: 900px) {
+  .evidence-list {
+    grid-template-columns: 1fr 1fr;
+  }
+  .evidence-item,
+  .evidence-item:nth-child(5),
+  .evidence-item:nth-child(6) {
+    grid-column: span 1;
+  }
+}
+@media (max-width: 560px) {
+  .evidence-list {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .evidence-item {
+    transform: none;
+  }
+}
+
+/* ---- Colophon ---- */
+.colophon {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 28px;
+  padding-top: 26px;
+  margin-top: clamp(40px, 6vw, 72px);
+  border-top: 1px solid var(--color-hairline);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--color-ink-muted);
+}
+
+/* ---- Self-drawing marks ----
+   The method chapter's marks draw themselves as the reader arrives, so the
+   section shows a hand working rather than a row of finished icons. Stroke
+   length is measured in draw.ts, which is the only reason a dash offset can
+   be set to something meaningful. */
+.js [data-draw] path {
+  stroke-dasharray: var(--len, 0);
+  stroke-dashoffset: var(--len, 0);
+}
+.js [data-draw].is-drawn path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1.1s var(--ease-out) var(--draw-delay, 0s);
+}
+@media (prefers-reduced-motion: reduce) {
+  .js [data-draw] path {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---- Work plates ----
+   A catalogue run, not a card grid: every plate carries the same label schema
+   in the same order, which is what makes the set read as one collection. */
+.plate {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.9fr) minmax(0, 2.1fr);
+  gap: clamp(20px, 4vw, 56px);
+  padding: clamp(30px, 4vw, 52px) 0;
+  border-top: 1px solid var(--color-hairline);
+  align-items: start;
+}
+.plate-label {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: sticky;
+  top: 96px;
+}
+.plate-n {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--color-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+.plate-title {
+  margin: 0;
+  font-size: clamp(19px, 2.2vw, 26px);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+.plate-title a {
+  text-decoration: none;
+  background-image: linear-gradient(var(--color-accent), var(--color-accent));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 32%;
+  transition: background-size 0.34s var(--ease-out);
+}
+.plate-title a:hover,
+.plate-title a:focus-visible {
+  background-size: 100% 32%;
+}
+[dir='rtl'] .plate-title a {
+  background-position: 100% 100%;
+}
+/* Museum-label schema. Same rows, same order, every plate. */
+.plate-spec {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.plate-spec dt {
+  color: var(--color-ink-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  padding-top: 1px;
+}
+.plate-spec dd {
+  margin: 0;
+}
+.plate-note {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-ink-muted);
+  max-width: 34ch;
+}
+/* The media is the plate. It wipes open from the bottom edge as it arrives:
+   a change of state rather than an introduction, which is why it is a wipe and
+   not a fade, and why it runs the full width of its column. */
+.plate-media {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.js .plate-media {
+  clip-path: inset(0 0 100% 0);
+}
+.js .plate-media.is-open {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 1s var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .plate-media {
+    clip-path: none;
+  }
+}
+@media (max-width: 860px) {
+  .plate {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .plate-label {
+    position: static;
+  }
+}
+
+/* ---- The record rail ----
+   Chapter three travels against a fixed year column: the years lag the scroll
+   and the roles lead it, so the list reads as a column of dates being walked
+   past rather than as a table. Depth only, never on the copy itself. */
+.record {
+  display: grid;
+  grid-template-columns: clamp(72px, 9vw, 120px) 1fr;
+  gap: clamp(20px, 4vw, 56px);
+  align-items: start;
+}
+.record-years {
+  position: sticky;
+  top: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-muted);
+  font-variant-numeric: tabular-nums;
+  border-inline-start: 1px solid var(--color-hairline);
+  padding-inline-start: 12px;
+}
+.record-years span {
+  transition: color 0.3s var(--ease-out);
+}
+.record-years span.is-here {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+@media (max-width: 760px) {
+  .record {
+    grid-template-columns: 1fr;
+  }
+  .record-years {
+    display: none;
+  }
+}

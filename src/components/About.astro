@@ -1,7 +1,10 @@
 ---
+import Chapter from './Chapter.astro';
 import { getLangFromUrl, t } from '../i18n/ui';
 
-const copy = t(getLangFromUrl(Astro.url)).about;
+const lang = getLangFromUrl(Astro.url);
+const all = t(lang);
+const copy = all.about;
 
 // 84px-wide hand-drawn accent scribbles (viewBox 0 0 220 120, stroke width 9,
 // round caps) — one per skill row. Each one draws its own subject rather than an
@@ -38,27 +41,35 @@ const marks = [
 const skills = marks.map((m, i) => ({ ...m, ...copy.skills[i] }));
 ---
 
-<section id="about" class="about" aria-labelledby="about-title">
-  <div class="head">
-    <div class="eyebrow" data-reveal>{copy.eyebrow}</div>
-    <h2 id="about-title" data-headline data-speed="1.14"><span class="hl"
-        >{copy.titleLead}<br />{copy.titleSecond}<span class="mark"><span class="mark-text"
-            >{copy.titleMark}</span
-          ><span class="mark-bg"></span></span></span
-      ></h2>
-  </div>
+<section id="about" class="about" data-ground="light" aria-label={all.chapters.two}>
+  <Chapter numeral={all.chapters.numerals[1]} run={all.chapters.two} title={copy.chapterTitle} />
   <div class="cols">
     <div class="prose">
-      {/* One idea per paragraph: who I am → what I do → how the work runs. */}
-      {copy.paragraphs.map((para) => <p data-reveal>{para}</p>)}
+      {/* Proof → story → method. The checkable claim leads, the paragraph gives
+          it context, and the habits close: three passes at different sizes so
+          the column has a hierarchy instead of an even run of paragraphs. */}
+      <p class="proof" data-reveal data-stamp="people">{copy.proof.map((line) => <span>{line}</span>)}</p>
+      <p data-reveal>{copy.paragraph}</p>
+      <p class="credentials" data-reveal>{copy.credentials}</p>
+      <div class="practice" data-reveal>
+        <h3>{copy.practiceTitle}</h3>
+        <dl>
+          {copy.practice.map((item) => (
+            <div class="p-row">
+              <dt>{item.label}</dt>
+              <dd>{item.text}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
     </div>
-    <ul class="skills" data-reveal-stagger>
+    <ul class="skills" data-reveal-stagger data-draw-group>
       {
         skills.map((s) => (
           <li data-reveal-item>
             {/* stroke is thinner than the old open squiggles: these marks enclose
                 space, and 9 closed the gaps up at 84px wide */}
-            <svg class="scribble" viewBox="0 0 220 120" fill="none" aria-hidden="true">
+            <svg class="scribble" viewBox="0 0 220 120" fill="none" aria-hidden="true" data-draw>
               <path
                 d={s.path}
                 stroke="var(--color-accent)"
@@ -79,37 +90,19 @@ const skills = marks.map((m, i) => ({ ...m, ...copy.skills[i] }));
 </section>
 
 <style>
+  /* Same measure and the same gutters as the other chapters, so one column edge
+     runs the length of the feature instead of each section finding its own. */
   .about {
-    padding: 40px clamp(24px, 7vw, 120px) 64px;
-    max-width: 1440px;
+    padding: clamp(30px, 5vw, 60px) clamp(24px, 7vw, 120px) clamp(50px, 8vw, 96px);
+    max-width: calc(1240px + 2 * clamp(24px, 7vw, 120px));
     margin: 0 auto;
-  }
-  .head {
-    padding: 40px 0 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-  .eyebrow {
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-ink-muted);
-    font-weight: 500;
-  }
-  h2 {
-    margin: 0;
-    font-size: clamp(34px, 5vw, 56px);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.05;
   }
   .cols {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 80px;
     align-items: start;
-    margin-top: 32px;
+    margin-top: clamp(30px, 5vw, 60px);
   }
   .prose {
     display: flex;
@@ -122,6 +115,77 @@ const skills = marks.map((m, i) => ({ ...m, ...copy.skills[i] }));
     color: var(--color-ink-muted);
     line-height: 1.6;
     max-width: 460px;
+  }
+  /* Larger and in full-strength ink: this is the only checkable claim in the
+     section, so it should not be set in the same grey as the story. Each
+     sentence gets its own line — the second is the evidence for the first, and
+     wrapped together they read as one long run-on. */
+  .prose p.proof {
+    font-size: 21px;
+    line-height: 1.5;
+    color: var(--color-ink);
+    max-width: 480px;
+  }
+  .proof span {
+    display: block;
+  }
+  .proof span + span {
+    margin-top: 10px;
+    color: var(--color-ink-muted);
+  }
+  /* The record, not the story — one step down from the paragraph so it reads as
+     a footnote to it rather than a fourth claim. */
+  .prose p.credentials {
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  .practice {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 460px;
+    padding-top: 8px;
+  }
+  .practice h3 {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .practice dl {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  /* A rule between rows rather than around each one: the three habits are one
+     list, and boxing them would give working notes the weight of the skill
+     marks in the next column. */
+  .p-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 10px;
+    padding: 12px 0;
+    border-top: 1px solid var(--color-hairline);
+  }
+  .p-row:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .p-row dt {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .p-row dd {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--color-ink-muted);
   }
   /* No top offset: the prose and the skill marks are two halves of one row, so
      they start on the same line rather than the list hanging below the text. */

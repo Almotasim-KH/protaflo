@@ -1,133 +1,127 @@
 ---
+// The close: a colophon, not a call-to-action island.
+//
+// The page has spent its whole length being a printed feature, so it ends the
+// way one ends. The ask is a line of running text at reading size, the two other
+// places to find me are footnotes beside it, and under a rule the page says what
+// it is set in and where it was written. The last screen holds content rather
+// than fading out.
 import { getLangFromUrl, t } from '../i18n/ui';
 
-const copy = t(getLangFromUrl(Astro.url)).contact;
+const lang = getLangFromUrl(Astro.url);
+const all = t(lang);
+const copy = all.contact;
+const col = all.colophon;
+const foot = all.footer;
 const email = 'portfolio.info@almotasim-kh.com';
 const linkedin = 'https://www.linkedin.com/in/almotasim-khairullah-73ab52166/';
 const github = 'https://github.com/Almotasim-KH';
 ---
 
-<section id="contact" class="contact" aria-labelledby="contact-title">
-  <div class="eyebrow" data-reveal>{copy.eyebrow}</div>
-  <h2 id="contact-title" data-headline data-speed="1.14">
-    <span class="hl"
-      >{copy.titleLead}<br />{copy.titleSecond}<span class="mark"><span class="mark-text"
-          >{copy.titleMark}</span
-        ><span class="mark-bg"></span></span></span
-    >
-  </h2>
+<section id="contact" class="contact" data-ground="light" aria-labelledby="contact-title">
+  <div class="contact-inner">
+    <h2 id="contact-title" data-headline>
+      <span class="hl"
+        >{copy.titleLead}<br />{copy.titleSecond}<span class="mark"><span class="mark-text"
+            >{copy.titleMark}</span
+          ><span class="mark-bg"></span></span></span
+      >
+    </h2>
 
-  <div class="links" data-reveal-stagger>
-    <a data-reveal-item href={`mailto:${email}`} class="pill accent">{email}</a>
-    <a
-      data-reveal-item
-      href={linkedin}
-      class="pill outline"
-      rel="noopener"
-      aria-label="LinkedIn"
-    >
-      <svg class="mk" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path
-          fill="currentColor"
-          d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0ZM.3 8.4h4.38V24H.3V8.4Zm7.63 0h4.2v2.13h.06c.58-1.1 2-2.27 4.12-2.27 4.4 0 5.22 2.9 5.22 6.68V24h-4.38v-7.4c0-1.77-.03-4.04-2.46-4.04-2.47 0-2.85 1.92-2.85 3.9V24H7.93V8.4Z"
-        ></path>
-      </svg>
-      {copy.linkedin}
-    </a>
-    <a
-      data-reveal-item
-      href={github}
-      class="pill outline"
-      rel="noopener"
-      aria-label="GitHub"
-    >
-      <svg class="mk" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path
-          fill="currentColor"
-          d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58l-.01-2.05c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.11-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.82 1.1.82 2.22l-.01 3.29c0 .32.21.7.82.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5Z"
-        ></path>
-      </svg>
-      {copy.github}
-    </a>
+    <p class="ask" data-reveal>
+      <a href={`mailto:${email}`}>{email}</a>
+    </p>
+
+    <p class="aside" data-reveal>
+      <a href={linkedin} rel="noopener">{copy.linkedin}</a>
+      <a href={github} rel="noopener">{copy.github}</a>
+      <span class="note">{copy.note}</span>
+    </p>
+
+    <div class="colophon" data-reveal>
+      <span>{col.set}</span>
+      <span>{col.built}</span>
+      <span>{col.place}</span>
+      <span class="rights">{foot.rights}</span>
+    </div>
   </div>
-  <p class="note" data-reveal>{copy.note}</p>
 </section>
 
 <style>
   .contact {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 28px;
-    padding: 120px clamp(24px, 7vw, 120px) 140px;
-    border-top: 1px solid transparent;
-    border-image: var(--flow-rule-x) 1;
-    animation: var(--flow-slide);
-    max-width: 1440px;
-    margin: 0 auto;
+    padding: clamp(60px, 10vw, 130px) clamp(24px, 7vw, 120px) clamp(70px, 10vw, 120px);
   }
-  .eyebrow {
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-ink-muted);
-    font-weight: 500;
+  .contact-inner {
+    max-width: 1240px;
+    margin: 0 auto;
   }
   h2 {
     margin: 0;
-    font-size: clamp(38px, 6.2vw, 88px);
+    font-size: clamp(32px, 5.4vw, 72px);
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
     line-height: 1.05;
-    text-align: center;
+    max-width: 14ch;
+    text-wrap: balance;
   }
-  .links {
-    display: flex;
-    gap: 16px;
-    margin-top: 8px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .pill {
-    min-height: 44px;
-    font-size: 15px;
+  /* The ask, set as running text. It is the largest link on the page and it is
+     still a link, which is the whole difference between this ending and a
+     button island. */
+  .ask {
+    margin: clamp(26px, 4vw, 44px) 0 0;
+    font-size: clamp(18px, 2.6vw, 30px);
     font-weight: 500;
-    padding: 14px 32px;
-    border-radius: 999px;
+    letter-spacing: -0.01em;
+    word-break: break-word;
+  }
+  .ask a {
     text-decoration: none;
-    /* Inline-flex so the social mark sits on the text baseline row rather than
-       pushing the pill taller. */
+    background-image: linear-gradient(var(--color-accent), var(--color-accent));
+    background-repeat: no-repeat;
+    background-position: 0 92%;
+    background-size: 100% 26%;
+    transition: background-size 0.28s var(--ease-out);
+    padding: 0 2px;
+  }
+  .ask a:hover,
+  .ask a:focus-visible {
+    background-size: 100% 100%;
+  }
+  [dir='rtl'] .ask a {
+    background-position: 100% 92%;
+  }
+  .aside {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 26px;
+    margin: 18px 0 0;
+    font-size: 14px;
+  }
+  .aside a {
+    min-height: 30px;
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid var(--color-hairline);
+    transition: border-color 0.16s var(--ease-out);
   }
-  .mk {
-    width: 18px;
-    height: 18px;
-    flex: none;
-  }
-  .pill.accent {
-    background: var(--color-accent);
-    color: var(--color-ink);
-  }
-  .pill.outline {
-    border: 1px solid transparent;
-    background:
-      linear-gradient(var(--color-canvas), var(--color-canvas)) padding-box,
-      var(--flow-ring) border-box;
-    animation: var(--flow-spin);
-    color: var(--color-ink);
-  }
-  /* Hover commits to a solid accent fill — the ring stops travelling once the
-     pointer has picked this one. */
-  .pill.outline:hover {
-    background: var(--color-accent);
-    border-color: var(--color-accent);
-    animation: none;
+  .aside a:hover,
+  .aside a:focus-visible {
+    border-bottom-color: currentColor;
   }
   .note {
-    margin: 0;
-    font-size: 15px;
     color: var(--color-ink-muted);
+  }
+  /* Pushed to the end of the colophon line, so the last thing set on the page is
+     the smallest thing on it. */
+  .rights {
+    margin-inline-start: auto;
+  }
+  @media (pointer: coarse) {
+    .aside a {
+      min-height: 44px;
+    }
   }
 </style>

@@ -15,15 +15,20 @@ gallery:
   - ../../../assets/horizon/occupancy.png
   - ../../../assets/horizon/building.png
   - ../../../assets/horizon/night-audit.png
+captions:
+  - "Overview: revenue, pax, rooms and vacant beds for the day, over arrivals against departures across the last 14 days."
+  - "Occupancy report: who is staying under which company, filtered by company and room category, and exportable as it stands on screen."
+  - "Building info: capacity, pax, rooms and vacancies floor by floor for every building, with out-of-order rooms called out on each card."
+  - "Night audit: checked in against checked out for the shift, over the room table the audit is actually run from."
+galleryGroups:
+  - at: 1
+    label: "All data in these shots is replaced with non-real values"
 body:
-  - An admin platform that gives you the state of the residential building in one look, along with revenue and the operational data that matters.
-  - The project was built to make the night audit easier on staff, and at the same time give management a full control panel to follow the operational picture, with room to extend the platform later and bring other departments into it.
-  - As an employee, you can open the platform and pull a report of everyone staying under a given organisation's name, and check the status of every building and room. From the Night Audit page you can see all check-ins and check-outs, who is expected in and who is expected out today, plus an ordered table of arrivals and departures.
-  - On the management side, building status stays important information, but the Overview page gives a wider read on operations, with figures and indicators showing where the day currently stands.
-  - All the data in the platform is tied to the organisation's database, so any update made in the core system the company uses is sent through and updated in the database. Once the database updates, the platform pulls the new data and shows it directly, which keeps what you see in step with company data.
-  - In the end, the main goal of the project is to save the user time and effort, so the important data sits ready in front of them and they can pull the reports and information they need easily.
-  - 'Note: all data shown in the screenshots has been changed or replaced with non-real data, to protect the privacy of the organisation and its users.'
-  - The project was volunteer work on my part. I wanted it to add experience and an extra point to my career, and at the same time deliver a real solution that makes the daily work easier.
+  - "1. Context: Volunteer initiative — staff at a residential operation were running the nightly headcount and building status by hand."
+  - "2. Problem: Night audit and occupancy checks lived in scattered manual steps, so staff spent the shift chasing numbers instead of running it, and management had no single screen showing where the day stood."
+  - "3. Approach: I connected the platform directly to the organisation's own database instead of building a separate one to sync by hand, so every update made in their core system flows straight through and shows up live — no re-entry, no drift between what the platform shows and what's actually true."
+  - "4. Result: One admin platform giving occupancy, capacity and night operations across every building, with an Overview page for management and a Night Audit page built around the actual shift. (All data in the screenshots is changed or replaced with non-real values to protect the organisation's privacy.)"
+  - "5. Lesson: Volunteering this let me practice building on top of someone else's live system rather than a clean slate, which is a different discipline than starting from scratch."
 ar:
   title: 'نظام الإدارة'
   role: 'المنتج والتطوير المتكامل'
@@ -32,12 +37,16 @@ ar:
   headline: 'نظرة عامة على الإشغال والسعة وعمليات الليل في كل المباني.'
   tags: ['مبادرة']
   body:
-    - 'منصة إدارية تعطيك بنظرة واحدة حالة المبنى السكني، بالإضافة إلى الدخل والبيانات التشغيلية المهمة.'
-    - 'المشروع تم تطويره بهدف تسهيل عملية الـNight Audit على الموظفين، وفي نفس الوقت يكون عند الإدارة لوحة تحكم كاملة تساعدهم في متابعة الحالة التشغيلية، مع إمكانية تطوير المنصة مستقبلًا وضم أقسام أخرى.'
-    - 'كموظف، تقدر تدخل المنصة وتسحب تقرير بجميع الأشخاص الموجودين تحت اسم مؤسسة معينة، وتقدر أيضًا تعرف حالة جميع المباني والغرف. ومن صفحة الـNight Audit تقدر تشوف جميع عمليات الدخول والخروج، والمتوقع دخولهم، والمتوقع خروجهم اليوم، بالإضافة إلى جدول بيانات مرتب للدخول والخروج.'
-    - 'أما بالنسبة للواجهة الإدارية، فحالة المباني تظل من المعلومات المهمة، لكن الصفحة الرئيسية Overview تعطيك نظرة أشمل عن الوضع التشغيلي، بأرقام ومؤشرات توضح لك الحالة الحالية لليوم.'
-    - 'جميع البيانات في المنصة مرتبطة بقاعدة بيانات المؤسسة، بحيث إن أي تحديث يتم على النظام الأساسي المستخدم في الشركة يتم إرساله وتحديثه في قاعدة البيانات. وبعد تحديث قاعدة البيانات، تقوم المنصة بسحب البيانات الجديدة وعرضها بشكل مباشر، بحيث تكون المعلومات الموجودة في المنصة محدثة مع بيانات الشركة.'
-    - 'في النهاية، الهدف الأساسي من المشروع هو توفير الوقت والجهد على المستخدم، بحيث تكون جميع البيانات المهمة جاهزة أمامه ويقدر يسحب التقارير والمعلومات اللي يحتاجها بسهولة.'
-    - 'ملاحظة: جميع البيانات الظاهرة في الصور تم تغييرها أو استبدالها ببيانات غير حقيقية، وذلك حفاظًا على خصوصية بيانات المؤسسة والمستخدمين.'
-    - 'المشروع كان تطوعيًا مني، وحبيت من خلاله أضيف تجربة ونقطة إضافية في مسيرتي الوظيفية، وفي نفس الوقت أقدم حل فعلي يساعد في تسهيل العمل اليومي.'
+    - "1. السياق: مبادرة تطوعية — موظفو منشأة سكنية كانوا يسوون عد النزلاء وحالة المباني يدويًا كل ليلة."
+    - "2. المشكلة: الـNight Audit وفحص الإشغال كانا خطوات يدوية متفرقة، فالموظف يقضي الوردية يطارد الأرقام بدل ما يديرها، والإدارة ما عندها شاشة واحدة توضح وضع اليوم."
+    - "3. القرار: وصلت المنصة مباشرة بقاعدة بيانات المؤسسة نفسها بدل ما أبني قاعدة منفصلة تحتاج مزامنة يدوية، بحيث أي تحديث على النظام الأساسي عندهم ينعكس مباشرة — بدون إعادة إدخال، وبدون فرق بين اللي تعرضه المنصة واللي هو صحيح فعليًا."
+    - "4. النتيجة: منصة إدارية واحدة تعطي الإشغال والسعة وعمليات الليل في كل مبنى، بصفحة Overview للإدارة وصفحة Night Audit مبنية على شكل الوردية الفعلي. (جميع البيانات الظاهرة في الصور مغيّرة أو مستبدلة ببيانات غير حقيقية حفاظًا على خصوصية المؤسسة.)"
+    - "5. الدرس: التطوع في هذا المشروع خلاني أتمرن على البناء فوق نظام حي لغيري بدل صفحة بيضاء، وهذا انضباط مختلف عن البداية من الصفر."
+  captions:
+    - 'نظرة عامة: الإيراد وعدد النزلاء والغرف والأسرّة الشاغرة لليوم، وفوقها الوصول مقابل المغادرة خلال آخر ١٤ يومًا.'
+    - 'تقرير الإشغال: من يقيم تحت أي شركة، بفلترة بالشركة وفئة الغرفة، وقابل للتصدير كما هو على الشاشة.'
+    - 'معلومات المباني: النسبة والنزلاء والغرف والشاغر دورًا بدور لكل مبنى، مع إبراز الغرف خارج الخدمة على كل بطاقة.'
+    - 'التدقيق الليلي: الداخل مقابل الخارج في الوردية، وفوق جدول الغرف الذي يُنفَّذ منه التدقيق فعليًا.'
+  galleryGroups:
+    - 'جميع البيانات في هذه الصور مستبدلة ببيانات غير حقيقية'
 ---

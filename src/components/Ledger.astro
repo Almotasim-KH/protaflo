@@ -1,0 +1,40 @@
+---
+// The margin ledger — this site's one bespoke interaction.
+//
+// A rail in the margin that collects the page's verified figures as the reader
+// passes them, each with the project it came from, and hands the whole set over
+// to the evidence plate at the end.
+//
+// Every line here is a real number taken from a project file in src/content or
+// from the work history. There is no line without a source, which is the whole
+// point of showing it this way rather than writing "trusted" anywhere.
+//
+// aria-hidden on purpose: the rail duplicates figures the evidence plate states
+// in full, in reading order, and announcing six live stamps mid-read would be
+// noise rather than information.
+import { getLangFromUrl, t } from '../i18n/ui';
+
+const copy = t(getLangFromUrl(Astro.url)).ledger;
+const total = copy.entries.length;
+---
+
+<aside class="ledger" data-ledger aria-hidden="true">
+  <div class="ledger-head">
+    <span>{copy.label}</span>
+    {/* The attribute carries the template the rail rewrites on every stamp. */}
+    <span class="ledger-count" data-ledger-count={copy.of}
+      >{copy.of.replace('{n}', '0').replace('{total}', String(total))}</span
+    >
+  </div>
+  <p class="ledger-caption">{copy.caption}</p>
+  <ul class="ledger-list">
+    {
+      copy.entries.map((e) => (
+        <li class="ledger-line" data-ledger-line={e.id}>
+          <span class="ledger-v">{e.value}</span>
+          <span class="ledger-s">{e.source}</span>
+        </li>
+      ))
+    }
+  </ul>
+</aside>

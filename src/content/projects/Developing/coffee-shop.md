@@ -18,15 +18,24 @@ gallery:
   - ../../../assets/coffee-shop/admin-sales.png
   - ../../../assets/coffee-shop/admin-products.png
   - ../../../assets/coffee-shop/admin-stores.png
+captions:
+  - "Home: the hero, three entry points, best sellers that add to the cart from the card itself, and the four-step sourcing story."
+  - "Catalog: category filter, search and sort. A product that is out of stock stays visible but dimmed with its button disabled, rather than disappearing from the grid."
+  - "Admin overview: 30 days of sales, new customers, low stock, the recent orders queue, and stock alerts."
+  - "Sales: daily, weekly and monthly views, with revenue and VAT broken out per day under the chart."
+  - "Products: the full catalogue with category, price and active state, filtered by the same categories the storefront uses."
+  - "Branches: address, map location and opening hours per branch, added from the same panel."
+galleryGroups:
+  - at: 1
+    label: "Storefront, what the customer sees"
+  - at: 3
+    label: "Admin panel, what the owner runs the store from"
 body:
-  - An online store that displays and sells products, managed end to end through an admin panel that handles inventory and gives sales indicators and revenue reports.
-  - The project came out of a client request — a complete website to show his products, with a control panel he could run the store from, and a design built to suit him.
-  - As a customer, you open the platform, pick the product that suits you and add it to the cart. After that you set the delivery address and place the order.
-  - As an admin, you sign in from the admin side and get a dashboard covering the last 30 days of sales, the number of registered customers, and stock status, along with the latest orders, sales movement, and the best-selling products.
-  - From the same panel you can go into sales, orders, products, or customers in detail, and add branches to the store. There is also an activity log, so any edit or action inside the system leaves a clear record.
-  - The dashboard as a whole pulls together the important information about products, sales, and customers, and gives you a quick read on where the store stands.
-  - This project was a real challenge for me. Through it I started learning and applying APIs, payment gateways, and delivery interfaces, and using AI tools in a way that helps the work. After that I learned how to use Docker and package the whole program, so it sits in a portable folder that is easy to run and move.
-  - The build is finished on my side, but the store has not gone live — the last step is the payment gateway and the delivery integration, and both need accounts and API keys that only the client can issue. It stays parked there until those come through.
+  - "1. Context: A client came with a product line and no way to sell it online or see where the business stood day to day."
+  - "2. Problem: Every sale, every stock check, every new customer was invisible to him — no storefront, no dashboard, no record of what was actually moving."
+  - "3. Approach: I built both sides at once — a storefront customers buy from, and an admin panel covering sales, orders, products, branches and an activity log, so nothing changes without a trace. A ready-made e-commerce platform would have gotten a store live faster, but the client needed his own control panel and a design built around his brand, not a template, so I built it full-stack instead."
+  - "4. Result: The build is finished and packaged in Docker as a portable unit; it's parked one step from launch — the payment gateway and delivery integration need API keys only the client can issue."
+  - "5. Lesson: This is where I first used APIs, payment gateways and delivery interfaces for real, and learned to package a whole app with Docker so it's easy to hand off and move."
 ar:
   # The project's name, not a phrase — it stays Latin in Arabic like Budgettr,
   # so the same name identifies it everywhere on the site.
@@ -37,12 +46,19 @@ ar:
   headline: 'متجر قهوة مختصة مع لوحة الإدارة التي تديره.'
   tags: ['طلب من عميل']
   body:
-    - 'متجر إلكتروني لعرض وبيع المنتجات، ويتم إدارة المتجر بالكامل عن طريق لوحة إدارية تتولى إدارة المخزون، وتقدم مؤشرات للمبيعات وتقارير الإيرادات.'
-    - 'المشروع كان بناءً على طلب عميل، بحيث طلب موقع إلكتروني كامل يعرض فيه منتجاته ويقدر يدير المتجر من خلال لوحة تحكم، بتصميم خاص ومناسب له.'
-    - 'كمستخدم، تدخل المنصة وتختار المنتج اللي يناسبك، وبعدها تضيفه للسلة. بعد كذا تحدد عنوان التوصيل وتنفذ الطلب.'
-    - 'كإداري، تقدر تسجل الدخول من الواجهة الإدارية، وبيكون عندك Dashboard توضح لك مبيعات آخر 30 يوم، وعدد العملاء المسجلين، وحالة المخزون، بالإضافة إلى آخر الطلبات، وحركة المبيعات، والمنتجات الأكثر مبيعًا.'
-    - 'ومن نفس اللوحة، تقدر تدخل بالتفصيل على المبيعات، أو الطلبات، أو المنتجات، أو العملاء، وتقدر تضيف فروع للمتجر. وأيضًا فيه سجل للنشاط، بحيث أي تعديل أو إجراء يحصل داخل النظام يكون له سجل واضح.'
-    - 'الـDashboard بشكل عام تجمع لك أهم المعلومات المتعلقة بالمنتجات والمبيعات والعملاء، وتعطيك نظرة سريعة عن وضع المتجر.'
-    - 'كان هذا المشروع تحدي حقيقي بالنسبة لي، ومن خلاله بدأت أتعلم وأطبق على الـAPIs، وبوابات الدفع، واجهات التوصيل و استخدام ادوات الذكاء الاصطناعي بطريقة تساعد في العمل. وبعدها تعلمت كيف أستخدم Docker وأغلف البرنامج كامل، بحيث يكون على شكل Folder متنقل وسهل تشغيله ونقله.'
-    - 'العمل منتهٍ من طرفي، لكن المتجر ما طُلِق: الخطوة الأخيرة هي بوابة الدفع وربط التوصيل، والاثنين يحتاجون حسابات ومفاتيح API ما يقدر يصدرها إلا العميل. واقف عند هذه النقطة لحين توصل.'
+    - "1. السياق: عميل عنده منتجات وما عنده طريقة يبيعها أونلاين ولا يشوف وضع متجره يوم بيوم."
+    - "2. المشكلة: كل عملية بيع، وكل فحص مخزون، وكل عميل جديد كان غير مرئي له — لا متجر، ولا Dashboard، ولا سجل يوضح وش يتحرك فعليًا."
+    - "3. القرار: بنيت الطرفين مع بعض — واجهة يشتري منها العميل، ولوحة إدارية تغطي المبيعات والطلبات والمنتجات والفروع مع سجل نشاط، بحيث أي تعديل يترك أثر. كان ممكن أستخدم منصة تجارة إلكترونية جاهزة يطلع فيها المتجر أسرع، بس العميل يحتاج لوحة تحكم خاصة فيه وتصميم يناسب هويته مو قالب، فبنيتها متكاملة من الصفر."
+    - "4. النتيجة: العمل منتهي ومغلف بـDocker كوحدة متنقلة؛ واقف عند خطوة واحدة قبل الإطلاق — بوابة الدفع وربط التوصيل يحتاجون مفاتيح API ما يصدرها إلا العميل."
+    - "5. الدرس: هذا أول مشروع استخدمت فيه APIs وبوابات الدفع وواجهات التوصيل بشكل حقيقي، وتعلمت أغلف برنامج كامل بـDocker بحيث يكون سهل التسليم والنقل."
+  captions:
+    - 'الرئيسية: الواجهة، وثلاثة مداخل، والأكثر مبيعًا مع الإضافة للسلة من البطاقة نفسها، وقصة المنشأ في أربع خطوات.'
+    - 'الكتالوج: فلترة بالفئات وبحث وترتيب. المنتج غير المتوفر يبقى ظاهرًا لكن باهتًا وزره معطّل، بدل أن يختفي من الشبكة.'
+    - 'نظرة عامة للإدارة: مبيعات ٣٠ يومًا، والعملاء الجدد، والمخزون المنخفض، وطابور أحدث الطلبات، وتنبيهات المخزون.'
+    - 'المبيعات: عرض يومي وأسبوعي وشهري، مع تفصيل الإيراد والضريبة لكل يوم تحت الرسم.'
+    - 'المنتجات: الكتالوج كاملًا بالفئة والسعر وحالة التفعيل، بنفس فئات واجهة المتجر.'
+    - 'الفروع: العنوان والموقع على الخريطة وأوقات الدوام لكل فرع، تُضاف من اللوحة نفسها.'
+  galleryGroups:
+    - 'واجهة المتجر، ما يراه العميل'
+    - 'لوحة الإدارة، ما يدير منها صاحب المتجر متجره'
 ---

@@ -17,18 +17,28 @@ let lenis: Lenis | null = null;
 export function initSmoothScroll(): (() => void) | null {
   // Reduced motion: native scroll, no interpolation.
   if (prefersReduced()) return null;
-  // Touch keeps native momentum — Lenis on touch feels laggy and fights the OS.
-  if (window.matchMedia('(pointer: coarse)').matches) return null;
+  // Touch runs the same interpolation, on its own numbers. Handing the phone raw
+  // native scroll left it the one surface where the page had no weight at all:
+  // the plate wipes and the band stamps still fire, but the travel between them
+  // is 1:1 with the finger, which reads as a different site. syncTouch is what
+  // lets Lenis own a touch drag instead of racing the OS's momentum; the shorter
+  // duration keeps the settle from feeling like lag under a thumb.
+  const coarse = window.matchMedia('(pointer: coarse)').matches;
 
   lenis?.destroy();
 
   lenis = new Lenis({
-    // ~1.05s to settle: heavy, still responsive. Higher = more float.
-    duration: 1.05,
+    // ~1.05s to settle on a wheel: heavy, still responsive. Higher = more float.
+    // A thumb is a direct manipulation and wants a much shorter tail.
+    duration: coarse ? 0.6 : 1.05,
     easing: (t: number) => 1 - Math.pow(1 - t, 4), // expo-ish out, no overshoot
     wheelMultiplier: 0.9, // slightly slower than native = more "mass"
     smoothWheel: true,
-    syncTouch: false,
+    syncTouch: coarse,
+    // Near 1:1 with the finger while the finger is down — the interpolation is
+    // for what happens after it lifts, not for making the drag itself lag.
+    syncTouchLerp: 0.09,
+    touchInertiaMultiplier: 22,
   });
 
   const onScroll = (): void => ScrollTrigger.update();
@@ -60,8 +70,8 @@ export function initSmoothScroll(): (() => void) | null {
 }
 
 // Freeze the page behind a full-screen overlay (the gallery lightbox). Lenis owns
-// the scroll on pointer devices; the body class covers touch and reduced-motion,
-// where Lenis never starts.
+// the scroll wherever it is running; the body class is the fallback for
+// reduced-motion, the one case where Lenis never starts.
 export function lockScroll(locked: boolean): void {
   document.documentElement.classList.toggle('is-scroll-locked', locked);
   if (locked) lenis?.stop();

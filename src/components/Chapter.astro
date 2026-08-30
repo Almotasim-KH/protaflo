@@ -1,0 +1,23 @@
+---
+// A chapter opener: rule, numeral, running head, title.
+//
+// The numeral is information on this page rather than decoration — the feature
+// is chaptered and the folio reports the same number back in the margin, so the
+// reader always knows which of four they are in.
+interface Props {
+  /** Roman or Arabic-Indic numeral, already localised by the caller. */
+  numeral: string;
+  /** Running head, repeated by the folio. */
+  run: string;
+  /** The chapter's own title, the largest type in the section. */
+  title: string;
+}
+
+const { numeral, run, title } = Astro.props;
+---
+
+<header class="chapter-open" data-chapter-num={numeral} data-chapter-title={run}>
+  <span class="chapter-num">{numeral}</span>
+  <span class="chapter-run">{run}</span>
+  <h2 class="chapter-title" data-headline><span class="hl">{title}</span></h2>
+</header>

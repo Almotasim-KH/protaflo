@@ -22,3 +22,9 @@ pnpm-debug.log*
 /Videos/
 /imgs/Screenshot*.png
 /imgs/yanbu-industrial-city-dither-notext.png
+
+# scroll-harness output (lab/shoot.mjs writes ~14MB of frames per run)
+lab/shots/
+lab/mobile/
+lab/reduced/
+lab/ar/
