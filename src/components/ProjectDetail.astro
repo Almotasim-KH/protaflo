@@ -559,7 +559,9 @@ slots.forEach((img, i) => {
     background: color-mix(in srgb, var(--color-ink) 92%, transparent);
     backdrop-filter: blur(6px);
   }
-  /* The picture fills whatever the arrows and padding leave, never crops. */
+  /* The picture fills whatever the arrows and padding leave, never crops, and it
+     is never shown at a size it is not. It arrives at full size and the overlay
+     fades in around it: no scale on the way in, none stepping between shots. */
   .lb-img {
     position: relative;
     grid-column: 2;
@@ -568,11 +570,6 @@ slots.forEach((img, i) => {
     object-fit: contain;
     border-radius: 12px;
     box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.65);
-    transform: scale(0.98);
-    transition: transform 0.22s var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
-  }
-  .lightbox.is-open .lb-img {
-    transform: scale(1);
   }
   .lb-btn {
     position: relative;
@@ -643,8 +640,7 @@ slots.forEach((img, i) => {
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .lightbox,
-    .lb-img {
+    .lightbox {
       transition: none;
     }
   }

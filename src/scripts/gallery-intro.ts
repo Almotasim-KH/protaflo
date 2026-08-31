@@ -3,8 +3,9 @@
 // whatever is in view on arrival lifts in as one staggered set (after the
 // transition band has cleared, so nothing animates underneath it), and anything
 // below the fold waits for the scroll. Each tile rises and un-clips from the
-// bottom while its image settles out of a slight zoom — the frame arrives first,
-// the picture lands into it.
+// bottom. The frame moves; the picture inside it does not. It sits at its final
+// size from the first frame and is simply uncovered, so nothing about the image
+// is ever shown at the wrong scale.
 import { gsap, ScrollTrigger, prefersReduced } from './gsap-core';
 
 declare global {
@@ -31,7 +32,6 @@ function inView(el: HTMLElement): boolean {
 
 function animateIn(el: HTMLElement, delay: number): void {
   show(el);
-  const img = el.querySelector('img');
   const tl = gsap.timeline({ delay });
 
   tl.from(el, {
@@ -42,16 +42,6 @@ function animateIn(el: HTMLElement, delay: number): void {
     ease: 'power4.out',
     clearProps: 'clipPath,transform',
   });
-
-  // Image outlives the tile tween by a beat so the settle reads as the picture
-  // coming to rest, not as one block moving.
-  if (img) {
-    tl.from(
-      img,
-      { scale: 1.14, duration: 1.5, ease: 'power3.out', clearProps: 'transform' },
-      0
-    );
-  }
 }
 
 export function initGalleryIntro(): void {

@@ -155,9 +155,11 @@ const copy = {
     scrambleTerm: 3,
   },
   work: {
-    // Chapter title. The old heading named the section; this one states what the
-    // chapter is about, which is what a chapter title does in a printed feature.
-    chapterTitle: L('What I built, and what it changed.', 'ما الذي بنيته، وما الذي غيّره.'),
+    // Chapter title. Deliberately the same string as chapters.one rather than a
+    // sentence about the chapter: the projects underneath make the argument, and
+    // a heading that also makes it says the same thing twice. Chapter.astro drops
+    // its small running head when the two match, so this prints once.
+    chapterTitle: L('The work', 'الأعمال'),
   },
   // Chapter folios. The page is set as a printed feature, so each section carries
   // a number and a running head; the folio in the top margin shows whichever one
@@ -417,6 +419,10 @@ const copy = {
     cv: L('CV', 'السيرة الذاتية'),
     email: L('Email', 'البريد'),
     rights: L('© 2026 Almotasim Khairullah', '© 2026 المعتصم خير الله'),
+    // Sits between the name and the place, on the last line before the plate.
+    // The plate below only finishes arriving on further scroll, and this is the
+    // one place on the page that says so.
+    more: L('Scroll more', 'واصل التمرير'),
     // Captions the dithered city plate at the foot of the page.
     place: L('Yanbu · Red Sea Coast', 'ينبع · ساحل البحر الأحمر'),
   },

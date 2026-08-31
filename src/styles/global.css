@@ -592,6 +592,12 @@ html.is-scroll-locked body {
   text-transform: uppercase;
   color: var(--color-ink-muted);
 }
+/* Without the running head the second cell of row 1 is empty, and the title
+   would auto-place into it — landing on the numeral's baseline instead of
+   under it. Pin it to its own row so both variants set the same shape. */
+.chapter-open.no-run .chapter-title {
+  grid-row: 2;
+}
 .chapter-title {
   grid-column: 2;
   margin: clamp(18px, 3vw, 34px) 0 0;
@@ -1048,13 +1054,23 @@ html.is-scroll-locked body {
   padding: clamp(30px, 4vw, 52px) 0;
   border-top: 1px solid var(--color-hairline);
   align-items: start;
+  /* Where the label column comes to rest. Clear of the fixed folio, which owns
+     the first 59px of the viewport. plate.ts reads the same number as STICK_TOP
+     to bound the title sweep, so the two must move together. */
+  --plate-stick: 76px;
 }
+/* The label travels and the media does not. Only this column is sticky, and it
+   is sticky inside its own plate: it rides the top of the screen for the length
+   of that project and lets go the moment the plate runs out from under it, at
+   which point the next plate's label takes the position. Nothing is pinned, so
+   every plate keeps its place in the document and the next project is reached
+   by scrolling to it rather than by climbing the screen to meet the reader. */
 .plate-label {
   display: flex;
   flex-direction: column;
   gap: 12px;
   position: sticky;
-  top: 96px;
+  top: var(--plate-stick);
 }
 .plate-n {
   font-size: 11px;
@@ -1068,6 +1084,19 @@ html.is-scroll-locked body {
   font-weight: 600;
   letter-spacing: -0.015em;
   line-height: 1.15;
+  /* Containing block for the solid copy. The link stays inline, so both layers
+     break at the same points and the two sets of letterforms land on top of
+     each other exactly. */
+  position: relative;
+  /* And it hugs its own text. The sweep is measured across this box, so a box
+     wider than the words in it spends part of the plate's scroll run masking
+     empty space: the Arabic title is 210px of text and the label column is
+     355px wide, which finished the sweep at 59% and left the rest of the pin
+     with a title already solid. fit-content ends at the last letter in both
+     directions; a title long enough to wrap still takes the full column and
+     wraps exactly as before. */
+  width: fit-content;
+  max-width: 100%;
 }
 .plate-title a {
   text-decoration: none;
@@ -1083,6 +1112,59 @@ html.is-scroll-locked body {
 }
 [dir='rtl'] .plate-title a {
   background-position: 100% 100%;
+}
+/* ---- Outlined titles, filled by the run ----
+   A plate's title is hollow until the plate pins, then a solid copy sweeps
+   across it over the length of that plate's scroll run and stands finished as
+   it releases. Scrolling back drains it by the same arithmetic. The
+   sweep has to have an edge, so it is a masked overlay rather than a colour
+   change: --plate-fill (0..1) is written on .plate by plate.ts, off the same
+   trigger that pins that plate, so the fill and the pinned plate are the same
+   fact and cannot disagree.
+
+   Direction is the text's own. One token, set once for RTL, carries it; there
+   is no mirrored copy of the rule below. */
+.plate {
+  --sweep: to right;
+  /* Thin on purpose. Arabic is connected and its counters are small; a heavy
+     stroke closes them up and the word turns into a blot. */
+  --title-stroke: 0.6px;
+}
+[dir='rtl'] .plate {
+  --sweep: to left;
+  --title-stroke: 0.45px;
+}
+/* Outline state. Gated on .js because without the script nothing would ever
+   fill these in, and a page of hollow titles is not a readable page. */
+.js .plate-title a {
+  color: transparent;
+  -webkit-text-stroke: var(--title-stroke) var(--color-ink);
+  text-stroke: var(--title-stroke) var(--color-ink);
+}
+.plate-title-fill {
+  display: none;
+}
+.js .plate-title-fill {
+  display: block;
+  position: absolute;
+  inset: 0;
+  color: var(--color-ink);
+  /* Same stroke as the layer underneath, so the filled letterform is the
+     outlined one solidified rather than a slightly narrower shape sliding in. */
+  -webkit-text-stroke: var(--title-stroke) var(--color-ink);
+  text-stroke: var(--title-stroke) var(--color-ink);
+  /* The link underneath keeps the hover underline and the click target. */
+  pointer-events: none;
+  /* Measured against the text, not the box. --title-w is the width of the
+     title's widest line box, written by plate.ts; a wrapped title's box is as
+     wide as the column it wraps in, and sweeping across that spends the last
+     third of the run masking blank space beside the words. The 2px overshoot at
+     each end makes a finished title genuinely finished and an untouched one
+     genuinely empty once the feather is counted. Falls back to the box while
+     nothing has measured yet, which is the state on the very first frame. */
+  --edge: calc(var(--plate-fill, 0) * (var(--title-w, 100%) + 4px) - 2px);
+  -webkit-mask-image: linear-gradient(var(--sweep), #000 calc(var(--edge) - 2px), transparent var(--edge));
+  mask-image: linear-gradient(var(--sweep), #000 calc(var(--edge) - 2px), transparent var(--edge));
 }
 /* Museum-label schema. Same rows, same order, every plate. */
 .plate-spec {
@@ -1135,8 +1217,35 @@ html.is-scroll-locked body {
     grid-template-columns: 1fr;
     gap: 18px;
   }
+  /* Stacked at this width: the label sits directly above its own media with
+     nothing to travel against, so it does not stick and there is no run to
+     sweep. plate.ts builds no trigger below 861px either, so this is the whole
+     of the narrow-screen state, not a cosmetic patch over one. */
   .plate-label {
     position: static;
+  }
+  .js .plate-title a {
+    color: var(--color-ink);
+    -webkit-text-stroke: 0;
+    text-stroke: 0;
+  }
+  .js .plate-title-fill {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* plate.ts builds no trigger here, so --plate-fill is never written and there
+     is no active plate to speak of. Every title stands solid: a sweep with no
+     scrub would only be a hard cut, and leaving the set hollow would cost the
+     reader the titles for nothing. */
+  .js .plate-title a {
+    color: var(--color-ink);
+    -webkit-text-stroke: 0;
+    text-stroke: 0;
+  }
+  .js .plate-title-fill {
+    display: none;
   }
 }
 

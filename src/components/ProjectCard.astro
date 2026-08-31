@@ -38,7 +38,16 @@ const plateNo = String(index + 1).padStart(2, '0');
 <article class="plate" data-stamp={stamp}>
   <div class="plate-label">
     <span class="plate-n">{plateNo}</span>
-    <h3 class="plate-title"><a href={href} data-project-link data-project-name={data.title} data-astro-reload>{data.title}</a></h3>
+    {/* The title is drawn twice on purpose. The link carries the real text and
+        renders as outline only; the span above it is the same text in solid ink,
+        revealed by a mask whose edge rides the run's scroll progress. Two layers
+        rather than an animated colour because the beat is a moving edge, and a
+        colour cannot have one. The span is decorative and aria-hidden: the link
+        underneath is the only copy assistive tech ever sees. */}
+    <h3 class="plate-title">
+      <a href={href} data-project-link data-project-name={data.title} data-astro-reload>{data.title}</a>
+      <span class="plate-title-fill" aria-hidden="true">{data.title}</span>
+    </h3>
 
     <dl class="plate-spec">
       <dt>{detail.year}</dt>
@@ -60,6 +69,12 @@ const plateNo = String(index + 1).padStart(2, '0');
     <p class="plate-note">{data.summary}</p>
   </div>
 
+  {/* The plate takes the shape of what is on it. No forced ratio and no crop:
+      a 16/10 tile with object-fit:cover cut the edges off every cover, which on
+      a dashboard means cutting off the part that says what it is. Each slot
+      carries the asset's own proportions instead, so the whole frame is shown
+      and the plates differ in height, which is what a catalogue of different
+      work actually looks like. */}
   <a class="plate-media" href={href} data-project-link data-project-name={data.title} data-astro-reload aria-hidden="true" tabindex="-1">
     {
       !data.cover && data.video ? (
@@ -69,14 +84,12 @@ const plateNo = String(index + 1).padStart(2, '0');
           height={data.video.height}
           label={data.title}
           radius={10}
-          aspect="16 / 10"
-          fit="cover"
         />
       ) : (
         <ImageSlot
           src={data.cover}
           alt={data.title}
-          aspect="16 / 10"
+          aspect="auto"
           radius={10}
           placeholder={`Drop ${data.title} mockup`}
         />

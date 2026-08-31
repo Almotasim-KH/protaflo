@@ -79,6 +79,11 @@ const birds = [
 
     <div class="base">
       <span>{copy.rights}</span>
+      {/* The arrow points at the plate below, which is still arriving. It is a
+          glyph in the line rather than an icon beside it, so the row stays one
+          piece of running text. aria-hidden because "Scroll more" already says
+          it; a screen reader announcing "down arrow" adds nothing. */}
+      <span class="more">{copy.more} <span aria-hidden="true">↓</span></span>
       <span class="place">{copy.place}</span>
     </div>
   </div>
@@ -214,6 +219,12 @@ const birds = [
     font-size: 12px;
     letter-spacing: 0.04em;
     color: var(--color-ink-muted);
+  }
+  /* Centred between the name and the place. It is the same footnote size as
+     both, in the same muted ink: a note in the line, not a call to action. */
+  .more {
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
   /* Names what the artwork below is, so the skyline reads as a place rather
      than decoration. */

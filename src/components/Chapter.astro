@@ -14,10 +14,20 @@ interface Props {
 }
 
 const { numeral, run, title } = Astro.props;
+
+// A chapter whose title IS its running head would print the same words twice,
+// once small and once large. Where they match, only the title is set — the folio
+// still gets the running head from the data attribute below, which is the only
+// place it was ever read from.
+const showRun = run.trim().toLocaleLowerCase() !== title.trim().toLocaleLowerCase();
 ---
 
-<header class="chapter-open" data-chapter-num={numeral} data-chapter-title={run}>
+<header
+  class:list={['chapter-open', { 'no-run': !showRun }]}
+  data-chapter-num={numeral}
+  data-chapter-title={run}
+>
   <span class="chapter-num">{numeral}</span>
-  <span class="chapter-run">{run}</span>
+  {showRun && <span class="chapter-run">{run}</span>}
   <h2 class="chapter-title" data-headline><span class="hl">{title}</span></h2>
 </header>

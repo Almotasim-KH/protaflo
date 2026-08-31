@@ -42,10 +42,17 @@ const stamps: Record<string, string> = {
     />
     <h2 id="work-title" class="sr-only">{copy.chapters.one}</h2>
 
-    <div class="run">
+    {/* data-run is what plate.ts collects the plates from. Each plate then
+        carries its own trigger, and that trigger's progress is the plate's
+        title fill. */}
+    <div class="run" data-run>
       {
         projects.map((project, i) => (
-          <ProjectCard project={project} index={i} stamp={stamps[projectSlug(project.id)]} />
+          <ProjectCard
+            project={project}
+            index={i}
+            stamp={stamps[projectSlug(project.id)]}
+          />
         ))
       }
     </div>
