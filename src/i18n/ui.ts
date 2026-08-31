@@ -100,9 +100,12 @@ const copy = {
     // a project tab reads "Budgettr — Almotasim Khairullah" rather than
     // repeating the whole home title after every slug.
     siteName: L('Almotasim Khairullah', 'المعتصم خير الله'),
+    // Tracks the hero standfirst, with two things the page itself does not have
+    // to say: the name leads, because a search result is read out of context,
+    // and the city stays, because it is what local search matches on.
     description: L(
-      'Almotasim Khairullah, developer and data analyst in Yanbu. I build the interface and the model behind it.',
-      'المعتصم خير الله مطوّر ومحلل بيانات في ينبع. أبني الواجهة والنموذج الذي خلفها.'
+      'Almotasim Khairullah, web developer and data analyst in Yanbu. Design, development, and analysis in one track.',
+      'المعتصم خير الله، مطوّر ويب ومحلّل بيانات في ينبع. تصميم وتطوير وتحليل في مسار واحد.'
     ),
   },
   nav: {
@@ -120,21 +123,36 @@ const copy = {
     tagline: L('Worth every pixel', 'يستاهل كل بكسل'),
   },
   hero: {
-    line1: L('Storefronts that build identity', 'متاجر تصنع هوية'),
-    line2Pre: L('Data that ', 'وبيانات '),
-    line2Muted: L('explains', 'تشرح'),
-    line2Post: L(' itself', ' نفسها'),
-    // The line under the title has to answer who / what / where before the
-    // reader decides to stay. It used to read "We are the vision of 2030",
-    // which named no person, no discipline and no place — and said "we" for one
-    // person. The sentence that replaces it is the one already written as the
-    // meta description, where only search engines were seeing it.
-    sublinePre: L('Web developer and data ', 'مطوّر ويب ومحلل '),
-    sublineScramble: L('analyst', 'بيانات'),
-    sublinePost: L(
-      ' in Yanbu. I build the interface and the model behind it.',
-      ' في ينبع. أبني الواجهة والنموذج الذي خلفها.'
-    ),
+    // Kicker above the title. The headline states what the work does and the
+    // term row states what it is made of, but neither says what he IS — and a
+    // stranger needs that before either of the other two mean anything. Set
+    // small on purpose: it answers the question and gets out of the way.
+    eyebrow: L('Web developer and data analyst', 'مطوّر ويب ومحلّل بيانات'),
+    // Two lines, one sentence broken across them: the first states where the
+    // work starts, the second where it ends. The muted span carries the second
+    // half's verb, so the emphasis lands on the finished thing rather than on
+    // the idea.
+    line1: L('From the idea', 'من الفكرة'),
+    line2Pre: L('to something that ', 'إلى شيء '),
+    line2Muted: L('runs', 'يعمل'),
+    line2Post: L('', ''),
+    // The line under the title is set as a row of terms rather than a sentence:
+    // three disciplines and the claim that binds them, separated by dots the way
+    // a masthead sets a list. A sentence asks to be read; a list is scanned,
+    // which is all this line needs at the size it runs.
+    //
+    // Order is meaningful and identical in both locales — the reader meets the
+    // disciplines in the order the work moves through them, and the last item is
+    // the argument, not a fourth discipline.
+    terms: [
+      L('Design', 'تصميم'),
+      L('Development', 'وتطوير'),
+      L('Analysis', 'وتحليل'),
+      L('in one track', 'في مسار واحد'),
+    ],
+    // Index into `terms` that carries the scramble. On the last item on purpose:
+    // it is the claim, and it is where the row wants a full stop.
+    scrambleTerm: 3,
   },
   work: {
     // Chapter title. The old heading named the section; this one states what the
@@ -223,16 +241,6 @@ const copy = {
       'ستة أرقام، كل واحد منها من مشروع في هذه الصفحة. لا شيء هنا تقديري.'
     ),
     sourceLabel: L('Source', 'المصدر'),
-  },
-  // The close is a colophon, not a call-to-action island: what the page is set in,
-  // what it was built with, and where it was written.
-  colophon: {
-    set: L(
-      'Set in Poppins and IBM Plex Sans Arabic.',
-      'مصفوف بخطي Poppins وIBM Plex Sans Arabic.'
-    ),
-    built: L('Built with Astro, GSAP and Lenis.', 'مبني بـAstro وGSAP وLenis.'),
-    place: L('Written in Yanbu, on the Red Sea coast.', 'كُتب في ينبع، على ساحل البحر الأحمر.'),
   },
   about: {
     chapterTitle: L('Half builder, half analyst.', 'نصف مطوّر، ونصف محلل.'),

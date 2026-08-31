@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs><filter id="soft" x="-75%" y="-75%" width="250%" height="250%"><feGaussianBlur stdDeviation="4.5"></feGaussianBlur></filter></defs>
+  <g id="glow" filter="url(#soft)" opacity="0.6">
+  <path d="M30,32 Q60,50 90,32" fill="none" stroke="#D6EF46" stroke-width="5" stroke-linecap="round"></path>
+  <path d="M30,88 Q60,70 90,88" fill="none" stroke="#D6EF46" stroke-width="5" stroke-linecap="round"></path>
+  <path d="M60,52 C68,56 68,64 60,68 C52,64 52,56 60,52 Z" fill="#D6EF46"></path>
+  </g>
+  <g id="base">
+  <path d="M30,32 Q60,50 90,32" fill="none" stroke="#D6EF46" stroke-width="5" stroke-linecap="round"></path>
+  <path d="M30,88 Q60,70 90,88" fill="none" stroke="#D6EF46" stroke-width="5" stroke-linecap="round"></path>
+  <path d="M60,52 C68,56 68,64 60,68 C52,64 52,56 60,52 Z" fill="#D6EF46"></path>
+  </g>
+</svg>

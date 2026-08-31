@@ -7,6 +7,7 @@
 // [data-pixelated-scroll-transition] element and returns a disposer. Imports GSAP
 // from ./gsap-core so ScrollTrigger is registered exactly once (never here).
 import { gsap, prefersReduced } from './gsap-core';
+import { setScrollWeight } from './smooth-scroll';
 
 function responsiveCols(el) {
   const w = window.innerWidth;
@@ -55,9 +56,20 @@ export function initTileDissolve() {
       scrollTrigger: {
         trigger: el.closest('section'),
         start: el.dataset.scrollStart || 'bottom 60%',
-        end: 'bottom 20%',
-        scrub: 0.9, // a NUMBER — the playhead eases behind the scrollbar
+        // Ends late on purpose: the last tiles land just before the hero clears,
+        // so the dissolve is never still running over the section beneath it.
+        end: el.dataset.scrollEnd || 'bottom 10%',
+        // A NUMBER — the playhead eases behind the scrollbar. Raised with the
+        // scroll weight below: the front should trail the wheel far enough to
+        // read as mass, not far enough to feel disconnected from it.
+        scrub: 1.4,
         invalidateOnRefresh: true,
+        // The scroll itself gets heavy for exactly the span of the dissolve —
+        // a wheel notch travels less and the tail takes longer to settle, so
+        // pulling the hero apart costs something. onToggle fires on both edges
+        // and in both directions, which is what makes scrolling back up feel
+        // the same as scrolling down. See setScrollWeight in smooth-scroll.ts.
+        onToggle: (self) => setScrollWeight(self.isActive),
       },
     });
     tl.to(blocks, {
@@ -71,10 +83,14 @@ export function initTileDissolve() {
 
   // Disposer: kill each timeline's ScrollTrigger and remove its panel so a
   // ClientRouter swap can't leak triggers or stack duplicate overlays.
-  return () =>
+  return () => {
+    // Killing a trigger does not fire its onToggle, so a swap made mid-dissolve
+    // would strand the whole site at dissolve weight. Hand it back explicitly.
+    setScrollWeight(false);
     built.forEach((o) => {
       o.tl?.scrollTrigger?.kill();
       o.tl?.kill();
       o.panel.remove();
     });
+  };
 }

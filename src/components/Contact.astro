@@ -3,15 +3,13 @@
 //
 // The page has spent its whole length being a printed feature, so it ends the
 // way one ends. The ask is a line of running text at reading size, the two other
-// places to find me are footnotes beside it, and under a rule the page says what
-// it is set in and where it was written. The last screen holds content rather
+// places to find me are footnotes beside it. The last screen holds content rather
 // than fading out.
 import { getLangFromUrl, t } from '../i18n/ui';
 
 const lang = getLangFromUrl(Astro.url);
 const all = t(lang);
 const copy = all.contact;
-const col = all.colophon;
 const foot = all.footer;
 const email = 'portfolio.info@almotasim-kh.com';
 const linkedin = 'https://www.linkedin.com/in/almotasim-khairullah-73ab52166/';
@@ -39,9 +37,6 @@ const github = 'https://github.com/Almotasim-KH';
     </p>
 
     <div class="colophon" data-reveal>
-      <span>{col.set}</span>
-      <span>{col.built}</span>
-      <span>{col.place}</span>
       <span class="rights">{foot.rights}</span>
     </div>
   </div>
