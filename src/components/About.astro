@@ -45,23 +45,15 @@ const skills = marks.map((m, i) => ({ ...m, ...copy.skills[i] }));
   <Chapter numeral={all.chapters.numerals[1]} run={all.chapters.two} title={copy.chapterTitle} />
   <div class="cols">
     <div class="prose">
-      {/* Proof → story → method. The checkable claim leads, the paragraph gives
-          it context, and the habits close: three passes at different sizes so
-          the column has a hierarchy instead of an even run of paragraphs. */}
-      <p class="proof" data-reveal data-stamp="people">{copy.proof.map((line) => <span>{line}</span>)}</p>
+      {/* Opening → goal → thesis. The introduction leads at a larger size and
+          the two paragraphs under it carry the argument, so the column has a
+          hierarchy instead of an even run of paragraphs. */}
+      <p class="proof" data-reveal data-stamp="people">
+        {copy.greeting && <span>{copy.greeting}</span>}
+        {copy.proof.map((line) => <span>{line}</span>)}
+      </p>
       <p data-reveal>{copy.paragraph}</p>
-      <p class="credentials" data-reveal>{copy.credentials}</p>
-      <div class="practice" data-reveal>
-        <h3>{copy.practiceTitle}</h3>
-        <dl>
-          {copy.practice.map((item) => (
-            <div class="p-row">
-              <dt>{item.label}</dt>
-              <dd>{item.text}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
+      <p data-reveal>{copy.closer}</p>
     </div>
     <ul class="skills" data-reveal-stagger data-draw-group>
       {
@@ -109,83 +101,32 @@ const skills = marks.map((m, i) => ({ ...m, ...copy.skills[i] }));
     flex-direction: column;
     gap: 24px;
   }
+  /* Full-strength ink throughout: the section is one continuous statement, and
+     setting the paragraphs under the opening in the muted grey made them read
+     as supporting notes to it rather than the rest of the same voice. */
   .prose p {
     margin: 0;
     font-size: 18px;
-    color: var(--color-ink-muted);
+    color: var(--color-ink);
     line-height: 1.6;
     max-width: 460px;
   }
-  /* Larger and in full-strength ink: this is the only checkable claim in the
-     section, so it should not be set in the same grey as the story. Each
-     sentence gets its own line — the second is the evidence for the first, and
+  /* One step up from the paragraphs below it: the opening introduces the voice
+     the rest of the section speaks in, and each line gets its own row because
      wrapped together they read as one long run-on. */
   .prose p.proof {
     font-size: 21px;
     line-height: 1.5;
-    color: var(--color-ink);
     max-width: 480px;
   }
   .proof span {
     display: block;
   }
+  /* Every line in the opening carries the same ink: the greeting and the two
+     lines under it are one voice, and dropping the later ones to the muted grey
+     read as an aside to the first. */
   .proof span + span {
     margin-top: 10px;
-    color: var(--color-ink-muted);
-  }
-  /* The record, not the story — one step down from the paragraph so it reads as
-     a footnote to it rather than a fourth claim. */
-  .prose p.credentials {
-    font-size: 16px;
-    line-height: 1.55;
-  }
-  .practice {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    max-width: 460px;
-    padding-top: 8px;
-  }
-  .practice h3 {
-    margin: 0;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-ink-muted);
-  }
-  .practice dl {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-  }
-  /* A rule between rows rather than around each one: the three habits are one
-     list, and boxing them would give working notes the weight of the skill
-     marks in the next column. */
-  .p-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 4px 10px;
-    padding: 12px 0;
-    border-top: 1px solid var(--color-hairline);
-  }
-  .p-row:first-child {
-    border-top: 0;
-    padding-top: 0;
-  }
-  .p-row dt {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-  .p-row dd {
-    margin: 0;
-    font-size: 16px;
-    line-height: 1.5;
-    color: var(--color-ink-muted);
   }
   /* No top offset: the prose and the skill marks are two halves of one row, so
      they start on the same line rather than the list hanging below the text. */

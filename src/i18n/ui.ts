@@ -245,51 +245,34 @@ const copy = {
     sourceLabel: L('Source', 'المصدر'),
   },
   about: {
-    chapterTitle: L('Half builder, half analyst.', 'نصف مطوّر، ونصف محلل.'),
-    // The proof line goes first and is set larger than the prose: it is the one
-    // claim in the section a reader can check, and every portfolio makes the
-    // claims in the paragraph below it.
+    chapterTitle: L('Half builder, half analyst.', 'نصف مطور، ونصف محلل.'),
+    // A greeting the Arabic locale opens with and English has no equivalent for,
+    // so the English side is deliberately empty and the line is skipped rather
+    // than rendered blank.
+    greeting: L('', 'السلام عليكم.'),
+    // The opening lines are set larger than the prose below them: they say who
+    // is talking before the section argues anything.
     proof: [
       L(
-        'I worked in web development and data analysis before the AI tools, and after them.',
-        'اشتغلت في تطوير المواقع وتحليل البيانات قبل أدوات الذكاء الاصطناعي وبعدها.'
+        "I'm currently working and studying, and I've chosen technology as my path.",
+        'موظف وطالب، واخترت التقنية طريقا لي.'
       ),
       L(
-        'One platform I shipped is used by 30 people, and the dashboards are still open in occupancy reviews.',
-        'إحدى المنصات التي أطلقتها يستخدمها ٣٠ شخصًا، ولوحات البيانات لا تزال تُستخدم في مراجعة حالة الإشغال.'
+        'My journey started between work, study, and courses, then it grew into freelance work and personal projects.',
+        'بدأت مسيرتي بين العمل والدراسة والدورات، ثم امتدت إلى الأعمال الحرة والمشاريع الشخصية.'
       ),
     ],
     paragraph: L(
-      "Hi, I'm Almotasim. I started in tech in 2022, when building a project took weeks, sometimes months. Today it takes far less. The real difference isn't the speed, it's that I know what is happening underneath.",
-      'أهلًا، أنا المعتصم. بدأت أعمل في المجال التقني سنة ٢٠٢٢، لمّا كان بناء المشروع يستغرق أسابيع وأحيانًا أشهر. اليوم يستغرق مدة أقصر بكثير. والفرق الحقيقي مو في السرعة، في إني أعرف وش يصير تحت.'
+      'My goal is to build something useful that serves people and makes their experience easier, through technology and AI.',
+      'هدفي أن أصنع شيئا نافعا يخدم الناس ويسهل تجربتهم، عبر عالم التقنية والذكاء الاصطناعي.'
     ),
-    // Kept as its own line rather than folded into the paragraph above: the
-    // paragraph is the story, this is the record, and running them together
-    // made the studying read as part of the same sentence as the doing.
-    credentials: L(
-      "I hold a diploma in Web & Tech Development and I'm in the final year of my Data Science bachelor's degree.",
-      'حاصل على دبلوم في تطوير الويب والتقنية، وحاليًا بسنتي الأخيرة في بكالوريوس علم البيانات.'
+    // The thesis the section closes on, set at prose weight rather than as a
+    // footnote: it is the argument the paragraph above is building toward, not
+    // an aside to it.
+    closer: L(
+      "In the 21st century, if you know how to use the tools the right way, with the right thinking, you'll end up with a product that looks like you.",
+      'في القرن الواحد والعشرين، إذا عرفت كيف تستخدم الأدوات بالطريقة الصحيحة وبتفكير سليم، فتأكد أنك ستخرج بمنتج يشبهك.'
     ),
-    practiceTitle: L('How I work', 'طريقة العمل'),
-    // Label plus one rule each. These are working habits, not services — the
-    // label carries the moment, the line carries the rule.
-    practice: [
-      {
-        label: L('Before I start', 'قبل أبدأ'),
-        text: L(
-          'I work the problem by hand before I turn on any tool.',
-          'أفهم المشكلة يدويًا قبل ما أشغل أي أداة.'
-        ),
-      },
-      {
-        label: L('Planning', 'التخطيط'),
-        text: L('I plan before I write the first line.', 'أخطط قبل ما أكتب أول سطر.'),
-      },
-      {
-        label: L('Data', 'البيانات'),
-        text: L('I clean it before any chart.', 'أنظّف قبل أي رسم بياني.'),
-      },
-    ],
     // Skills stay in English on the Arabic side too — these are tool and
     // discipline names, and transliterating them read worse than leaving the
     // Latin script the industry actually uses. Written out twice anyway, so it
@@ -308,7 +291,7 @@ const copy = {
       },
       {
         title: L('Web Development', 'Web Development'),
-        desc: L('React, APIs, full-stack', 'React, APIs, full-stack'),
+        desc: L('Full-Stack Web Developer', 'Full-Stack Web Developer'),
       },
       {
         title: L('Excel', 'Excel'),
