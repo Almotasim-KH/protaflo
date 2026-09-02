@@ -33,6 +33,9 @@
   /* Poppins stays first so Latin runs inside Arabic text keep the brand face;
      the browser only reaches Plex for codepoints Poppins doesn't cover. */
   --font-ar: 'Poppins', 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
+  /* System stack, deliberately: the KPI cards are the only monospace on the
+     page and a webfont for six cards is a request the page does not need. */
+  --font-mono: ui-monospace, SFMono-Regular, 'Cascadia Mono', Menlo, Consolas, monospace;
 
   --ease-brand: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -233,13 +236,13 @@ html.lenis body {
   background: #fff;
 }
 [data-headline].play .hl::before {
-  animation: barSweep 1.25s var(--ease-brand) both;
+  animation: barSweep 1.25s var(--ease-brand) var(--d, 0s) both;
 }
 [data-headline].play .hl::after {
-  animation: barSweep 1.25s var(--ease-brand) 0.12s both;
+  animation: barSweep 1.25s var(--ease-brand) calc(var(--d, 0s) + 0.12s) both;
 }
 [data-headline].play .hl {
-  animation: htextIn 1.25s linear both;
+  animation: htextIn 1.25s linear var(--d, 0s) both;
 }
 @keyframes barSweep {
   0% {
@@ -598,6 +601,12 @@ html.is-scroll-locked body {
 .chapter-open.no-run .chapter-title {
   grid-row: 2;
 }
+/* One line box per authored line: the bar sweep sits on the text span, so two
+   lines inside a single span would sweep one rectangle across both and paint
+   the ragged edge of the shorter one. */
+.chapter-line {
+  display: block;
+}
 .chapter-title {
   grid-column: 2;
   margin: clamp(18px, 3vw, 34px) 0 0;
@@ -753,150 +762,7 @@ html.is-scroll-locked body {
   }
 }
 
-/* ---- The evidence band ----
-   The signature move. Every verified figure the page passes stamps itself into a
-   band at the foot of the window, with the project it came from, and the band
-   hands the whole set to the evidence plate at the end.
-
-   It was built as a margin rail first, and that was wrong: this page runs at a
-   1240px measure inside clamp(24px, 7vw, 120px) gutters, so there is no outer
-   margin at any width a reader actually has. A rail in a margin that does not
-   exist sits on top of the reading column, which is what it did. A band along
-   the foot steals 40px of viewport, is legible over anything, and says what it
-   is on its face instead of being a block of numbers in a corner.
-
-   Only real numbers ever enter it. No figure in the content, no line here. */
-.ledger {
-  position: fixed;
-  inset-inline: 0;
-  bottom: 0;
-  z-index: 25;
-  pointer-events: none;
-  display: flex;
-  align-items: baseline;
-  gap: clamp(10px, 2vw, 28px);
-  padding: 11px clamp(16px, 7vw, 120px) 12px;
-  background: var(--color-canvas);
-  border-top: 1px solid var(--color-hairline);
-  opacity: 0;
-  transform: translate3d(0, 100%, 0);
-  transition:
-    opacity 0.45s var(--ease-out),
-    transform 0.55s var(--ease-out),
-    background-color 0.4s var(--ease-out);
-}
-/* The band rises out of the bottom edge the first time a figure is stamped, so
-   its arrival is itself the first thing it says. */
-.ledger.is-on {
-  opacity: 1;
-  transform: none;
-}
-/* Over the dark chapters the band flips with the ground. */
-.ledger.on-dark {
-  background: var(--color-plate);
-  border-top-color: var(--color-hairline-invert);
-  --ledger-ink: var(--color-ink-invert);
-  --ledger-ink-muted: var(--color-ink-invert-muted);
-}
-.ledger-head {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ledger-ink-muted, var(--color-ink-muted));
-  white-space: nowrap;
-}
-.ledger-count {
-  font-variant-numeric: tabular-nums;
-  color: var(--ledger-ink, var(--color-ink));
-  font-weight: 600;
-}
-/* What the band is, said once, in the smallest type on it. */
-.ledger-caption {
-  margin: 0;
-  font-size: 11px;
-  color: var(--ledger-ink-muted, var(--color-ink-muted));
-  white-space: nowrap;
-}
-/* One row, holding whichever figure was stamped last. The rest of the record is
-   still in the DOM underneath it, which is what the plate collects at the end. */
-.ledger-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  flex: 1;
-  min-width: 0;
-  height: 17px;
-}
-.ledger-line {
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  display: flex;
-  align-items: baseline;
-  gap: 9px;
-  min-width: 0;
-  color: var(--ledger-ink, var(--color-ink));
-  /* Stamped, not faded in: it arrives already at size and settles the last few
-     percent, the way a stamp meets paper. */
-  opacity: 0;
-  transform: translateY(5px) scale(1.05);
-  transition:
-    opacity 0.3s var(--ease-out),
-    transform 0.3s var(--ease-out);
-}
-.ledger-line.is-stamped {
-  opacity: 1;
-  transform: none;
-}
-/* Only the newest is shown. An older line is still stamped, still counted, and
-   still collected by the plate; it has simply been read already. It leaves
-   faster than the new one arrives, because the two share one row and a
-   symmetrical crossfade renders both figures on top of each other. */
-.ledger-line.is-past {
-  opacity: 0;
-  transition: opacity 0.14s var(--ease-out);
-}
-.ledger-v {
-  font-size: 13px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.ledger-s {
-  font-size: 11px;
-  color: var(--ledger-ink-muted, var(--color-ink-muted));
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-/* The handoff. The band does not simply stop being there: it drops back out of
-   the bottom edge as the evidence plate takes its lines, so the two read as one
-   motion instead of two things happening at once. */
-.ledger.is-handoff {
-  transform: translate3d(0, 100%, 0);
-}
-@media (max-width: 700px) {
-  /* The caption has done its work by the time the band is this narrow, and the
-     figure is what has to survive. */
-  .ledger-caption {
-    display: none;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ledger,
-  .ledger.is-handoff {
-    transform: none;
-  }
-  .ledger-line {
-    transform: none;
-  }
-}
-
-/* ---- Evidence plate, the peak ---- */
+/* ---- KPI plate, the peak ---- */
 /* The peak holds the most scroll room on the page: the plate is the one screen
    the reader is meant to leave with, and the space under it is what keeps it on
    screen while they read the last of it. */
@@ -914,71 +780,137 @@ html.is-scroll-locked body {
   line-height: 1.6;
   color: var(--color-ink-muted);
 }
-.evidence-list {
+/* The stack. Six cards on a loose serpentine path rather than a grid: each one
+   is placed absolutely, tilted a degree or two, and overlaps its neighbour by
+   20-35px so the set reads as a handful of cards laid down one after another.
+
+   Two rules keep every figure readable, and they are the whole reason the
+   geometry below is not arbitrary:
+
+     1. Of any two overlapping cards, the one further along the path — right of,
+        or below, the other — carries the higher z-index. So an overlap always
+        eats into the covered card's trailing or bottom edge, never its leading
+        edge, which is where every value, label and source starts.
+     2. The trailing and bottom padding are both wider than the deepest overlap
+        (46px against 35px at the narrowest the stack runs), so what gets covered
+        is always empty card, never ink.
+
+   Depth comes from overlap and the border alone. No shadow, no gradient: the
+   cards are lit by their own outline. */
+.evidence-stack {
+  --card-w: 34%;
+  --card-h: clamp(250px, 20vw, 272px);
+  /* Both rows plus the offset of the lowest card, derived from the card height
+     so one variable moves the whole path. */
+  height: calc(var(--card-h) * 2.072);
   list-style: none;
   margin: clamp(40px, 7vw, 84px) 0 0;
   padding: 0;
-  display: grid;
-  /* Six across in threes leaves the last row with two, and the two take the
-     wider cells, so the grid resolves instead of trailing into an empty one. */
-  grid-template-columns: repeat(6, 1fr);
-  gap: 1px;
-  /* The plate's own ground, not the hairline: a cell that has not landed yet is
-     transparent, and a hairline-coloured field behind it renders every pending
-     cell as a grey hole. On the plate colour the same cell is simply not there
-     yet, which is what the arrival is supposed to look like. */
-  background: var(--color-plate);
+  position: relative;
 }
 .evidence-item {
-  grid-column: span 2;
-  background: var(--color-plate);
-  /* The rule travels with the cell rather than being painted under it, so it
-     arrives when the cell does. */
-  box-shadow: 0 0 0 1px var(--color-hairline);
-  padding: clamp(22px, 3vw, 34px);
+  position: absolute;
+  inset-inline-start: var(--x);
+  top: var(--y);
+  z-index: var(--z);
+  width: var(--card-w);
+  height: var(--card-h);
+  box-sizing: border-box;
+  /* One step below the plate: the cards are objects lying ON the ground, so
+     they cannot be the same colour as it. */
+  background: #0c0c0b;
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  border-radius: 15px;
+  /* Trailing and bottom padding run wide on purpose: that is the margin the
+     next card in the path is allowed to cover. Logical, not physical: the whole
+     path mirrors in Arabic, so the wide side has to mirror with it. */
+  padding: clamp(20px, 2.4vw, 30px) clamp(20px, 2.4vw, 30px) clamp(24px, 2.6vw, 32px);
+  padding-inline-end: clamp(46px, 5vw, 76px);
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-height: 220px;
-  /* The lines arrive from the rail: each one lands from the direction the
-     ledger sat in, which is what makes the plate read as the rail emptying
-     rather than as a grid fading in. */
+  font-family: var(--font-mono);
+  /* The cards are laid down rather than faded up: each one arrives from the
+     leading side, a beat after the one before it. The tilt is part of the
+     resting state, so it has to be restated in both transforms or the cards
+     land square. */
   opacity: 0;
-  transform: translate3d(-14px, 10px, 0);
+  transform: translate3d(-14px, 10px, 0) rotate(var(--rot));
   transition:
     opacity 0.5s var(--ease-out),
     transform 0.6s var(--ease-out);
 }
 .evidence-item.is-landed {
   opacity: 1;
-  transform: none;
+  transform: rotate(var(--rot));
 }
 [dir='rtl'] .evidence-item {
-  transform: translate3d(14px, 10px, 0);
+  transform: translate3d(14px, 10px, 0) rotate(var(--rot));
+  /* Monospace Latin has no Arabic companion in the system stack, so the Arabic
+     side keeps the brand face and the cards carry their character through the
+     geometry instead. */
+  font-family: var(--font-ar);
 }
 [dir='rtl'] .evidence-item.is-landed {
-  transform: none;
+  transform: rotate(var(--rot));
 }
-.evidence-item:nth-child(5),
+/* The path. Row one runs left to right and drifts; row two runs back right to
+   left under it, catching the bottom edge of the row above. z-index follows
+   position on the page, never source order — see rule 1 above — which is why
+   the numbers below are not sequential: card 6 sits under card 2 because card 2
+   is to its right, and over card 1 because it is below it. Solving that
+   ordering for all nine touching pairs is what these six values are. */
+.evidence-item:nth-child(1) {
+  --x: 1%;
+  --y: 0px;
+  --rot: -1.4deg;
+  --z: 1;
+}
+.evidence-item:nth-child(2) {
+  --x: 32%;
+  --y: calc(var(--card-h) * 0.16);
+  --rot: 1.1deg;
+  --z: 3;
+}
+.evidence-item:nth-child(3) {
+  --x: 63%;
+  --y: calc(var(--card-h) * 0.016);
+  --rot: -0.8deg;
+  --z: 5;
+}
+.evidence-item:nth-child(4) {
+  --x: 63%;
+  --y: calc(var(--card-h) - 18px);
+  --rot: 1.6deg;
+  --z: 6;
+}
+.evidence-item:nth-child(5) {
+  --x: 32%;
+  --y: calc(var(--card-h) * 1.072);
+  --rot: -1.2deg;
+  --z: 4;
+}
 .evidence-item:nth-child(6) {
-  grid-column: span 3;
+  --x: 1%;
+  --y: calc(var(--card-h) - 22px);
+  --rot: 0.9deg;
+  --z: 2;
 }
 .evidence-v {
-  font-size: clamp(30px, 4.4vw, 52px);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1;
+  font-size: clamp(26px, 3.2vw, 40px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
   font-variant-numeric: tabular-nums;
 }
 .evidence-l {
-  font-size: 15px;
-  line-height: 1.5;
-  max-width: 30ch;
+  font-size: 14px;
+  line-height: 1.45;
 }
 .evidence-src {
   margin-top: auto;
-  font-size: 11px;
-  letter-spacing: 0.12em;
+  font-size: 10px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-ink-muted);
 }
@@ -988,27 +920,46 @@ html.is-scroll-locked body {
   color: var(--color-ink);
   letter-spacing: 0.02em;
   text-transform: none;
-  font-size: 12.5px;
+  font-size: 12px;
   margin-top: 3px;
 }
-@media (max-width: 900px) {
-  .evidence-list {
-    grid-template-columns: 1fr 1fr;
+/* Below the width the path was drawn for, the cards stop being placed and
+   become a run: absolute positions computed for 1240px do not survive being
+   squeezed, and a card whose value is clipped has failed at the one job it
+   has. The tilt and a small negative margin keep the hand-laid reading. */
+@media (max-width: 1000px) {
+  .evidence-stack {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  .evidence-item,
-  .evidence-item:nth-child(5),
-  .evidence-item:nth-child(6) {
-    grid-column: span 1;
+  .evidence-item {
+    position: relative;
+    inset-inline-start: auto;
+    top: auto;
+    width: min(420px, 100%);
+    height: auto;
+    min-height: 190px;
+    padding: 24px 28px 26px;
+    padding-inline-end: 28px;
+    z-index: auto;
   }
-}
-@media (max-width: 560px) {
-  .evidence-list {
-    grid-template-columns: 1fr;
+  .evidence-item + .evidence-item {
+    margin-top: -20px;
+  }
+  .evidence-item:nth-child(even) {
+    --rot: 1.2deg;
+    align-self: flex-end;
+  }
+  .evidence-item:nth-child(odd) {
+    --rot: -1.2deg;
+    align-self: flex-start;
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .evidence-item {
-    transform: none;
+    transform: rotate(var(--rot));
   }
 }
 

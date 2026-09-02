@@ -104,8 +104,8 @@ const copy = {
     // to say: the name leads, because a search result is read out of context,
     // and the city stays, because it is what local search matches on.
     description: L(
-      'Almotasim Khairullah, web developer and data analyst in Yanbu. Design, development, and analysis in one track.',
-      'المعتصم خير الله، مطوّر ويب ومحلّل بيانات في ينبع. تصميم وتطوير وتحليل في مسار واحد.'
+      'Almotasim Khairullah, web developer and data analyst in Yanbu. Design, deployment, analysis, and AI in one track.',
+      'المعتصم خير الله، مطوّر ويب ومحلّل بيانات في ينبع. تصميم ونشر وتحليل وذكاء اصطناعي في مسار واحد.'
     ),
   },
   nav: {
@@ -136,23 +136,12 @@ const copy = {
     line2Pre: L('to something that ', 'إلى شيء '),
     line2Muted: L('runs', 'يعمل'),
     line2Post: L('', ''),
-    // The line under the title is set as a row of terms rather than a sentence:
-    // three disciplines and the claim that binds them, separated by dots the way
-    // a masthead sets a list. A sentence asks to be read; a list is scanned,
-    // which is all this line needs at the size it runs.
-    //
-    // Order is meaningful and identical in both locales — the reader meets the
-    // disciplines in the order the work moves through them, and the last item is
-    // the argument, not a fourth discipline.
-    terms: [
-      L('Design', 'تصميم'),
-      L('Development', 'وتطوير'),
-      L('Analysis', 'وتحليل'),
-      L('in one track', 'في مسار واحد'),
-    ],
-    // Index into `terms` that carries the scramble. On the last item on purpose:
-    // it is the claim, and it is where the row wants a full stop.
-    scrambleTerm: 3,
+    // The line under the title is one claim, not a list of disciplines: the
+    // headline says what the work does, and this says which era it is built
+    // for. Split in two so only the year churns — a whole sentence scrambling
+    // runs long enough to read as a fault rather than as an effect.
+    claim: L('We are the vision of', 'نحن رؤية'),
+    claimYear: L('2030', '2030'),
   },
   work: {
     // Chapter title. Deliberately the same string as chapters.one rather than a
@@ -168,44 +157,31 @@ const copy = {
     one: L('The work', 'الأعمال'),
     two: L('How I work', 'طريقة العمل'),
     three: L('The record', 'السجل'),
-    four: L('The evidence', 'الدليل'),
+    four: L('KPIs', 'مؤشرات الأداء'),
     // Roman numerals are language-independent, but Arabic sets its own digits, so
     // the pair is written out rather than assumed.
     numerals: [L('I', '١'), L('II', '٢'), L('III', '٣'), L('IV', '٤')],
   },
-  // The margin ledger. Every verified figure the reader passes stamps one line
-  // into the rail, and the rail empties itself into the evidence plate at the end.
-  // `value` is rendered as written; `count` is the numeric target where one exists,
-  // and an entry without a count simply appears rather than counting.
-  ledger: {
-    label: L('Evidence', 'الدليل'),
-    // Four words under the heading, once. Without them the rail is a small block
-    // of numbers in the corner and nobody can tell what it is doing or why it is
-    // filling up.
-    caption: L('collected as you read', 'تُجمع أثناء القراءة'),
-    // Template rather than a function: the rail rewrites this string on every
-    // stamp, so the placeholders have to survive being handed to the browser as
-    // a data attribute.
-    of: L('{n} of {total}', '{n} من {total}'),
+  // The figures on the KPI plate. `value` is rendered as written; `count` is the
+  // numeric target where one exists, and an entry without a count simply appears
+  // rather than counting.
+  figures: {
     entries: [
       {
-        id: 'sources',
         count: '12',
         value: L('12', '١٢'),
         label: L('Excel sources merged into one dashboard', 'مصدر Excel مدمج في لوحة واحدة'),
         source: L('Revenue Analysis 2024', 'تحليل الإيرادات 2024'),
       },
       {
-        id: 'minutes',
         // A range, not a quantity: there is nothing here for a counter to count
         // up to, so this line simply arrives.
         count: null,
-        value: L('60 min → under 1', 'أكثر من 60 دقيقة ← أقل من دقيقة'),
+        value: L('60 min → 1 min', '60 دقيقة ← دقيقة واحدة'),
         label: L('Time to find one revenue number', 'الوقت للوصول إلى رقم إيراد واحد'),
         source: L('Revenue Analysis 2024', 'تحليل الإيرادات 2024'),
       },
       {
-        id: 'hours',
         // One hour, not a countable climb — this line arrives rather than
         // counting, same as the range above it.
         count: null,
@@ -214,21 +190,18 @@ const copy = {
         source: L('Camp Operations Dashboard', 'لوحة العمليات التشغيلية'),
       },
       {
-        id: 'people',
-        count: '30',
-        value: L('30', '٣٠'),
+        count: '27',
+        value: L('27', '٢٧'),
         label: L('People using one platform I shipped', 'شخصًا يستخدمون منصة أطلقتها'),
-        source: L('Management System', 'نظام الإدارة'),
+        source: L('Budgettr', 'Budgettr'),
       },
       {
-        id: 'teams',
         count: '44',
-        value: L('4th of 44', 'الرابع من 44'),
+        value: L('4th /44', '4th /44'),
         label: L('Teams at YCATThon, tourism track', 'فريقًا في YCATThon، المسار السياحي'),
         source: L('YCATThon 2024', 'YCATThon 2024'),
       },
       {
-        id: 'participants',
         count: '300',
         value: L('~300', '~300'),
         label: L('Participants in the LinkedIn data challenge', 'مشاركًا في تحدي البيانات على LinkedIn'),
@@ -237,19 +210,17 @@ const copy = {
     ],
   },
   evidence: {
-    title: L('The evidence', 'الدليل'),
+    title: L('KPIs', 'مؤشرات الأداء'),
     lead: L(
-      'Six figures, each one from a project on this page. Nothing here is an estimate.',
-      'ستة أرقام، كل واحد منها من مشروع في هذه الصفحة. لا شيء هنا تقديري.'
+      'Six figures, each one from a project on this page.',
+      'ستة أرقام، كل واحد منها من مشروع في هذه الصفحة.'
     ),
     sourceLabel: L('Source', 'المصدر'),
   },
   about: {
-    chapterTitle: L('Half builder, half analyst.', 'نصف مطور، ونصف محلل.'),
-    // A greeting the Arabic locale opens with and English has no equivalent for,
-    // so the English side is deliberately empty and the line is skipped rather
-    // than rendered blank.
-    greeting: L('', 'السلام عليكم.'),
+    // The newline is an authored line break, not formatting: Chapter.astro sets
+    // each half on its own line and sweeps them in one after the other.
+    chapterTitle: L('Half builder\nhalf analyst', 'نصف مطور\nونصف محلل'),
     // The opening lines are set larger than the prose below them: they say who
     // is talking before the section argues anything.
     proof: [
@@ -281,8 +252,8 @@ const copy = {
       {
         title: L('UI / UX Design', 'UI / UX Design'),
         desc: L(
-          'Figma, design systems, prototyping',
-          'Figma, design systems, prototyping'
+          'Figma, Claude Design, scrolling, layering',
+          'Figma, Claude Design, scrolling, layering'
         ),
       },
       {
@@ -310,7 +281,7 @@ const copy = {
     ],
   },
   experience: {
-    chapterTitle: L('The short version.', 'النسخة المختصرة.'),
+    chapterTitle: L('Work journey', 'مسيرة العمل'),
     // The job is one row; the analytics and engineering work built alongside it
     // gets its own, because none of it is front-desk duty. One array for both
     // locales, so the two timelines always list the same rows in the same order.
@@ -345,7 +316,7 @@ const copy = {
         ),
       },
       {
-        when: L('2025 to now', '2025 إلى الآن'),
+        when: L('2025 - now', '2025 - الآن'),
         role: L(
           'Front Desk Group Leader, Namariq',
           'مسؤول قسم الاستقبال، نمارق'
@@ -359,12 +330,12 @@ const copy = {
         when: L('2024', '2024'),
         role: L('YCATThon participant', 'المشاركة في YCATThon'),
         desc: L(
-          'Fourth place out of forty-four teams. The hackathon ran across several sectors; I entered the tourism track.',
-          'المركز الرابع من بين أربعة وأربعين فريقًا. فكرة المسابقة كانت في عدة قطاعات، وأنا اخترت السياحي.'
+          '4th place out of 44 teams. The hackathon ran across several sectors; I entered the tourism track.',
+          'المركز الرابع من بين 44 فريقًا. فكرة المسابقة كانت في عدة قطاعات، وأنا اخترت السياحي.'
         ),
       },
       {
-        when: L('2023 to 2025', '2023 إلى 2025'),
+        when: L('2023 - 2025', '2023 - 2025'),
         role: L('Front Desk Clerk, Namariq', 'موظف استقبال، نمارق'),
         desc: L(
           'Handled guest and visitor services, managed reservation correspondence, responded to emails, and performed night audit operations.',
@@ -372,7 +343,7 @@ const copy = {
         ),
       },
       {
-        when: L('2023 to 2025', '2023 إلى 2025'),
+        when: L('2023 - 2025', '2023 - 2025'),
         role: L('UI/UX Designer', 'مصمم واجهات مستخدم'),
         desc: L(
           'Designed wireframes, web interfaces, and mobile applications for clients using Figma.',
@@ -380,7 +351,7 @@ const copy = {
         ),
       },
       {
-        when: L('2018 to 2023', '2018 إلى 2023'),
+        when: L('2018 - 2023', '2018 - 2023'),
         role: L('Assorted work', 'أعمال مختلفة'),
         // Deliberately no detail line — this row is there for the timeline, not
         // for a story. `desc` is optional, and optional for both locales at

@@ -9,11 +9,18 @@ interface Props {
   numeral: string;
   /** Running head, repeated by the folio. */
   run: string;
-  /** The chapter's own title, the largest type in the section. */
+  /**
+   * The chapter's own title, the largest type in the section. A newline in the
+   * string is an authored line break: the two halves are set on their own lines
+   * and sweep in one after the other, rather than wrapping wherever the measure
+   * happens to run out.
+   */
   title: string;
 }
 
 const { numeral, run, title } = Astro.props;
+
+const titleLines = title.split('\n');
 
 // A chapter whose title IS its running head would print the same words twice,
 // once small and once large. Where they match, only the title is set — the folio
@@ -29,5 +36,11 @@ const showRun = run.trim().toLocaleLowerCase() !== title.trim().toLocaleLowerCas
 >
   <span class="chapter-num">{numeral}</span>
   {showRun && <span class="chapter-run">{run}</span>}
-  <h2 class="chapter-title" data-headline><span class="hl">{title}</span></h2>
+  <h2 class="chapter-title" data-headline>
+    {titleLines.map((line, i) => (
+      <span class="chapter-line" style={i ? `--d:${i * 0.18}s` : undefined}>
+        <span class="hl">{line}</span>
+      </span>
+    ))}
+  </h2>
 </header>

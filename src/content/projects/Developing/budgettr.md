@@ -9,6 +9,12 @@ summary: A dashboard that organises your spending at the start of every month, s
 cover: ../../../assets/budgettr/cover.png
 client: personal
 status: live
+# The home page's KPI plate and the footer band both state that a platform I
+# shipped is used by 27 people, and both name this project as the source — so
+# the number has to be visible on the page a reader opens to check it.
+stats:
+  - value: "27"
+    label: "People using it"
 headline: A dashboard that organises your spending at the start of every month, so you have a clear view of where it goes and a record you can go back to.
 stack: [React, TypeScript, PostgreSQL, Tailwind]
 gallery:
@@ -52,6 +58,9 @@ ar:
   summary: 'لوحة إدارية تنظم فيها مصروفك في بداية كل شهر. بحيث توصل لرؤية واضحة للمصروفات في الشهر ودليل تقدر ترجع له.'
   headline: 'لوحة إدارية تنظم فيها مصروفك في بداية كل شهر. بحيث توصل لرؤية واضحة للمصروفات في الشهر ودليل تقدر ترجع له.'
   tags: ['مشروع شخصي']
+  stats:
+    - value: "٢٧"
+      label: "شخصًا يستخدمونها"
   body:
     - "1. السياق: مشكلة شخصية. مصروفاتي كانت متوزعة على طول الشهر وما عندي طريقة أشوف وين راحت، فقررت أبني أداة تحلها لي أنا أول شيء."
     - "2. المشكلة: بدون رؤية واضحة للشهر، تتبع المصروفات يعني تتنقل بين الملاحظات وكشف الحساب، وهدف الادخار يضل تخمين مو شي تقدر تقيسه."

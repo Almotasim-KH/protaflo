@@ -13,7 +13,6 @@ import Chapter from './Chapter.astro';
 import ProjectCard from './ProjectCard.astro';
 import type { CollectionEntry } from 'astro:content';
 import { getLangFromUrl, t } from '../i18n/ui';
-import { projectSlug } from '../i18n/slug';
 
 interface Props {
   projects: CollectionEntry<'projects'>[];
@@ -22,15 +21,6 @@ interface Props {
 const { projects } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const copy = t(lang);
-
-// Slug → ledger ids. Both figures below are stated in that project's own body,
-// so a line can never reach the rail beside work that did not produce it. Keyed
-// on the built slug (the content loader slugifies the file name), not on the
-// file name itself.
-const stamps: Record<string, string> = {
-  'actual-revenues-of-2024': 'sources minutes',
-  'camp-operations-dashboard': 'hours',
-};
 ---
 
 <section id="work" class="work" data-ground="light" aria-labelledby="work-title">
@@ -48,11 +38,7 @@ const stamps: Record<string, string> = {
     <div class="run" data-run>
       {
         projects.map((project, i) => (
-          <ProjectCard
-            project={project}
-            index={i}
-            stamp={stamps[projectSlug(project.id)]}
-          />
+          <ProjectCard project={project} index={i} />
         ))
       }
     </div>

@@ -6,9 +6,6 @@
 // with a date field. The year level with the reader is the one in full ink;
 // plate.ts owns that.
 //
-// Two rows carry release points for the margin ledger, and both figures are
-// stated in the row itself: fourth of forty-four teams at YCATThon, and around
-// three hundred participants in the LinkedIn challenge.
 import Chapter from './Chapter.astro';
 import { getLangFromUrl, t } from '../i18n/ui';
 
@@ -16,10 +13,6 @@ const lang = getLangFromUrl(Astro.url);
 const all = t(lang);
 const copy = all.experience;
 const rows = copy.rows;
-
-// Row index → ledger ids. Indexed rather than matched on text so a translation
-// can never move a release point off the row that states the figure.
-const stamps: Record<number, string> = { 2: 'participants', 4: 'teams' };
 ---
 
 <section id="experience" class="exp" data-ground="light" aria-label={all.chapters.three}>
@@ -35,8 +28,8 @@ const stamps: Record<number, string> = { 2: 'participants', 4: 'teams' };
 
       <div class="rows" data-reveal-stagger>
         {
-          rows.map((r, i) => (
-            <div class="row" data-reveal-item data-record-row data-stamp={stamps[i]}>
+          rows.map((r) => (
+            <div class="row" data-reveal-item data-record-row>
               <div class="when">{r.when}</div>
               <div class="body">
                 <div class="role">{r.role}</div>

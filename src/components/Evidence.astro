@@ -1,21 +1,25 @@
 ---
-// The evidence plate — the page's peak.
+// The KPI plate — the page's peak.
 //
-// The margin ledger has been collecting figures for the whole scroll; here it
-// lets go and the lines land in the middle of the screen, each one with the
-// project it came from. It is the only full ground inversion after the title
-// plate and it holds the most scroll room on the page.
+// Six figures, each with the project it came from, landing one after another as
+// the plate arrives. It is the only full ground inversion after the title plate
+// and it holds the most scroll room on the page.
 //
 // Every figure is real and sourced. Six numbers, six projects, no estimates: the
 // counters only ever run toward a value that is already written into the markup,
 // so the page states the same thing with JS off.
+//
+// The six are laid out as a stack of overlapping cards rather than a grid — the
+// geometry, the z-order rule that keeps every figure readable, and the width at
+// which the path gives way to a plain run all live in global.css under
+// `.evidence-stack`.
 import Chapter from './Chapter.astro';
 import { getLangFromUrl, t } from '../i18n/ui';
 
 const lang = getLangFromUrl(Astro.url);
 const copy = t(lang);
 const ev = copy.evidence;
-const entries = copy.ledger.entries;
+const entries = copy.figures.entries;
 ---
 
 <section id="evidence" class="evidence on-plate" data-ground="dark" data-evidence aria-label={ev.title}>
@@ -23,7 +27,7 @@ const entries = copy.ledger.entries;
     <Chapter numeral={copy.chapters.numerals[3]} run={copy.chapters.four} title={ev.title} />
     <p class="evidence-lead" data-reveal>{ev.lead}</p>
 
-    <ul class="evidence-list">
+    <ul class="evidence-stack">
       {
         entries.map((e) => (
           <li class="evidence-item">

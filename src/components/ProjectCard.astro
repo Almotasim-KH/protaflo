@@ -20,11 +20,9 @@ interface Props {
   project: CollectionEntry<'projects'>;
   /** Position in the run, printed as the plate number. */
   index: number;
-  /** Ledger ids this plate releases as the reader reaches it, space separated. */
-  stamp?: string;
 }
 
-const { project, index, stamp } = Astro.props;
+const { project, index } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const data = localizeProject(project.data, lang);
 const detail = t(lang).detail;
@@ -35,7 +33,7 @@ const href = localizePath(`/work/${projectSlug(project.id)}/`, lang);
 const plateNo = String(index + 1).padStart(2, '0');
 ---
 
-<article class="plate" data-stamp={stamp}>
+<article class="plate">
   <div class="plate-label">
     <span class="plate-n">{plateNo}</span>
     {/* The title is drawn twice on purpose. The link carries the real text and

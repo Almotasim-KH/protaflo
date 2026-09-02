@@ -5,7 +5,6 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Preloader from './Preloader.astro';
 import Folio from './Folio.astro';
-import Ledger from './Ledger.astro';
 import Evidence from './Evidence.astro';
 import Hero from './Hero.astro';
 import WorkGrid from './WorkGrid.astro';
@@ -27,9 +26,6 @@ const shown = projects.filter((p) => p.data.cover || p.data.video);
 <Base title={copy.home}>
   <Preloader />
   <Folio />
-  {/* The margin ledger sits outside <main>: it is fixed, and a transformed
-      ancestor (page transitions, parallax) would capture it. */}
-  <Ledger />
   <main id="main">
     <Hero />
     <WorkGrid projects={shown} />

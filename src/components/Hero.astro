@@ -32,20 +32,12 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
     >
   </h1>
 
-  {/* Standfirst as a term row. The separators are drawn by CSS on the terms
-      themselves rather than written into the markup, so a screen reader hears
-      four items and not four bullet characters, and the row still wraps as a
-      unit at narrow widths. */}
+  {/* Standfirst — one claim, with the year set as its own span so scramble.ts
+      churns only the four digits and the sentence around them stays readable
+      the whole time. */}
   <p class="subline" data-reveal="loader" data-reveal-delay="0.85">
-    {
-      copy.terms.map((term, i) =>
-        i === copy.scrambleTerm ? (
-          <span class="term scramble" data-scramble={term}>{term}</span>
-        ) : (
-          <span class="term">{term}</span>
-        )
-      )
-    }
+    <span class="term">{copy.claim}</span>
+    <span class="term scramble" data-scramble={copy.claimYear}>{copy.claimYear}</span>
   </p>
 
   {/* Parallax rides an OUTER wrapper: reveal.ts tweens `y` on [data-reveal] itself,
@@ -54,11 +46,11 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
   <div class="portrait-wrap" data-reveal="loader" data-reveal-delay="1.0">
     {/* D. Mind scratches — hero-intro.ts cycles work-derived marks over the head. */}
     <svg class="scribble" viewBox="0 0 200 70" fill="none" aria-hidden="true" data-scribble></svg>
-    {/* Portrait — SVG wrapper around a PNG, drawn at its own 355×631 ratio.
-        The photo still carries its own hallway background, so it is graded and
-        edge-masked (see .portrait) to sit inside the hero instead of on top of
-        it, with a glow pool behind and a floor shadow under. */}
-    <img class="portrait" src="/me.svg" alt="Portrait of Almotasim" width="355" height="631" />
+    {/* Portrait — the photo at its own 537×797 ratio, cut at the knee. It still
+        carries its own hallway background, so it is graded and edge-masked
+        (see .portrait) to sit inside the hero instead of on top of it, with a
+        glow pool behind and a floor shadow under. */}
+    <img class="portrait" src="/me.webp" alt="Portrait of Almotasim" width="537" height="797" />
   </div>
   </div>
 
@@ -241,7 +233,7 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
     flex-wrap: wrap;
     justify-content: center;
     align-items: baseline;
-    gap: 0 clamp(12px, 1.6vw, 22px);
+    gap: 0 0.4em;
     font-size: 18px;
     color: #a8a8a2;
     line-height: 1.6;
@@ -252,21 +244,6 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
     display: inline-flex;
     align-items: baseline;
     white-space: nowrap;
-  }
-  /* The dot sits before every term but the first, drawn at half the ink of the
-     text so it separates without being read as punctuation. Direction-agnostic:
-     it is a gap filler, and inline-start flips with the document. */
-  .term + .term::before {
-    content: '';
-    display: inline-block;
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: currentColor;
-    opacity: 0.45;
-    margin-inline-end: clamp(12px, 1.6vw, 22px);
-    /* baseline-aligned flex item, so nudge it up to sit at x-height centre */
-    transform: translateY(-5px);
   }
   .scramble {
     display: inline-block;
@@ -286,11 +263,11 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
   .portrait-wrap {
     position: relative;
     z-index: 1;
-    /* The portrait's own mask fades its top 9% out and the head only starts
-       ~13% down, so the visual gap runs well past whatever margin sits here —
-       kept small on purpose. */
-    margin: 24px auto 0;
-    width: min(355px, 74vw);
+    /* This crop starts just above the head, so unlike the earlier full-length
+       one there is no empty band inside the frame for the mark to sit in — the
+       top margin is the band, and .scribble hangs into it from above. */
+    margin: 72px auto 0;
+    width: min(400px, 80vw);
     display: flex;
     justify-content: center;
     isolation: isolate;
@@ -307,8 +284,8 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
     transform: translateX(-50%);
     background: radial-gradient(
       circle at 50% 42%,
-      rgba(232, 245, 68, 0.13) 0%,
-      rgba(232, 245, 68, 0.05) 34%,
+      rgba(232, 245, 68, 0.1) 0%,
+      rgba(232, 245, 68, 0.04) 34%,
       rgba(28, 28, 28, 0) 66%
     );
     pointer-events: none;
@@ -328,15 +305,17 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
     pointer-events: none;
     z-index: -1;
   }
-  /* Sits in the band above the head. In the 355×631 portrait the head starts
-     ~13% down, so a 60%-wide mark (21% of the width tall) offset 1% from the top
-     lands its bottom edge on the hairline. */
+  /* Sits above the frame, not inside it: in the 537×797 crop the ghutra starts
+     ~5% down, which is less headroom than the mark is tall. Pulled up by its
+     own height (50% of the width, at a 200×70 board, is 17.5% of the width —
+     and the wrap is 1.48× as tall as it is wide, so ~12% of the wrap) so its
+     bottom edge lands on the frame's top edge, clear of the hairline. */
   .scribble {
     position: absolute;
-    top: 1%;
+    top: -13%;
     left: 50%;
     transform: translateX(-50%);
-    width: 60%;
+    width: 50%;
     pointer-events: none;
     z-index: 3;
     filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.55));
@@ -353,11 +332,11 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
     display: block;
     filter: grayscale(0.62) saturate(1.08) contrast(1.06) brightness(0.88);
     -webkit-mask-image:
-      linear-gradient(to bottom, transparent 0%, #000 9%, #000 78%, transparent 100%),
-      linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%);
+      linear-gradient(to bottom, transparent 0%, #000 4%, #000 82%, transparent 100%),
+      linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
     mask-image:
-      linear-gradient(to bottom, transparent 0%, #000 9%, #000 78%, transparent 100%),
-      linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%);
+      linear-gradient(to bottom, transparent 0%, #000 4%, #000 82%, transparent 100%),
+      linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
     -webkit-mask-composite: source-in;
     mask-composite: intersect;
   }

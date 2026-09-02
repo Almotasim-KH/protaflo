@@ -6,7 +6,7 @@ import { initHeadlineReveal } from './headline-reveal';
 import { initHeroIntro } from './hero-intro';
 import { initReveal } from './reveal';
 import { initChapters } from './chapters';
-import { initLedger } from './ledger';
+import { initEvidence } from './evidence';
 import { initCount } from './count';
 import { initDraw } from './draw';
 import { initPlates } from './plate';
@@ -29,11 +29,11 @@ let disposeScroll: (() => void) | null = null;
 let disposeFooter: (() => void) | null = null;
 // Footer colour-spotlight pointer listeners — same lifecycle as the glow.
 let disposeTint: (() => void) | null = null;
-// The chaptered layer: folio, margin ledger, counters, self-drawing marks and
-// the plate wipes. All four attach ScrollTriggers and the folio also holds a
-// scroll listener, so each hands back its own disposer for the swap.
+// The chaptered layer: folio, KPI plate, counters, self-drawing marks and the
+// plate wipes. All four attach ScrollTriggers and the folio also holds a scroll
+// listener, so each hands back its own disposer for the swap.
 let disposeChapters: (() => void) | null = null;
-let disposeLedger: (() => void) | null = null;
+let disposeEvidence: (() => void) | null = null;
 let disposeCount: (() => void) | null = null;
 let disposeDraw: (() => void) | null = null;
 let disposePlates: (() => void) | null = null;
@@ -53,8 +53,8 @@ function boot(): void {
   initParallax();
   disposeChapters?.();
   disposeChapters = initChapters();
-  disposeLedger?.();
-  disposeLedger = initLedger();
+  disposeEvidence?.();
+  disposeEvidence = initEvidence();
   disposeCount?.();
   disposeCount = initCount();
   disposeDraw?.();
@@ -89,8 +89,8 @@ document.addEventListener('astro:before-swap', () => {
   disposeTint = null;
   disposeChapters?.();
   disposeChapters = null;
-  disposeLedger?.();
-  disposeLedger = null;
+  disposeEvidence?.();
+  disposeEvidence = null;
   disposeCount?.();
   disposeCount = null;
   disposeDraw?.();

@@ -48,8 +48,7 @@ const skills = marks.map((m, i) => ({ ...m, ...copy.skills[i] }));
       {/* Opening → goal → thesis. The introduction leads at a larger size and
           the two paragraphs under it carry the argument, so the column has a
           hierarchy instead of an even run of paragraphs. */}
-      <p class="proof" data-reveal data-stamp="people">
-        {copy.greeting && <span>{copy.greeting}</span>}
+      <p class="proof" data-reveal>
         {copy.proof.map((line) => <span>{line}</span>)}
       </p>
       <p data-reveal>{copy.paragraph}</p>
@@ -89,11 +88,15 @@ const skills = marks.map((m, i) => ({ ...m, ...copy.skills[i] }));
     max-width: calc(1240px + 2 * clamp(24px, 7vw, 120px));
     margin: 0 auto;
   }
+  /* The two columns are unequal in height — five skill rows run longer than
+     three paragraphs — so they are centred against each other rather than
+     hung from a shared top edge, which left the shorter column reading as
+     unfinished next to the taller one. */
   .cols {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 80px;
-    align-items: start;
+    align-items: center;
     margin-top: clamp(30px, 5vw, 60px);
   }
   .prose {
@@ -122,14 +125,12 @@ const skills = marks.map((m, i) => ({ ...m, ...copy.skills[i] }));
   .proof span {
     display: block;
   }
-  /* Every line in the opening carries the same ink: the greeting and the two
-     lines under it are one voice, and dropping the later ones to the muted grey
-     read as an aside to the first. */
+  /* Every line in the opening carries the same ink: the two lines are one
+     voice, and dropping the second to the muted grey read as an aside to the
+     first. */
   .proof span + span {
     margin-top: 10px;
   }
-  /* No top offset: the prose and the skill marks are two halves of one row, so
-     they start on the same line rather than the list hanging below the text. */
   .skills {
     list-style: none;
     margin: 0;
