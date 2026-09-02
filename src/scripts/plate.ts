@@ -67,9 +67,10 @@ function initTitleFill(mm: gsap.MatchMedia): void {
     if (widest) title.style.setProperty('--title-w', `${Math.ceil(widest)}px`);
   };
 
-  // Narrow screens get no sweep: the grid has collapsed to one column, the label
-  // sits directly above its own media with nothing to travel against, and the
-  // stylesheet already renders the titles solid at this width. Same 860px
+  // Two branches, one idea. A title is hollow until the reader reaches it and
+  // solid once they have, and what differs by width is only which movement
+  // states that: the desktop has a pinned label travelling against its own
+  // plate, and a phone has the title's own approach up the screen. Same 860px
   // breakpoint the grid collapses at; gsap.matchMedia re-evaluates it on resize
   // and reverts on the way out.
   mm.add('(min-width: 861px)', () => {
@@ -106,6 +107,48 @@ function initTitleFill(mm: gsap.MatchMedia): void {
         // The ends are clamped rather than left wherever the last frame landed:
         // a plate the reader has passed is finished, one not yet reached is
         // untouched.
+        onLeave: () => fill(plate, 1),
+        onLeaveBack: () => fill(plate, 0),
+      });
+    });
+
+    return () => {
+      ScrollTrigger.removeEventListener('refresh', remeasure);
+      runs.forEach((t) => t.kill());
+      plates.forEach((p) => {
+        p.style.removeProperty('--plate-fill');
+        p.querySelector<HTMLElement>('.plate-title')?.style.removeProperty('--title-w');
+      });
+    };
+  });
+
+  // The phone. The label does not stick here (one column, nothing to travel
+  // against), so the run is the span between the title arriving from the bottom
+  // of the screen and reaching the reading line. Leaving this branch out was
+  // what made the work section the one place the phone looked like a different,
+  // plainer site: six solid titles where the desktop fills each one by hand.
+  mm.add('(max-width: 860px)', () => {
+    const remeasure = (): void => plates.forEach(measure);
+    remeasure();
+    ScrollTrigger.addEventListener('refresh', remeasure);
+    void document.fonts.ready.then(() => ScrollTrigger.refresh());
+
+    const runs = plates.map((plate) => {
+      // The title, not the plate: on a phone the plate is most of a screen tall
+      // and its progress would still be filling long after the words had been
+      // read past.
+      const title = plate.querySelector<HTMLElement>('.plate-title') ?? plate;
+      let last = -1;
+      return ScrollTrigger.create({
+        trigger: title,
+        start: 'top 88%',
+        end: 'top 42%',
+        onUpdate: (self) => {
+          const p = self.progress;
+          if (Math.abs(p - last) < 0.004) return;
+          last = p;
+          fill(plate, p);
+        },
         onLeave: () => fill(plate, 1),
         onLeaveBack: () => fill(plate, 0),
       });

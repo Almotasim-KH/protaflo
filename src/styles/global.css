@@ -1169,19 +1169,12 @@ html.is-scroll-locked body {
     gap: 18px;
   }
   /* Stacked at this width: the label sits directly above its own media with
-     nothing to travel against, so it does not stick and there is no run to
-     sweep. plate.ts builds no trigger below 861px either, so this is the whole
-     of the narrow-screen state, not a cosmetic patch over one. */
+     nothing to travel against, so it does not stick. The fill still runs —
+     plate.ts drives it off the title's own approach up the screen here rather
+     than off a pinned label — so the outline state above holds and this block
+     only undoes the stickiness. */
   .plate-label {
     position: static;
-  }
-  .js .plate-title a {
-    color: var(--color-ink);
-    -webkit-text-stroke: 0;
-    text-stroke: 0;
-  }
-  .js .plate-title-fill {
-    display: none;
   }
 }
 

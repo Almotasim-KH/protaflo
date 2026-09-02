@@ -16,12 +16,24 @@ function responsiveCols(el) {
   return parseInt(el.dataset.columns ?? '16', 10);
 }
 
+// Rows are responsive for the same reason columns are, and leaving them fixed
+// was the bug: a phone kept the desktop's 8 rows while its columns dropped to
+// 6, so the hero came apart in 66x125 slabs and a lone straggler read as a grey
+// rectangle sitting on the page rather than as a dissolving edge. The front has
+// to be finer than the eye can count, at every width.
+function responsiveRows(el) {
+  const w = window.innerWidth;
+  if (w < 640) return parseInt(el.dataset.rowsMobile ?? el.dataset.rows ?? '8', 10);
+  if (w < 1024) return parseInt(el.dataset.rowsTablet ?? el.dataset.rows ?? '8', 10);
+  return parseInt(el.dataset.rows ?? '8', 10);
+}
+
 export function initTileDissolve() {
   const built = [];
 
   document.querySelectorAll('[data-pixelated-scroll-transition]').forEach((el) => {
     const cols = responsiveCols(el);
-    const rows = parseInt(el.dataset.rows ?? '8', 10);
+    const rows = responsiveRows(el);
 
     // Tiles live in an absolutely-positioned grid panel so the .pxt container keeps
     // its negative inset (seam killer #1); the cream box-shadow on each tile is #2.

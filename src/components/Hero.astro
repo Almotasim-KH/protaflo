@@ -104,9 +104,11 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
     class="pxt"
     data-pixelated-scroll-transition
     data-columns="16"
-    data-columns-tablet="10"
-    data-columns-mobile="6"
+    data-columns-tablet="12"
+    data-columns-mobile="10"
     data-rows="8"
+    data-rows-tablet="11"
+    data-rows-mobile="14"
     data-scroll-start="35% top"
     aria-hidden="true"
   >
@@ -478,6 +480,12 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
      reading — three a side at unrelated heights — and they clamp small enough
      to sit beside the headline rather than under it. */
   @media (max-width: 760px) {
+    /* At 50% of a 312px wrap the mark is 156px wide, which on a phone reads as
+       an icon parked above the photo rather than as a scratch over the head. */
+    .scribble {
+      width: 34%;
+      top: -9%;
+    }
     .deco .d-extra {
       display: none;
     }
