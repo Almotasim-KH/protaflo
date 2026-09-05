@@ -85,15 +85,16 @@ const plateNo = num(String(index + 1).padStart(2, '0'), lang);
       and the plates differ in height, which is what a catalogue of different
       work actually looks like. */
   }
-  <a
-    class="plate-media"
-    href={href}
-    data-project-link
-    data-project-name={data.title}
-    data-astro-reload
-    aria-hidden="true"
-    tabindex="-1"
-  >
+  <div class="plate-frame">
+    <a
+      class="plate-media"
+      href={href}
+      data-project-link
+      data-project-name={data.title}
+      data-astro-reload
+      aria-hidden="true"
+      tabindex="-1"
+    >
     {
       !data.cover && data.video ? (
         <VideoSlot
@@ -114,5 +115,28 @@ const plateNo = num(String(index + 1).padStart(2, '0'), lang);
         />
       )
     }
-  </a>
+    </a>
+
+    {
+      /* The way in, said out loud. The media above is already a link, but a
+        picture with no edge treatment does not announce that it is clickable,
+        and the title in the label column is a long way from the image the
+        reader is actually looking at. This sits on the media's own bottom edge,
+        on the same hairline the plates are ruled with, in the label column's
+        type — a line of the catalogue's own furniture rather than a button
+        dropped on top of it. It is also the only focusable copy of this link in
+        the media column: the frame above stays aria-hidden so the plate offers
+        one destination per tab stop, not three. */
+    }
+    <a
+      class="plate-cue"
+      href={href}
+      data-project-link
+      data-project-name={data.title}
+      data-astro-reload
+      aria-label={detail.viewProjectOf(data.title)}
+    >
+      <span class="plate-cue-label">{detail.viewProject}</span>
+    </a>
+  </div>
 </article>

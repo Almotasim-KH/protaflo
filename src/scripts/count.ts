@@ -4,10 +4,13 @@
 // element carries the final text in its markup, so the page reads correctly with
 // no JS and the counter only ever animates toward a value that was already true.
 import { gsap, ScrollTrigger, prefersReduced } from './gsap-core';
+import { num } from '../i18n/numerals';
 
 export function initCount(): () => void {
   const els = Array.from(document.querySelectorAll<HTMLElement>('[data-count]'));
   if (!els.length || prefersReduced()) return () => {};
+
+  const lang = document.documentElement.lang || 'en';
 
   const triggers: ScrollTrigger[] = [];
   els.forEach((el) => {
@@ -34,9 +37,12 @@ export function initCount(): () => void {
             duration: 1.1,
             ease: 'power2.out',
             onUpdate: () => {
-              el.textContent = `${head}${Math.round(state.v).toLocaleString(
-                document.documentElement.lang || 'en'
-              )}${tail}`;
+              // Not toLocaleString: Chrome resolves a bare "ar" to the latn
+              // numbering system, so the Arabic plate counted up in Western
+              // digits and then snapped to the Arabic-Indic value written in the
+              // markup — a visible flip at the end of every figure. num() maps
+              // the digits directly, which is the same rule the copy follows.
+              el.textContent = `${head}${num(Math.round(state.v), lang)}${tail}`;
             },
             onComplete: () => {
               el.textContent = final;

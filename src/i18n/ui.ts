@@ -26,23 +26,16 @@ export function isRtl(lang: Lang): boolean {
   return rtlLangs.includes(lang);
 }
 
-// Which digits a locale writes numbers with. The site used to mix the two inside
-// one Arabic screen — ١٢ in a KPI card, 2025 in the timeline beside it — which
-// reads as an oversight rather than a choice. The Arabic build is Arabic-Indic
-// throughout; every number that reaches the page through code goes through
-// `num()`, and every number written into copy is typed in ٠-٩ to match.
-const numerals: Record<Lang, string> = { en: '0123456789', ar: '٠١٢٣٤٥٦٧٨٩' };
-
-/**
- * Rewrite the ASCII digits in a value into the locale's own numerals. Years,
- * counts and anything else numeric that is stored once and rendered in both
- * languages (a project's `year`, say) passes through here. Non-digit characters
- * are returned untouched, so "2023 - 2025" and "~300" keep their shape.
- */
-export function num(value: string | number, lang: Lang): string {
-  const digits = numerals[lang];
-  return String(value).replace(/[0-9]/g, (d) => digits[Number(d)]);
-}
+// The site used to mix the two digit sets inside one Arabic screen — ١٢ in a KPI
+// card, 2025 in the timeline beside it — which reads as an oversight rather than
+// a choice. The Arabic build is Arabic-Indic throughout: every number that
+// reaches the page through code goes through `num()`, and every number written
+// into copy is typed in ٠-٩ to match.
+//
+// The map itself lives in ./numerals so the client scripts that compose numbers
+// at runtime can share it without pulling this file's whole copy tree into the
+// browser bundle.
+export { num } from './numerals';
 
 // The locale lives in the first path segment (/ar/...); the default locale is
 // unprefixed, matching the astro.config i18n setting.
@@ -306,6 +299,11 @@ const copy = {
   },
   experience: {
     chapterTitle: L('Work journey', 'مسيرة العمل'),
+    // Phone-only: the record folds to its two most recent rows behind these two
+    // labels. Desktop never shows them, but they live here with the rest of the
+    // chapter's copy rather than hard-coded in the component.
+    viewAll: L('View all', 'عرض الكل'),
+    showLess: L('Show less', 'عرض أقل'),
     // The job is one row; the analytics and engineering work built alongside it
     // gets its own, because none of it is front-desk duty. One array for both
     // locales, so the two timelines always list the same rows in the same order.
@@ -439,6 +437,17 @@ const copy = {
     stack: L('Stack', 'الأدوات'),
     year: L('Year', 'السنة'),
     link: L('Website', 'الموقع'),
+    // Sits under the plate's media in the run and says out loud what the media
+    // already is: a way in. The arrow points the way the reader reads, so it
+    // flips in Arabic, and the leading U+200F (RLM) keeps that bidi-neutral
+    // glyph inside the RTL run instead of parking it at the far edge.
+    viewProject: L('View project →', '‏عرض المشروع ←'),
+    // Screen-reader name for that link, so six plates do not read as six
+    // identical "View project" rows in a list of links.
+    viewProjectOf: L(
+      (title: string) => `View project: ${title}`,
+      (title: string) => `عرض المشروع: ${title}`,
+    ),
     // Full-screen gallery viewer.
     zoom: L('View full screen', 'عرض بملء الشاشة'),
     // Accessible name for the viewer itself, which is a modal dialog and has to

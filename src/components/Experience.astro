@@ -6,6 +6,11 @@
 // with a date field. The year level with the reader is the one in full ink;
 // plate.ts owns that.
 //
+// On phones the whole record at once is a wall of text, so everything older
+// than the two most recent rows is folded behind a toggle and expands on tap.
+// The fold is phone-only and JS-only: the markup ships open, and experience.ts
+// closes it after load, so a reader without the bundle still gets every row.
+//
 import Chapter from './Chapter.astro';
 import { getLangFromUrl, t } from '../i18n/ui';
 
@@ -13,6 +18,11 @@ const lang = getLangFromUrl(Astro.url);
 const all = t(lang);
 const copy = all.experience;
 const rows = copy.rows;
+
+// The two most recent rows stay in place; the rest ride inside the fold.
+const LEAD = 2;
+const lead = rows.slice(0, LEAD);
+const rest = rows.slice(LEAD);
 ---
 
 <section id="experience" class="exp" data-ground="light" aria-label={all.chapters.three}>
@@ -28,8 +38,8 @@ const rows = copy.rows;
 
       <div class="rows" data-reveal-stagger>
         {
-          rows.map((r) => (
-            <div class="row" data-reveal-item data-record-row>
+          lead.map((r, i) => (
+            <div class="row" data-reveal-item data-record-row style={`--row-i:${i}`}>
               <div class="when">{r.when}</div>
               <div class="body">
                 <div class="role">{r.role}</div>
@@ -38,6 +48,29 @@ const rows = copy.rows;
             </div>
           ))
         }
+
+        {/* display:contents at desktop widths, so the fold is invisible to the
+            layout there and the rows stay one flat column. */}
+        <div class="more" id="exp-more" data-exp-more>
+          <div class="more-inner">
+            {
+              rest.map((r, i) => (
+                <div class="row" data-reveal-item data-record-row style={`--row-i:${i + LEAD}`}>
+                  <div class="when">{r.when}</div>
+                  <div class="body">
+                    <div class="role">{r.role}</div>
+                    {r.desc && <p>{r.desc}</p>}
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+
+        <button class="exp-toggle" type="button" data-exp-toggle data-exp-shut={copy.viewAll} aria-controls="exp-more" aria-expanded="true" hidden>
+          <span class="exp-toggle-label" data-exp-label>{copy.showLess}</span>
+          <span class="exp-toggle-mark" aria-hidden="true"></span>
+        </button>
       </div>
     </div>
   </div>
@@ -63,23 +96,24 @@ const rows = copy.rows;
     border-top: 1px solid transparent;
     border-image: var(--flow-rule-x) 1;
     animation: var(--flow-slide);
+    /* Each row starts its sweep later than the one above, so the highlight reads
+       as a single pulse running down the list instead of several in lockstep.
+       The index is set in the markup, so the offset survives the fold splitting
+       the rows across two parents. */
+    animation-delay: calc(var(--flow-dur) * -0.2 * var(--row-i, 0));
   }
-  /* Each row starts its sweep later than the one above, so the highlight reads
-     as a single pulse running down the list instead of several in lockstep. */
-  .row:nth-child(2) {
-    animation-delay: calc(var(--flow-dur) / -5);
-  }
-  .row:nth-child(3) {
-    animation-delay: calc(var(--flow-dur) / -2.5);
-  }
-  .row:nth-child(4) {
-    animation-delay: calc(var(--flow-dur) / -1.67);
-  }
-  .row:nth-child(5) {
-    animation-delay: calc(var(--flow-dur) / -1.25);
-  }
-  .row:last-child {
+  .rows > .row:last-child,
+  .more-inner > .row:last-child {
     border-bottom: 1px solid transparent;
+  }
+  /* The fold is not a layout box at desktop widths: its rows are laid out by
+     .rows exactly as if they were still written flat. */
+  .more,
+  .more-inner {
+    display: contents;
+  }
+  .exp-toggle {
+    display: none;
   }
   /* The date lives in the rail at desktop widths and inside the row once the
      rail is gone, so it is printed once on screen either way. */
@@ -110,6 +144,77 @@ const rows = copy.rows;
   @media (max-width: 760px) {
     .when {
       display: block;
+    }
+    /* 0fr -> 1fr on a one-track grid is the height-auto transition without a
+       measured pixel height, so the fold opens to whatever the rows need. */
+    .more {
+      display: grid;
+      grid-template-rows: 1fr;
+      transition: grid-template-rows 0.62s var(--ease-out);
+    }
+    .more-inner {
+      display: block;
+      overflow: hidden;
+      min-height: 0;
+      opacity: 1;
+      transition: opacity 0.42s var(--ease-out) 0.06s;
+    }
+    .more[data-collapsed] {
+      grid-template-rows: 0fr;
+    }
+    /* The rows fade slightly ahead of the fold closing, so the collapse reads as
+       content leaving rather than a list being guillotined. */
+    .more[data-collapsed] .more-inner {
+      opacity: 0;
+      transition: opacity 0.3s var(--ease-out);
+    }
+    /* The button carries the rule under the last visible row, open or shut, so
+       the record keeps its baseline either way. */
+    .more-inner > .row:last-child {
+      border-bottom-width: 0;
+    }
+    .exp-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 18px 0;
+      background: none;
+      border: 0;
+      border-top: 1px solid transparent;
+      border-image: var(--flow-rule-x) 1;
+      font: inherit;
+      font-size: 10.5px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-ink-muted);
+      text-align: start;
+      cursor: pointer;
+      transition: color 0.3s var(--ease-out);
+    }
+    .exp-toggle:hover,
+    .exp-toggle:focus-visible {
+      color: var(--color-ink);
+    }
+    /* A chevron drawn from two borders — one glyph fewer to load, and it turns
+       with the state instead of swapping character. */
+    .exp-toggle-mark {
+      width: 6px;
+      height: 6px;
+      border-inline-end: 1px solid currentColor;
+      border-block-end: 1px solid currentColor;
+      transform: translateY(-2px) rotate(45deg);
+      transition: transform 0.42s var(--ease-out);
+    }
+    .exp-toggle[aria-expanded='true'] .exp-toggle-mark {
+      transform: translateY(1px) rotate(-135deg);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .more,
+    .more-inner,
+    .exp-toggle-mark {
+      transition: none;
     }
   }
 </style>

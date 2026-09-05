@@ -1163,6 +1163,54 @@ html.is-scroll-locked body {
     clip-path: none;
   }
 }
+/* Media column: the frame, then the line that says it opens. */
+.plate-frame {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+/* The way in. Ruled off the media on the same hairline that separates the
+   plates, set in the label column's type, and left in the muted ink the spec
+   rows use — furniture of the catalogue rather than a button laid over it. It
+   reads as caption, not call to action, which is the register the rest of the
+   run is written in. */
+.plate-cue {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-hairline);
+  /* Rules to the media's own width, so the line reads as that frame's baseline
+     rather than a stray rule in the column. */
+  align-self: stretch;
+  display: flex;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  text-decoration: none;
+  transition: color 0.3s var(--ease-out);
+}
+/* Same accent underline the plate titles wear, drawn on the words only. */
+.plate-cue-label {
+  background-image: linear-gradient(var(--color-accent), var(--color-accent));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 0.34s var(--ease-out);
+}
+[dir='rtl'] .plate-cue-label {
+  background-position: 100% 100%;
+}
+/* Hovering anywhere on the plate — the media included, which is the click most
+   readers will make — brings the cue up to full ink, so the picture and the
+   line under it visibly belong to the same target. */
+.plate:hover .plate-cue,
+.plate-cue:focus-visible {
+  color: var(--color-ink);
+}
+.plate-cue:hover .plate-cue-label,
+.plate-cue:focus-visible .plate-cue-label {
+  background-size: 100% 1px;
+}
 @media (max-width: 860px) {
   .plate {
     grid-template-columns: 1fr;

@@ -7,6 +7,7 @@ import { initHeroIntro } from './hero-intro';
 import { initReveal } from './reveal';
 import { initChapters } from './chapters';
 import { initEvidence } from './evidence';
+import { initExperience } from './experience';
 import { initCount } from './count';
 import { initDraw } from './draw';
 import { initPlates } from './plate';
@@ -34,6 +35,8 @@ let disposeTint: (() => void) | null = null;
 // listener, so each hands back its own disposer for the swap.
 let disposeChapters: (() => void) | null = null;
 let disposeEvidence: (() => void) | null = null;
+// Chapter three's phone fold — a click handler plus a media-query listener.
+let disposeExperience: (() => void) | null = null;
 let disposeCount: (() => void) | null = null;
 let disposeDraw: (() => void) | null = null;
 let disposePlates: (() => void) | null = null;
@@ -55,6 +58,8 @@ function boot(): void {
   disposeChapters = initChapters();
   disposeEvidence?.();
   disposeEvidence = initEvidence();
+  disposeExperience?.();
+  disposeExperience = initExperience();
   disposeCount?.();
   disposeCount = initCount();
   disposeDraw?.();
@@ -91,6 +96,8 @@ document.addEventListener('astro:before-swap', () => {
   disposeChapters = null;
   disposeEvidence?.();
   disposeEvidence = null;
+  disposeExperience?.();
+  disposeExperience = null;
   disposeCount?.();
   disposeCount = null;
   disposeDraw?.();

@@ -6,6 +6,7 @@
 // the tiles, since the tiles are the source of truth for order, source and alt.
 import { prefersReduced } from './gsap-core';
 import { lockScroll } from './smooth-scroll';
+import { num } from '../i18n/numerals';
 
 // Document-level listeners must not survive a ClientRouter swap — each boot
 // aborts the previous page's set.
@@ -50,11 +51,17 @@ export function initLightbox(): void {
   let index = 0;
   let opener: HTMLElement | null = null;
 
+  // The counter is composed here rather than authored, so it was the one number
+  // on the Arabic build still set in Western digits — "1 / 10" over a page whose
+  // every other figure is in ٠-٩. The locale is read off the document: this
+  // module is handed none, and <html lang> is the same fact.
+  const lang = document.documentElement.lang || 'en';
+
   function render(): void {
     const img = shots[index];
     view.src = largestSrc(img);
     view.alt = img.alt;
-    if (count) count.textContent = `${index + 1} / ${shots.length}`;
+    if (count) count.textContent = `${num(index + 1, lang)} / ${num(shots.length, lang)}`;
   }
 
   function step(delta: number): void {
