@@ -6,23 +6,25 @@
 // places to find me are footnotes beside it. The last screen holds content rather
 // than fading out.
 import { getLangFromUrl, t } from '../i18n/ui';
+import { site } from '../config/site';
 
 const lang = getLangFromUrl(Astro.url);
 const all = t(lang);
 const copy = all.contact;
 const foot = all.footer;
-const email = 'portfolio.info@almotasim-kh.com';
-const linkedin = 'https://www.linkedin.com/in/almotasim-khairullah-73ab52166/';
-const github = 'https://github.com/Almotasim-KH';
+// One address for the whole site, from src/config/site.ts. It is never written
+// out in page content again — that is how the previous address survived on half
+// the pages long after the other half had moved on.
+const { email, linkedin, github } = site;
 ---
 
 <section id="contact" class="contact" data-ground="light" aria-labelledby="contact-title">
   <div class="contact-inner">
     <h2 id="contact-title" data-headline>
       <span class="hl"
-        >{copy.titleLead}<br />{copy.titleSecond}<span class="mark"><span class="mark-text"
-            >{copy.titleMark}</span
-          ><span class="mark-bg"></span></span></span
+        >{copy.titleLead}<br />{copy.titleSecond}<span class="mark"
+          ><span class="mark-text">{copy.titleMark}</span><span class="mark-bg"></span></span
+        ></span
       >
     </h2>
 

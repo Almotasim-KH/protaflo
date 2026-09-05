@@ -100,41 +100,72 @@ export function initLightbox(): void {
           open(i, tile);
         }
       },
-      { signal }
+      { signal },
     );
   });
 
   nav.forEach((btn) =>
-    btn.addEventListener('click', () => step(Number(btn.dataset.lightboxStep)), { signal })
+    btn.addEventListener('click', () => step(Number(btn.dataset.lightboxStep)), { signal }),
   );
-  root.querySelector<HTMLButtonElement>('[data-lightbox-close]')?.addEventListener('click', close, { signal });
+  root
+    .querySelector<HTMLButtonElement>('[data-lightbox-close]')
+    ?.addEventListener('click', close, { signal });
   // Clicking the backdrop (anything that isn't a control or the picture) closes.
-  root.addEventListener('click', (e) => {
-    if (e.target === root || (e.target as HTMLElement).dataset.lightboxBackdrop !== undefined) {
-      close();
-    }
-  }, { signal });
+  root.addEventListener(
+    'click',
+    (e) => {
+      if (e.target === root || (e.target as HTMLElement).dataset.lightboxBackdrop !== undefined) {
+        close();
+      }
+    },
+    { signal },
+  );
 
-  document.addEventListener('keydown', (e) => {
-    if (root.hidden) return;
-    if (e.key === 'Escape') close();
-    else if (many && e.key === 'ArrowRight') step(1);
-    else if (many && e.key === 'ArrowLeft') step(-1);
-  }, { signal });
+  // Tab has to stay inside the overlay while it is open. Without this the third
+  // Tab walks out of the viewer and into the page behind it, which is still
+  // scrolled to wherever the reader was and is visually covered — so focus goes
+  // somewhere the reader cannot see and Escape no longer reads as the way out.
+  function trapTab(e: KeyboardEvent): void {
+    const stops = Array.from(root!.querySelectorAll<HTMLElement>('button:not([hidden])')).filter(
+      (el) => el.offsetParent !== null,
+    );
+    if (!stops.length) return;
+    const first = stops[0];
+    const last = stops[stops.length - 1];
+    const active = document.activeElement as HTMLElement | null;
+    if (e.shiftKey && (active === first || !root!.contains(active))) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && (active === last || !root!.contains(active))) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
+  document.addEventListener(
+    'keydown',
+    (e) => {
+      if (root.hidden) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'Tab') trapTab(e);
+      else if (many && e.key === 'ArrowRight') step(1);
+      else if (many && e.key === 'ArrowLeft') step(-1);
+    },
+    { signal },
+  );
 
   // Touch: horizontal swipe steps, matching the arrow directions.
   let startX = 0;
-  root.addEventListener(
-    'touchstart',
-    (e) => (startX = e.changedTouches[0].clientX),
-    { passive: true, signal }
-  );
+  root.addEventListener('touchstart', (e) => (startX = e.changedTouches[0].clientX), {
+    passive: true,
+    signal,
+  });
   root.addEventListener(
     'touchend',
     (e) => {
       const dx = e.changedTouches[0].clientX - startX;
       if (many && Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
     },
-    { passive: true, signal }
+    { passive: true, signal },
   );
 }

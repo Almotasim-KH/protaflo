@@ -9,6 +9,7 @@
 // palette and inflates 170kB to 1.5MB. The only live parts are the birds,
 // drawn as SVG over the top.
 import { getLangFromUrl, localizePath, t } from '../i18n/ui';
+import { site } from '../config/site';
 
 interface Props {
   // Resting reveal, 0–1: how far the plate has settled before the scroll-driven
@@ -24,9 +25,9 @@ const { minReveal = 0.08 } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const copy = t(lang).footer;
 
-const email = 'portfolio.info@almotasim-kh.com';
-const linkedin = 'https://www.linkedin.com/in/almotasim-khairullah-73ab52166/';
-const github = 'https://github.com/Almotasim-KH';
+// Shared with the contact colophon and hard-coded nowhere — see
+// src/config/site.ts.
+const { email, linkedin, github, cv, cvLang } = site;
 
 const sections = [
   { label: copy.work, href: localizePath('/#work', lang) },
@@ -48,8 +49,10 @@ const birds = [
 <footer class="site-footer" aria-label={copy.label}>
   <div class="inner">
     <div class="top">
-      {/* The name already closes the footer in the copyright line, so this
-          column carries the one-line descriptor on its own. */}
+      {
+        /* The name already closes the footer in the copyright line, so this
+          column carries the one-line descriptor on its own. */
+      }
       <div class="brand-col">
         <p class="tagline">{copy.tagline}</p>
       </div>
@@ -58,17 +61,24 @@ const birds = [
         <div class="col">
           <h2 class="col-title">{copy.sections}</h2>
           <ul>
-            {sections.map((s) => (
-              <li>
-                <a href={s.href}>{s.label}</a>
-              </li>
-            ))}
+            {
+              sections.map((s) => (
+                <li>
+                  <a href={s.href}>{s.label}</a>
+                </li>
+              ))
+            }
           </ul>
         </div>
         <div class="col">
           <h2 class="col-title">{copy.elsewhere}</h2>
           <ul>
-            <li><a href="/cv.pdf">{copy.cv}</a></li>
+            {
+              /* One CV file serves both builds and it is written in English, so
+                the Arabic label says so rather than letting the reader find out
+                on download. hreflang states the same fact to a crawler. */
+            }
+            <li><a href={cv} hreflang={cvLang}>{copy.cv}</a></li>
             <li><a href={`mailto:${email}`}>{copy.email}</a></li>
             <li><a href={linkedin} rel="noopener">LinkedIn ↗</a></li>
             <li><a href={github} rel="noopener">GitHub ↗</a></li>
@@ -79,24 +89,30 @@ const birds = [
 
     <div class="base">
       <span>{copy.rights}</span>
-      {/* The arrow points at the plate below, which is still arriving. It is a
+      {
+        /* The arrow points at the plate below, which is still arriving. It is a
           glyph in the line rather than an icon beside it, so the row stays one
           piece of running text. aria-hidden because "Scroll more" already says
-          it; a screen reader announcing "down arrow" adds nothing. */}
+          it; a screen reader announcing "down arrow" adds nothing. */
+      }
       <span class="more">{copy.more} <span aria-hidden="true">↓</span></span>
       <span class="place">{copy.place}</span>
     </div>
   </div>
 
-  {/* Full-bleed block at the end of the document. It holds the plate's aspect
+  {
+    /* Full-bleed block at the end of the document. It holds the plate's aspect
       ratio, so the artwork is never cropped; the reveal moves the image inside
-      it rather than the block itself, which would leave a gap in the flow. */}
+      it rather than the block itself, which would leave a gap in the flow. */
+  }
   <div class="band" data-footer-band data-min-reveal={minReveal} aria-hidden="true">
-    {/* The plate has no colour of its own — it is 1-bit ink on paper. This layer
+    {
+      /* The plate has no colour of its own — it is 1-bit ink on paper. This layer
         holds the scene's palette (sky, sun, horizon, water) and sits *under*
         the plate, which multiplies: the paper drops out and the colour comes
         up through the dots. A radial mask keeps it to a window around the
-        pointer, so the scene is black and white until you touch it. */}
+        pointer, so the scene is black and white until you touch it. */
+    }
     <div class="tint" data-footer-tint></div>
     <img
       class="city"
@@ -107,26 +123,35 @@ const birds = [
       loading="lazy"
       decoding="async"
     />
-    <svg class="birds" viewBox="0 0 1600 700" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
-      {birds.map((b) => (
-        <g class="bird-drift" style={`--dur:${b.drift}s; --delay:${b.delay}s`}>
-          <g transform={`translate(${b.x} ${b.y}) scale(${b.s})`}>
-            {/* Each wing is drawn outward from (0,0), so a bare rotate pivots
+    <svg
+      class="birds"
+      viewBox="0 0 1600 700"
+      preserveAspectRatio="xMidYMin slice"
+      aria-hidden="true"
+    >
+      {
+        birds.map((b) => (
+          <g class="bird-drift" style={`--dur:${b.drift}s; --delay:${b.delay}s`}>
+            <g transform={`translate(${b.x} ${b.y}) scale(${b.s})`}>
+              {/* Each wing is drawn outward from (0,0), so a bare rotate pivots
                 at the bird's body without any transform-origin bookkeeping. */}
-            <g class="wing wing-l" style={`--flap:${b.flap}s`}>
-              <path d="M0 0 Q -9 -9 -21 -6" />
-            </g>
-            <g class="wing wing-r" style={`--flap:${b.flap}s`}>
-              <path d="M0 0 Q 9 -9 21 -6" />
+              <g class="wing wing-l" style={`--flap:${b.flap}s`}>
+                <path d="M0 0 Q -9 -9 -21 -6" />
+              </g>
+              <g class="wing wing-r" style={`--flap:${b.flap}s`}>
+                <path d="M0 0 Q 9 -9 21 -6" />
+              </g>
             </g>
           </g>
-        </g>
-      ))}
+        ))
+      }
     </svg>
   </div>
 
-  {/* Resting reveal, so the skyline is already correct on the first frame —
-      the reveal script only takes over once it runs. */}
+  {
+    /* Resting reveal, so the skyline is already correct on the first frame —
+      the reveal script only takes over once it runs. */
+  }
   <script is:inline define:vars={{ minReveal }}>
     document.querySelectorAll('[data-footer-band]').forEach(function (el) {
       el.style.setProperty('--reveal', String(minReveal));

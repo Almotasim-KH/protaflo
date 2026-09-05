@@ -10,10 +10,10 @@
 // Its ink flips with the ground under it (the page hard-cuts between the cream
 // canvas and the dark plate) — chapters.ts owns that.
 import { getLangFromUrl, localizePath, t } from '../i18n/ui';
+import { site } from '../config/site';
 
 const lang = getLangFromUrl(Astro.url);
 const copy = t(lang).nav;
-const cvHref = '/cv.pdf';
 
 // The switch points at the same page in the other language, so /work/budgettr/
 // goes to /ar/work/budgettr/ instead of bouncing the reader home.
@@ -36,18 +36,30 @@ const brandShort = copy.brand.split(' ')[0];
   </div>
 
   <div class="folio-links">
-    <a href={cvHref}>{copy.cv}</a>
-    {/* Full reload: direction, fonts and every motion module are set up at
-        document level, so a client-side swap would leave the old dir in place. */}
-    <a href={otherHref} lang={other} hreflang={other} aria-label={copy.switchLabel} data-astro-reload
-      >{copy.switchTo}</a
+    {
+      /* One file, written in English, linked from both builds — hreflang says so
+        rather than leaving an Arabic reader to find out after the download. */
+    }
+    <a href={site.cv} hreflang={site.cvLang}>{copy.cv}</a>
+    {
+      /* Full reload: direction, fonts and every motion module are set up at
+        document level, so a client-side swap would leave the old dir in place. */
+    }
+    <a
+      href={otherHref}
+      lang={other}
+      hreflang={other}
+      aria-label={copy.switchLabel}
+      data-astro-reload>{copy.switchTo}</a
     >
     <a href={localizePath('/#contact', lang)} class="is-ask">{copy.cta}</a>
   </div>
 </div>
 
-{/* Page progress, drawn along the very top edge rather than counted out in a
-    percentage. Scaled, never width-animated. */}
+{
+  /* Page progress, drawn along the very top edge rather than counted out in a
+    percentage. Scaled, never width-animated. */
+}
 <div class="folio-rule" data-folio-rule aria-hidden="true"></div>
 
 <style>

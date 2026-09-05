@@ -12,7 +12,7 @@
 import ImageSlot from './ImageSlot.astro';
 import VideoSlot from './VideoSlot.astro';
 import type { CollectionEntry } from 'astro:content';
-import { getLangFromUrl, localizePath, t } from '../i18n/ui';
+import { getLangFromUrl, localizePath, num, t } from '../i18n/ui';
 import { localizeProject } from '../i18n/project';
 import { projectSlug } from '../i18n/slug';
 
@@ -30,26 +30,36 @@ const href = localizePath(`/work/${projectSlug(project.id)}/`, lang);
 
 // Two digits so the run keeps one column edge down the page. This is a printed
 // catalogue number, not a section counter.
-const plateNo = String(index + 1).padStart(2, '0');
+// Localised for the same reason the year is: it is a number the reader sees, and
+// the Arabic build sets its numbers in Arabic-Indic digits throughout.
+const plateNo = num(String(index + 1).padStart(2, '0'), lang);
 ---
 
 <article class="plate">
   <div class="plate-label">
     <span class="plate-n">{plateNo}</span>
-    {/* The title is drawn twice on purpose. The link carries the real text and
+    {
+      /* The title is drawn twice on purpose. The link carries the real text and
         renders as outline only; the span above it is the same text in solid ink,
         revealed by a mask whose edge rides the run's scroll progress. Two layers
         rather than an animated colour because the beat is a moving edge, and a
         colour cannot have one. The span is decorative and aria-hidden: the link
-        underneath is the only copy assistive tech ever sees. */}
+        underneath is the only copy assistive tech ever sees. */
+    }
     <h3 class="plate-title">
-      <a href={href} data-project-link data-project-name={data.title} data-astro-reload>{data.title}</a>
+      <a href={href} data-project-link data-project-name={data.title} data-astro-reload
+        >{data.title}</a
+      >
       <span class="plate-title-fill" aria-hidden="true">{data.title}</span>
     </h3>
 
     <dl class="plate-spec">
       <dt>{detail.year}</dt>
-      <dd>{data.year}</dd>
+      {
+        /* The year is stored once and rendered in both languages, so it is the
+          one number on the plate that has to be converted rather than typed. */
+      }
+      <dd>{num(data.year, lang)}</dd>
       <dt>{detail.client}</dt>
       <dd>{detail.clientValue[data.client]}</dd>
       {
@@ -67,20 +77,31 @@ const plateNo = String(index + 1).padStart(2, '0');
     <p class="plate-note">{data.summary}</p>
   </div>
 
-  {/* The plate takes the shape of what is on it. No forced ratio and no crop:
+  {
+    /* The plate takes the shape of what is on it. No forced ratio and no crop:
       a 16/10 tile with object-fit:cover cut the edges off every cover, which on
       a dashboard means cutting off the part that says what it is. Each slot
       carries the asset's own proportions instead, so the whole frame is shown
       and the plates differ in height, which is what a catalogue of different
-      work actually looks like. */}
-  <a class="plate-media" href={href} data-project-link data-project-name={data.title} data-astro-reload aria-hidden="true" tabindex="-1">
+      work actually looks like. */
+  }
+  <a
+    class="plate-media"
+    href={href}
+    data-project-link
+    data-project-name={data.title}
+    data-astro-reload
+    aria-hidden="true"
+    tabindex="-1"
+  >
     {
       !data.cover && data.video ? (
         <VideoSlot
           src={data.video.src}
           width={data.video.width}
           height={data.video.height}
-          label={data.title}
+          label={data.video.alt}
+          eager={index === 0}
           radius={10}
         />
       ) : (

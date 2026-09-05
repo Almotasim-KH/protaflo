@@ -21,6 +21,9 @@ export function localizeProject(data: ProjectData, lang: Lang): ProjectData {
     body: ar.body,
     stack: ar.stack,
     stats: ar.stats ?? data.stats,
+    // Same file, same dimensions — only the description of what it shows is a
+    // translated string.
+    video: data.video && { ...data.video, alt: ar.videoAlt ?? data.video.alt },
     captions: ar.captions ?? data.captions,
     // `at` is shared — only the label is translated, and the two lists are the
     // same length by schema, so index alignment is safe here.

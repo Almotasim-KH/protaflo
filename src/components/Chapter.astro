@@ -16,9 +16,16 @@ interface Props {
    * happens to run out.
    */
   title: string;
+  /**
+   * Id for the <h2>. A section that wants an accessible name points its
+   * `aria-labelledby` here rather than adding a second, visually hidden heading
+   * of its own — two <h2> elements carrying the same words is what a screen
+   * reader reads out twice and what a crawler sees as two landmarks.
+   */
+  titleId?: string;
 }
 
-const { numeral, run, title } = Astro.props;
+const { numeral, run, title, titleId } = Astro.props;
 
 const titleLines = title.split('\n');
 
@@ -36,11 +43,13 @@ const showRun = run.trim().toLocaleLowerCase() !== title.trim().toLocaleLowerCas
 >
   <span class="chapter-num">{numeral}</span>
   {showRun && <span class="chapter-run">{run}</span>}
-  <h2 class="chapter-title" data-headline>
-    {titleLines.map((line, i) => (
-      <span class="chapter-line" style={i ? `--d:${i * 0.18}s` : undefined}>
-        <span class="hl">{line}</span>
-      </span>
-    ))}
+  <h2 class="chapter-title" id={titleId} data-headline>
+    {
+      titleLines.map((line, i) => (
+        <span class="chapter-line" style={i ? `--d:${i * 0.18}s` : undefined}>
+          <span class="hl">{line}</span>
+        </span>
+      ))
+    }
   </h2>
 </header>

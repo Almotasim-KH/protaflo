@@ -5,56 +5,64 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
 ---
 
 <section class="hero" data-hero data-ground="dark" aria-labelledby="hero-title">
-  {/* Kicker. Rides its own parallax layer at the title's speed so the two travel
+  {
+    /* Kicker. Rides its own parallax layer at the title's speed so the two travel
       together — reveal.ts tweens y on [data-reveal] itself, so one element can
       never carry both a reveal and a data-speed. Same reason .p-layer exists.
       Lands after the headline wipe has started and before the term row, so it
-      reads as the title's label rather than as a line of its own. */}
+      reads as the title's label rather than as a line of its own. */
+  }
   <div class="k-layer" data-speed="1.18" data-parallax-start="top top">
     <p class="eyebrow" data-reveal="loader" data-reveal-delay="0.5">{copy.eyebrow}</p>
   </div>
 
-  {/* A. Bar-wipe headline — each line is its own accent+white sweep (hero-intro.ts
-      adds .play on loader complete; the animation itself is pure CSS below). */}
-  {/* Title leads (speed > 1): safe to parallax directly — its intro is pure CSS,
-      nothing else writes transform on it. */}
-  <h1
-    id="hero-title"
-    class="title"
-    data-hero-title
-    data-speed="1.18"
-    data-parallax-start="top top"
-  >
+  {
+    /* A. Bar-wipe headline — each line is its own accent+white sweep (hero-intro.ts
+      adds .play on loader complete; the animation itself is pure CSS below). */
+  }
+  {
+    /* Title leads (speed > 1): safe to parallax directly — its intro is pure CSS,
+      nothing else writes transform on it. */
+  }
+  <h1 id="hero-title" class="title" data-hero-title data-speed="1.18" data-parallax-start="top top">
     <span class="line"><span class="lt">{copy.line1}</span></span>
     <span class="line"
-      ><span class="lt">{copy.line2Pre}<span class="muted">{copy.line2Muted}</span>{copy.line2Post}</span
+      ><span class="lt"
+        >{copy.line2Pre}<span class="muted">{copy.line2Muted}</span>{copy.line2Post}</span
       ></span
     >
   </h1>
 
-  {/* Standfirst — one claim, with the year set as its own span so scramble.ts
+  {
+    /* Standfirst — one claim, with the year set as its own span so scramble.ts
       churns only the four digits and the sentence around them stays readable
-      the whole time. */}
+      the whole time. */
+  }
   <p class="subline" data-reveal="loader" data-reveal-delay="0.85">
     <span class="term">{copy.claim}</span>
     <span class="term scramble" data-scramble={copy.claimYear}>{copy.claimYear}</span>
   </p>
 
-  {/* Parallax rides an OUTER wrapper: reveal.ts tweens `y` on [data-reveal] itself,
-      and two systems on one element's y would fight. Portrait lags (speed < 1). */}
+  {
+    /* Parallax rides an OUTER wrapper: reveal.ts tweens `y` on [data-reveal] itself,
+      and two systems on one element's y would fight. Portrait lags (speed < 1). */
+  }
   <div class="p-layer" data-speed="0.8" data-parallax-start="top top">
-  <div class="portrait-wrap" data-reveal="loader" data-reveal-delay="1.0">
-    {/* D. Mind scratches — hero-intro.ts cycles work-derived marks over the head. */}
-    <svg class="scribble" viewBox="0 0 200 70" fill="none" aria-hidden="true" data-scribble></svg>
-    {/* Portrait — the photo at its own 537×797 ratio, cut at the knee. It still
+    <div class="portrait-wrap" data-reveal="loader" data-reveal-delay="1.0">
+      {/* D. Mind scratches — hero-intro.ts cycles work-derived marks over the head. */}
+      <svg class="scribble" viewBox="0 0 200 70" fill="none" aria-hidden="true" data-scribble></svg>
+      {
+        /* Portrait — the photo at its own 537×797 ratio, cut at the knee. It still
         carries its own hallway background, so it is graded and edge-masked
         (see .portrait) to sit inside the hero instead of on top of it, with a
-        glow pool behind and a floor shadow under. */}
-    <img class="portrait" src="/me.webp" alt="Portrait of Almotasim" width="537" height="797" />
-  </div>
+        glow pool behind and a floor shadow under. */
+      }
+      <img class="portrait" src="/me.webp" alt={copy.portraitAlt} width="537" height="797" />
+    </div>
   </div>
 
-  {/* C. Background marks — sourced from /public/deco/*.svg, tinted through a CSS
+  {
+    /* C. Background marks — sourced from /public/deco/*.svg, tinted through a CSS
       mask so each one carries its own gradient and glow. Ten marks, each shape
       used exactly once: the four abstract ones and the six chapter glyphs
       (strength, nourishment, code, travel, learning, stillness), so the hero
@@ -76,30 +84,57 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
            portrait. The field runs in the margins and closes under the fold.
 
       `.d-extra` is the half that drops on a phone, chosen so the six that
-      survive still read as a scatter rather than a thinned rail. */}
+      survive still read as a scatter rather than a thinned rail. */
+  }
   <div class="deco" aria-hidden="true">
     {/* leading side — anchor high, echo low */}
-    <span data-shape class="d s-sprout c-lime" style="left:4%;top:12%;width:68px;opacity:.55"></span>
-    <span data-shape class="d d-extra s-code c-cyan" style="left:9%;top:33%;width:34px;opacity:.45"></span>
-    <span data-shape class="d s-strength c-accent" style="left:6%;top:52%;width:52px;opacity:.5"></span>
-    <span data-shape class="d d-extra s-sparkle c-white" style="left:17%;top:63%;width:22px;opacity:.6"></span>
-    <span data-shape class="d s-learning c-lime" style="left:3%;top:78%;width:44px;opacity:.4"></span>
-    <span data-shape class="d d-extra s-dots c-accent" style="left:12%;top:88%;width:26px;opacity:.45"></span>
+    <span data-shape class="d s-sprout c-lime" style="left:4%;top:12%;width:68px;opacity:.55"
+    ></span>
+    <span data-shape class="d d-extra s-code c-cyan" style="left:9%;top:33%;width:34px;opacity:.45"
+    ></span>
+    <span data-shape class="d s-strength c-accent" style="left:6%;top:52%;width:52px;opacity:.5"
+    ></span>
+    <span
+      data-shape
+      class="d d-extra s-sparkle c-white"
+      style="left:17%;top:63%;width:22px;opacity:.6"></span>
+    <span data-shape class="d s-learning c-lime" style="left:3%;top:78%;width:44px;opacity:.4"
+    ></span>
+    <span
+      data-shape
+      class="d d-extra s-dots c-accent"
+      style="left:12%;top:88%;width:26px;opacity:.45"></span>
 
     {/* trailing side — anchor lower, and one fewer mark up top */}
-    <span data-shape class="d d-extra s-nourishment c-cyan" style="right:7%;top:9%;width:40px;opacity:.5"></span>
-    <span data-shape class="d d-extra s-squiggle c-accent" style="right:4%;top:23%;width:72px;opacity:.5"></span>
-    <span data-shape class="d d-extra s-travel c-lime" style="right:15%;top:44%;width:30px;opacity:.45"></span>
-    <span data-shape class="d s-stillness c-white" style="right:6%;top:58%;width:56px;opacity:.5"></span>
-    <span data-shape class="d d-extra s-code c-accent" style="right:19%;top:71%;width:24px;opacity:.35"></span>
-    <span data-shape class="d s-sparkle c-white" style="right:5%;top:86%;width:34px;opacity:.55"></span>
+    <span
+      data-shape
+      class="d d-extra s-nourishment c-cyan"
+      style="right:7%;top:9%;width:40px;opacity:.5"></span>
+    <span
+      data-shape
+      class="d d-extra s-squiggle c-accent"
+      style="right:4%;top:23%;width:72px;opacity:.5"></span>
+    <span
+      data-shape
+      class="d d-extra s-travel c-lime"
+      style="right:15%;top:44%;width:30px;opacity:.45"></span>
+    <span data-shape class="d s-stillness c-white" style="right:6%;top:58%;width:56px;opacity:.5"
+    ></span>
+    <span
+      data-shape
+      class="d d-extra s-code c-accent"
+      style="right:19%;top:71%;width:24px;opacity:.35"></span>
+    <span data-shape class="d s-sparkle c-white" style="right:5%;top:86%;width:34px;opacity:.55"
+    ></span>
   </div>
 
-  {/* E. Scroll tile-dissolve — filled + driven by tileDissolve.js.
+  {
+    /* E. Scroll tile-dissolve — filled + driven by tileDissolve.js.
       data-scroll-start begins earlier than it used to (was 50%): the dissolve
       now spans a longer stretch of scroll, so it advances less per notch. That,
       the raised scrub, and the scroll weight tileDissolve.js switches on for the
-      length of the trigger are the three things that give it drag. */}
+      length of the trigger are the three things that give it drag. */
+  }
   <div
     class="pxt"
     data-pixelated-scroll-transition
@@ -362,7 +397,14 @@ const copy = t(getLangFromUrl(Astro.url)).hero;
     display: block;
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(125deg, var(--c1) 0%, var(--c2) 38%, #fff 50%, var(--c1) 62%, var(--c2) 100%);
+    background-image: linear-gradient(
+      125deg,
+      var(--c1) 0%,
+      var(--c2) 38%,
+      #fff 50%,
+      var(--c1) 62%,
+      var(--c2) 100%
+    );
     background-size: 300% 300%;
     background-position: 0% 50%;
     -webkit-mask-image: var(--src);

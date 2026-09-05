@@ -9,8 +9,21 @@ interface Props extends HTMLAttributes<'div'> {
   src: string;
   width: number;
   height: number;
-  label?: string;
+  /**
+   * What the recording shows, in a sentence. Doubles as the accessible name and
+   * as the text a visitor reads when the clip does not play. Required in
+   * practice: without it the element's fallback is the file's own URL, which is
+   * what a screen reader then announces.
+   */
+  label: string;
   radius?: number;
+  /**
+   * Whether this tile is in the first screenful. Above the fold the browser may
+   * fetch metadata straight away; below it nothing is fetched until the tile is
+   * near the viewport, so three walkthroughs no longer open the page in
+   * parallel on a phone.
+   */
+  eager?: boolean;
   // Tile ratio. Defaults to the file's own; the work grid overrides it to keep
   // every card the same size, and pairs it with fit="cover" so the frame fills.
   aspect?: string;
@@ -21,8 +34,9 @@ const {
   src,
   width,
   height,
-  label = '',
+  label,
   radius = 20,
+  eager = false,
   aspect = `${width} / ${height}`,
   fit = 'contain',
   class: className = '',
@@ -35,9 +49,18 @@ const {
   style={`--r:${radius}px;--aspect:${aspect};--fit:${fit}`}
   {...rest}
 >
-  {/* No controls — this reads as a moving screenshot, not a player: muted, looping,
+  {
+    /* No controls — this reads as a moving screenshot, not a player: muted, looping,
       and inert to clicks (pointer-events off below). autoplay is dropped under
-      reduced-motion by the inline guard. */}
+      reduced-motion by the inline guard. */
+  }
+  {
+    /* The fallback between the tags is not decoration. A <video> with nothing
+      inside it falls back to its own src, so a failed load printed
+      "/videos/….mp4" in the middle of the card and a screen reader read the path
+      out. The sentence below is what the recording shows, which is the thing a
+      reader actually needed in both cases. */
+  }
   <video
     src={src}
     width={width}
@@ -46,8 +69,9 @@ const {
     muted
     loop
     playsinline
-    preload="metadata"
-    aria-label={label}></video>
+    preload={eager ? 'metadata' : 'none'}
+    aria-label={label}><p class="vidslot-fallback">{label}</p></video
+  >
 </div>
 
 <script>
@@ -77,6 +101,16 @@ const {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  /* Only ever seen when the browser will not play the file at all, so it is set
+     as a caption inside the tile rather than as raw text on the ground. */
+  .vidslot-fallback {
+    margin: 0;
+    padding: 16px 20px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--color-ink-muted);
+    text-align: center;
   }
   /* Inert: no controls, no click-to-pause, no context menu handle. */
   .vidslot video {

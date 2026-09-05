@@ -26,6 +26,24 @@ export function isRtl(lang: Lang): boolean {
   return rtlLangs.includes(lang);
 }
 
+// Which digits a locale writes numbers with. The site used to mix the two inside
+// one Arabic screen — ١٢ in a KPI card, 2025 in the timeline beside it — which
+// reads as an oversight rather than a choice. The Arabic build is Arabic-Indic
+// throughout; every number that reaches the page through code goes through
+// `num()`, and every number written into copy is typed in ٠-٩ to match.
+const numerals: Record<Lang, string> = { en: '0123456789', ar: '٠١٢٣٤٥٦٧٨٩' };
+
+/**
+ * Rewrite the ASCII digits in a value into the locale's own numerals. Years,
+ * counts and anything else numeric that is stored once and rendered in both
+ * languages (a project's `year`, say) passes through here. Non-digit characters
+ * are returned untouched, so "2023 - 2025" and "~300" keep their shape.
+ */
+export function num(value: string | number, lang: Lang): string {
+  const digits = numerals[lang];
+  return String(value).replace(/[0-9]/g, (d) => digits[Number(d)]);
+}
+
 // The locale lives in the first path segment (/ar/...); the default locale is
 // unprefixed, matching the astro.config i18n setting.
 export function getLangFromUrl(url: URL): Lang {
@@ -94,7 +112,7 @@ const copy = {
     // the single heaviest SEO signal on the page spent on nothing.
     home: L(
       'Almotasim Khairullah — Web Developer & Data Analyst · Yanbu',
-      'المعتصم خير الله — مطوّر ويب ومحلل بيانات · ينبع'
+      'المعتصم خير الله — مطوّر ويب ومحلل بيانات · ينبع',
     ),
     // Suffix for inner pages: the project's own name leads and this follows, so
     // a project tab reads "Budgettr — Almotasim Khairullah" rather than
@@ -105,7 +123,7 @@ const copy = {
     // and the city stays, because it is what local search matches on.
     description: L(
       'Almotasim Khairullah, web developer and data analyst in Yanbu. Design, deployment, analysis, and AI in one track.',
-      'المعتصم خير الله، مطوّر ويب ومحلّل بيانات في ينبع. تصميم ونشر وتحليل وذكاء اصطناعي في مسار واحد.'
+      'المعتصم خير الله، مطوّر ويب ومحلّل بيانات في ينبع. تصميم ونشر وتحليل وذكاء اصطناعي في مسار واحد.',
     ),
   },
   nav: {
@@ -141,7 +159,10 @@ const copy = {
     // for. Split in two so only the year churns — a whole sentence scrambling
     // runs long enough to read as a fault rather than as an effect.
     claim: L('We are the vision of', 'نحن رؤية'),
-    claimYear: L('2030', '2030'),
+    claimYear: L('2030', '٢٠٣٠'),
+    // The portrait is the same photograph in both builds, so the description of
+    // it is the same fact — it just has to be readable to whoever is listening.
+    portraitAlt: L('Portrait of Almotasim', 'صورة شخصية للمعتصم'),
   },
   work: {
     // Chapter title. Deliberately the same string as chapters.one rather than a
@@ -149,6 +170,15 @@ const copy = {
     // a heading that also makes it says the same thing twice. Chapter.astro drops
     // its small running head when the two match, so this prints once.
     chapterTitle: L('The work', 'الأعمال'),
+    // The run opens on the two most recent plates and keeps the earlier four
+    // behind this control, at the head of the catalogue. Both labels are written
+    // out because the button swaps between them rather than toggling a chevron —
+    // a reader who has opened the run needs to be told how to close it again.
+    showMore: L('Show more', 'عرض المزيد'),
+    showLess: L('Show less', 'عرض أقل'),
+    // Spoken name for the control, which says what it opens rather than leaving
+    // "Show more" to stand on its own out of context in a list of links.
+    moreLabel: L('Show earlier work', 'عرض الأعمال السابقة'),
   },
   // Chapter folios. The page is set as a printed feature, so each section carries
   // a number and a running head; the folio in the top margin shows whichever one
@@ -171,15 +201,15 @@ const copy = {
         count: '12',
         value: L('12', '١٢'),
         label: L('Excel sources merged into one dashboard', 'مصدر Excel مدمج في لوحة واحدة'),
-        source: L('Revenue Analysis 2024', 'تحليل الإيرادات 2024'),
+        source: L('Revenue Analysis 2024', 'تحليل الإيرادات ٢٠٢٤'),
       },
       {
         // A range, not a quantity: there is nothing here for a counter to count
         // up to, so this line simply arrives.
         count: null,
-        value: L('60 min → 1 min', '60 دقيقة ← دقيقة واحدة'),
+        value: L('60 min → 1 min', '٦٠ دقيقة ← دقيقة واحدة'),
         label: L('Time to find one revenue number', 'الوقت للوصول إلى رقم إيراد واحد'),
-        source: L('Revenue Analysis 2024', 'تحليل الإيرادات 2024'),
+        source: L('Revenue Analysis 2024', 'تحليل الإيرادات ٢٠٢٤'),
       },
       {
         // One hour, not a countable climb — this line arrives rather than
@@ -196,15 +226,21 @@ const copy = {
         source: L('Budgettr', 'Budgettr'),
       },
       {
+        // A placing, not a tally. The counter still climbs the field size, which
+        // is the number that carries the result: 4th of four teams and 4th of
+        // forty-four are not the same claim.
         count: '44',
-        value: L('4th /44', '4th /44'),
+        value: L('4th /44', 'الرابع من ٤٤'),
         label: L('Teams at YCATThon, tourism track', 'فريقًا في YCATThon، المسار السياحي'),
-        source: L('YCATThon 2024', 'YCATThon 2024'),
+        source: L('YCATThon 2024', 'YCATThon ٢٠٢٤'),
       },
       {
         count: '300',
-        value: L('~300', '~300'),
-        label: L('Participants in the LinkedIn data challenge', 'مشاركًا في تحدي البيانات على LinkedIn'),
+        value: L('~300', '~٣٠٠'),
+        label: L(
+          'Participants in the LinkedIn data challenge',
+          'مشاركًا في تحدي البيانات على LinkedIn',
+        ),
         source: L('Sales Analytics Challenge', 'تحدي تحليل المبيعات'),
       },
     ],
@@ -213,7 +249,7 @@ const copy = {
     title: L('KPIs', 'مؤشرات الأداء'),
     lead: L(
       'Six figures, each one from a project on this page.',
-      'ستة أرقام، كل واحد منها من مشروع في هذه الصفحة.'
+      'ستة أرقام، كل واحد منها من مشروع في هذه الصفحة.',
     ),
     sourceLabel: L('Source', 'المصدر'),
   },
@@ -226,23 +262,23 @@ const copy = {
     proof: [
       L(
         "I'm currently working and studying, and I've chosen technology as my path.",
-        'موظف وطالب، واخترت التقنية طريقا لي.'
+        'موظف وطالب، واخترت التقنية طريقا لي.',
       ),
       L(
         'My journey started between work, study, and courses, then it grew into freelance work and personal projects.',
-        'بدأت مسيرتي بين العمل والدراسة والدورات، ثم امتدت إلى الأعمال الحرة والمشاريع الشخصية.'
+        'بدأت مسيرتي بين العمل والدراسة والدورات، ثم امتدت إلى الأعمال الحرة والمشاريع الشخصية.',
       ),
     ],
     paragraph: L(
       'My goal is to build something useful that serves people and makes their experience easier, through technology and AI.',
-      'هدفي أن أصنع شيئا نافعا يخدم الناس ويسهل تجربتهم، عبر عالم التقنية والذكاء الاصطناعي.'
+      'هدفي أن أصنع شيئا نافعا يخدم الناس ويسهل تجربتهم، عبر عالم التقنية والذكاء الاصطناعي.',
     ),
     // The thesis the section closes on, set at prose weight rather than as a
     // footnote: it is the argument the paragraph above is building toward, not
     // an aside to it.
     closer: L(
       "In the 21st century, if you know how to use the tools the right way, with the right thinking, you'll end up with a product that looks like you.",
-      'في القرن الواحد والعشرين، إذا عرفت كيف تستخدم الأدوات بالطريقة الصحيحة وبتفكير سليم، فتأكد أنك ستخرج بمنتج يشبهك.'
+      'في القرن الواحد والعشرين، إذا عرفت كيف تستخدم الأدوات بالطريقة الصحيحة وبتفكير سليم، فتأكد أنك ستخرج بمنتج يشبهك.',
     ),
     // Skills stay in English on the Arabic side too — these are tool and
     // discipline names, and transliterating them read worse than leaving the
@@ -251,10 +287,10 @@ const copy = {
     skills: [
       {
         title: L('UI / UX Design', 'UI / UX Design'),
-        desc: L(
-          'Figma, Claude Design, scrolling, layering',
-          'Figma, Claude Design, scrolling, layering'
-        ),
+        // Named disciplines, not page effects. "Scrolling, layering" described
+        // what this site happens to do rather than anything a reader could hire;
+        // beside Figma they read as placeholder text left in production.
+        desc: L('Figma, design systems, prototyping', 'Figma, design systems, prototyping'),
       },
       {
         title: L('Data Analysis', 'Data Analysis'),
@@ -262,21 +298,18 @@ const copy = {
       },
       {
         title: L('Web Development', 'Web Development'),
-        desc: L('Full-Stack Web Developer', 'Full-Stack Web Developer'),
+        // The line under a skill says what it is made of. "Full-Stack Web
+        // Developer" only restated the label above it and cost the row its one
+        // chance to be specific.
+        desc: L('React, APIs, full-stack', 'React, APIs, full-stack'),
       },
       {
         title: L('Excel', 'Excel'),
-        desc: L(
-          'Modelling, automation, dashboards',
-          'Modelling, automation, dashboards'
-        ),
+        desc: L('Modelling, automation, dashboards', 'Modelling, automation, dashboards'),
       },
       {
         title: L('AI', 'AI'),
-        desc: L(
-          'Claude, prompt design, automation',
-          'Claude, prompt design, automation'
-        ),
+        desc: L('Claude, prompt design, automation', 'Claude, prompt design, automation'),
       },
     ],
   },
@@ -287,71 +320,63 @@ const copy = {
     // locales, so the two timelines always list the same rows in the same order.
     rows: [
       {
-        when: L('2026', '2026'),
-        role: L(
-          'Freelance full-stack, Coffee Shop Website',
-          'عمل حر، موقع متجر القهوة'
-        ),
+        when: L('2026', '٢٠٢٦'),
+        // The project's canonical name, the same string the card, the page title
+        // and the share card use. A timeline that calls it something else makes
+        // a reader ask whether they are two pieces of work.
+        role: L('Freelance full-stack, Coffee Shop Website', 'عمل حر، Coffee Shop Website'),
         // Built and handed over, but never went live: the launch waits on API
         // access the client has to supply, so the copy says built, not live.
         desc: L(
           'A storefront and admin dashboard built end to end: Node.js and SQL behind it, React and TypeScript in front, packaged with Docker. Not launched; the build stopped at the payment and delivery APIs, which are on the client side.',
-          'متجر إلكتروني ولوحة إدارة مبنيان بالكامل: Node.js وSQL في الخلفية، وReact وTypeScript في الواجهة، ومغلّف بـDocker. لم يُطلَق؛ العمل توقف عند واجهات الدفع والتوصيل، وهي من طرف العميل.'
+          'متجر إلكتروني ولوحة إدارة مبنيان بالكامل: Node.js وSQL في الخلفية، وReact وTypeScript في الواجهة، ومغلّف بـDocker. لم يُطلَق؛ العمل توقف عند واجهات الدفع والتوصيل، وهي من طرف العميل.',
         ),
       },
       {
-        when: L('2025', '2025'),
+        when: L('2025', '٢٠٢٥'),
         role: L('Revenue dashboards, Power BI', 'لوحات الإيرادات، Power BI'),
         desc: L(
           'Twelve-plus internal Excel sources folded into one Power BI view: Python for the prep, Figma for the layout. The 2025 rebuild added average performance rates and faster drill-down.',
-          'دمج أكثر من 12 مصدر Excel داخلي في لوحة واحدة: Python للتحضير وFigma للتصميم. نسخة 2025 أضافت معدلات الأداء المتوسطة وتنقّلًا أسرع في تفاصيل البيانات.'
+          'دمج أكثر من ١٢ مصدر Excel داخليًا في لوحة واحدة: Python للتحضير وFigma للتصميم. أضافت نسخة ٢٠٢٥ معدلات الأداء المتوسطة وتنقّلًا أسرع في تفاصيل البيانات.',
         ),
       },
+      // The Sales Analytics Challenge used to sit here as well as in the work
+      // list, under a second name — a reader could not tell whether that was one
+      // entry or two. It has a project page, and the page is where it is told.
       {
-        when: L('2025', '2025'),
-        role: L('Sales Analytics Challenge', 'تحدي تحليل المبيعات'),
-        desc: L(
-          'Open LinkedIn data challenge, around 300 participants. Cleaned and modelled a raw sales dataset into a Power BI read on revenue and product performance.',
-          'تحدٍ على LinkedIn بمشاركة نحو 300 شخص. تنظيف بيانات مبيعات خام ونمذجتها في لوحة Power BI تُبرز الإيرادات وأداء المنتجات.'
-        ),
-      },
-      {
-        when: L('2025 - now', '2025 - الآن'),
-        role: L(
-          'Front Desk Group Leader, Namariq',
-          'مسؤول قسم الاستقبال، نمارق'
-        ),
+        when: L('2025 - now', '٢٠٢٥ - الآن'),
+        role: L('Front Desk Group Leader, Namariq', 'مسؤول قسم الاستقبال، نمارق'),
         desc: L(
           'Lead the front desk team and own the daily operational reports that other departments rely on in their decision-making.',
-          'أقود فريق الاستقبال وأتولى التقارير التشغيلية اليومية التي تعتمد عليها الأقسام الأخرى في قراراتها.'
+          'أقود فريق الاستقبال وأتولى التقارير التشغيلية اليومية التي تعتمد عليها الأقسام الأخرى في قراراتها.',
         ),
       },
       {
-        when: L('2024', '2024'),
+        when: L('2024', '٢٠٢٤'),
         role: L('YCATThon participant', 'المشاركة في YCATThon'),
         desc: L(
           '4th place out of 44 teams. The hackathon ran across several sectors; I entered the tourism track.',
-          'المركز الرابع من بين 44 فريقًا. فكرة المسابقة كانت في عدة قطاعات، وأنا اخترت السياحي.'
+          'المركز الرابع من بين ٤٤ فريقًا. أُقيمت المسابقة في عدة قطاعات، واخترت المسار السياحي.',
         ),
       },
       {
-        when: L('2023 - 2025', '2023 - 2025'),
+        when: L('2023 - 2025', '٢٠٢٣ - ٢٠٢٥'),
         role: L('Front Desk Clerk, Namariq', 'موظف استقبال، نمارق'),
         desc: L(
           'Handled guest and visitor services, managed reservation correspondence, responded to emails, and performed night audit operations.',
-          'خدمة النزلاء والزوار، وإدارة الحجوزات، والرد على البريد الإلكتروني، وتنفيذ عمليات التدقيق الليلي.'
+          'خدمة النزلاء والزوار، وإدارة الحجوزات، والرد على البريد الإلكتروني، وتنفيذ عمليات التدقيق الليلي.',
         ),
       },
       {
-        when: L('2023 - 2025', '2023 - 2025'),
+        when: L('2023 - 2025', '٢٠٢٣ - ٢٠٢٥'),
         role: L('UI/UX Designer', 'مصمم واجهات مستخدم'),
         desc: L(
           'Designed wireframes, web interfaces, and mobile applications for clients using Figma.',
-          'تصميم النماذج الأولية وواجهات الويب وتطبيقات الجوال للعملاء باستخدام Figma.'
+          'تصميم النماذج الأولية وواجهات الويب وتطبيقات الجوال للعملاء باستخدام Figma.',
         ),
       },
       {
-        when: L('2018 - 2023', '2018 - 2023'),
+        when: L('2018 - 2023', '٢٠١٨ - ٢٠٢٣'),
         role: L('Assorted work', 'أعمال مختلفة'),
         // Deliberately no detail line — this row is there for the timeline, not
         // for a story. `desc` is optional, and optional for both locales at
@@ -370,9 +395,11 @@ const copy = {
     about: L('About', 'نبذة'),
     experience: L('Experience', 'الخبرة'),
     contact: L('Contact', 'تواصل'),
-    cv: L('CV', 'السيرة الذاتية'),
+    // One CV file serves both builds and it is written in English. Saying so in
+    // the label costs three characters and saves an Arabic reader a download.
+    cv: L('CV', 'السيرة الذاتية (بالإنجليزية)'),
     email: L('Email', 'البريد'),
-    rights: L('© 2026 Almotasim Khairullah', '© 2026 المعتصم خير الله'),
+    rights: L('© 2026 Almotasim Khairullah', '© ٢٠٢٦ المعتصم خير الله'),
     // Sits between the name and the place, on the last line before the plate.
     // The plate below only finishes arriving on further scroll, and this is the
     // one place on the page that says so.
@@ -386,7 +413,7 @@ const copy = {
     titleMark: L('shipping.', 'الإطلاق.'),
     linkedin: L('LinkedIn ↗', 'LinkedIn ↗'),
     github: L('GitHub ↗', 'GitHub ↗'),
-    note: L('Usually replies within 1-2 days', 'الرد عادةً خلال 1-2 يوم'),
+    note: L('Usually replies within 1-2 days', 'الرد عادةً خلال يوم إلى يومين'),
   },
   detail: {
     // Points back toward where the reader came from. In RTL "back" points right,
@@ -423,16 +450,19 @@ const copy = {
     link: L('Website', 'الموقع'),
     // Full-screen gallery viewer.
     zoom: L('View full screen', 'عرض بملء الشاشة'),
+    // Accessible name for the viewer itself, which is a modal dialog and has to
+    // announce as one before its controls make any sense.
+    lbLabel: L('Full screen image viewer', 'عارض الصور بملء الشاشة'),
     lbClose: L('Close', 'إغلاق'),
     lbPrev: L('Previous image', 'الصورة السابقة'),
     lbNext: L('Next image', 'الصورة التالية'),
     shot: L(
       (n: number) => `Drop shot ${n}`,
-      (n: number) => `أضف لقطة ${n}`
+      (n: number) => `أضف لقطة ${n}`,
     ),
     screen: L(
       (title: string, n: number) => `${title}, screen ${n}`,
-      (title: string, n: number) => `${title}، لقطة ${n}`
+      (title: string, n: number) => `${title}، لقطة ${n}`,
     ),
   },
 };
