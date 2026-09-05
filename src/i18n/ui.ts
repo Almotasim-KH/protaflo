@@ -170,15 +170,6 @@ const copy = {
     // a heading that also makes it says the same thing twice. Chapter.astro drops
     // its small running head when the two match, so this prints once.
     chapterTitle: L('The work', 'الأعمال'),
-    // The run opens on the two most recent plates and keeps the earlier four
-    // behind this control, at the head of the catalogue. Both labels are written
-    // out because the button swaps between them rather than toggling a chevron —
-    // a reader who has opened the run needs to be told how to close it again.
-    showMore: L('Show more', 'عرض المزيد'),
-    showLess: L('Show less', 'عرض أقل'),
-    // Spoken name for the control, which says what it opens rather than leaving
-    // "Show more" to stand on its own out of context in a list of links.
-    moreLabel: L('Show earlier work', 'عرض الأعمال السابقة'),
   },
   // Chapter folios. The page is set as a printed feature, so each section carries
   // a number and a running head; the folio in the top margin shows whichever one

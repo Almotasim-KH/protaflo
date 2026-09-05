@@ -10,7 +10,6 @@ import { initEvidence } from './evidence';
 import { initCount } from './count';
 import { initDraw } from './draw';
 import { initPlates } from './plate';
-import { initWorkToggle } from './work-toggle';
 import { initParallax } from './parallax';
 import { initScramble } from './scramble';
 import { initTileDissolve } from './tileDissolve';
@@ -62,9 +61,6 @@ function boot(): void {
   disposeDraw = initDraw();
   disposePlates?.();
   disposePlates = initPlates();
-  // After initPlates: the collapsed plates already have their triggers built,
-  // and opening the run refreshes them rather than creating any.
-  initWorkToggle();
   disposeTiles?.();
   disposeTiles = initTileDissolve();
   // after initPageTransition: the gallery intro reads the arrival flag it sets
