@@ -10,7 +10,7 @@ year: 2025
 category: analysis
 tags: [Power BI, Python, Data Cleaning, Sales Analysis]
 order: 1
-summary: An open LinkedIn sales-analysis challenge, around 300 entrants, answered from a raw Excel file.
+summary: "A LinkedIn data-analysis tournament: find the top 3 products overall, and the top product in each city."
 client: challenge
 headline: An open LinkedIn sales-analysis challenge, around 300 entrants, answered from a raw Excel file.
 stack: [Python, Power BI, Excel]
@@ -27,15 +27,17 @@ stats:
   - value: "4"
     label: "Steps from raw file to answer"
 body:
-  - "1. Context: An open data-analysis challenge posted on LinkedIn, around 300 entrants, working from a raw Excel sales file."
-  - "2. Problem: The brief asked for the top 3 products and top 2 regions by sales, and visuals that actually support a decision, but the source data wasn't clean enough to analyze yet. Missing values and duplicates sat under every number."
-  - "3. Approach: I cleaned and prepped the data in Python before touching a chart, fixing missing values, duplicates and distributions, then built the Power BI dashboard on top of that clean dataset. I could have opened the raw file straight in Power BI to move faster, but any ranking built on dirty data would have been wrong, so I cleaned first."
-  - "4. Result: A clear, decision-ready dashboard answering the brief in four structured steps."
-  - "5. Lesson: Under competition time pressure the instinct is to skip straight to the visual. This confirmed the cleaning step is what the whole answer stands on."
+  - "1. Overview: Sales Analytics Challenge, an open LinkedIn competition with around 300 entrants. I entered on my own as the analyst, cleaning in Python and building the dashboard in Power BI from a single raw Excel file."
+  - "2. Problem: The brief asked for the top 3 products and top 2 regions by sales, plus visuals that support a decision. The supplied file could not answer it as it stood, because missing values and duplicates sat under every number, so any ranking read straight off it would have been wrong."
+  - "3. Research: I profiled the file before deciding anything, counting missing values per column, checking for duplicate rows, and reading the distributions to see which fields the ranking would actually rest on. That pass is what showed the data was not analysis-ready."
+  - "4. Process: I fixed four steps, clean, prep, model, visualise, and kept them separate so every answer could be traced back to one of them. The faster route was to open the raw file straight in Power BI and chart it; I dropped that, because it produces a confident ranking off dirty rows. Charts that did not answer a line in the brief were cut too."
+  - "5. Result: A Power BI dashboard reading off the cleaned dataset, with a sales overview, the top three products, and the two leading regions. The recording below steps through it in the order the brief asks its questions."
+  - "6. Impact: Every question in the brief is answered on one screen among roughly 300 entries, and the ranking holds up because the cleaning behind it is documented rather than assumed."
+  - "7. Takeaway: Under competition time pressure the instinct is to jump straight to the visual, and this confirmed the cleaning step is what the whole answer stands on. What I would change: write the profiling pass up as a short data-quality note beside the dashboard, so a reader can see why the numbers are trustworthy instead of taking my word for it."
 ar:
   title: تحدي تحليل المبيعات
   role: تحليل البيانات
-  summary: تحدٍّ مفتوح لتحليل المبيعات على LinkedIn بمشاركة نحو ٣٠٠ متسابق، أُجيب عنه انطلاقًا من ملف Excel خام.
+  summary: "مسابقة لتحليل البيانات على LinkedIn: تحديد أعلى ٣ منتجات إجمالًا، وأعلى منتج في كل مدينة."
   headline: تحدٍّ مفتوح لتحليل المبيعات على LinkedIn بمشاركة نحو ٣٠٠ متسابق، أُجيب عنه انطلاقًا من ملف Excel خام.
   tags: ['Power BI', 'Python', 'تنظيف البيانات', 'تحليل المبيعات']
   stack: [Python, Power BI, Excel]
@@ -48,9 +50,11 @@ ar:
     - value: "٤"
       label: "خطوات من الملف الخام إلى الإجابة"
   body:
-    - "١. السياق: تحدٍّ مفتوح لتحليل البيانات نُشر على LinkedIn بمشاركة نحو ٣٠٠ متسابق، وقد وصلت البيانات في صورة ملف Excel خام."
-    - "٢. المشكلة: طلب التحدي تحديد أعلى ٣ منتجات وأعلى منطقتين من حيث المبيعات، مع مرئيات تدعم القرار فعليًا، غير أن البيانات المصدرية لم تكن نظيفة بما يكفي للتحليل؛ إذ كانت القيم الناقصة والتكرارات كامنة تحت كل رقم."
-    - "٣. القرار: نظّفت البيانات وهيّأتها باستخدام Python قبل إنشاء أي رسم، فعالجت القيم الناقصة والتكرارات والتوزيعات، ثم بنيت لوحة Power BI فوق مجموعة البيانات النظيفة. كان بالإمكان فتح الملف الخام مباشرة في Power BI اختصارًا للوقت، غير أن أي ترتيب يُبنى على بيانات غير نظيفة سيكون خاطئًا، فبدأت بالتنظيف."
-    - "٤. النتيجة: لوحة معلومات واضحة جاهزة لدعم القرار، مبنية على أربع خطوات منظّمة."
-    - "٥. الدرس: تحت ضغط وقت المسابقة يميل المرء إلى الانتقال مباشرة إلى الرسم البياني، وقد أكّد هذا المشروع أن خطوة التنظيف هي ما تقوم عليه الإجابة كلها."
+    - "١. نظرة عامة: تحدي تحليل المبيعات، مسابقة مفتوحة على LinkedIn بمشاركة نحو ٣٠٠ متسابق. شاركت فيها منفردًا بدور المحلّل، فنظّفت البيانات بـPython وبنيت اللوحة بـPower BI انطلاقًا من ملف Excel خام واحد."
+    - "٢. المشكلة: طلب التحدي أعلى ٣ منتجات وأعلى منطقتين من حيث المبيعات، مع مرئيات تدعم القرار فعليًا. والملف المُسلَّم لا يجيب عن ذلك كما هو، إذ كانت القيم الناقصة والتكرارات كامنة تحت كل رقم، فأي ترتيب يُقرأ منه مباشرة سيكون خاطئًا."
+    - "٣. البحث والفهم: فحصت الملف قبل أي قرار، فحصرت القيم الناقصة في كل عمود، وبحثت عن الصفوف المكرّرة، وقرأت التوزيعات لأعرف الحقول التي سيقوم عليها الترتيب فعلًا. هذه الجولة هي ما كشف أن البيانات غير جاهزة للتحليل."
+    - "٤. الحل والعملية: ثبّتُّ أربع خطوات، تنظيف ثم تهيئة ثم نمذجة ثم عرض، وأبقيتها منفصلة ليمكن ردّ كل إجابة إلى خطوتها. الطريق الأسرع كان فتح الملف الخام مباشرة في Power BI ورسمه، وقد استبعدته لأنه ينتج ترتيبًا واثقًا مبنيًا على صفوف غير نظيفة. واستبعدت كذلك كل رسم لا يجيب عن سطر في التحدي."
+    - "٥. النتيجة: لوحة Power BI تقرأ من مجموعة البيانات النظيفة، وفيها نظرة عامة على المبيعات، والمنتجات الثلاثة الأعلى، والمنطقتان الأوليان. ويستعرضها التسجيل أدناه بالترتيب الذي يطرح به التحدي أسئلته."
+    - "٦. الأثر: كل أسئلة التحدي مُجابة في شاشة واحدة بين نحو ٣٠٠ مشاركة، والترتيب صامد لأن التنظيف خلفه موثّق لا مفترض."
+    - "٧. الخلاصة والدروس: تحت ضغط وقت المسابقة يميل المرء إلى الانتقال مباشرة إلى الرسم البياني، وقد أكّد هذا المشروع أن خطوة التنظيف هي ما تقوم عليه الإجابة كلها. وما كنت سأغيّره: تدوين جولة الفحص في ملاحظة قصيرة عن جودة البيانات بجانب اللوحة، ليرى القارئ سبب الثقة بالأرقام بدل أن يأخذها على كلامي."
 ---

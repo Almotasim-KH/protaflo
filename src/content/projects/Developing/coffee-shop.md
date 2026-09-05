@@ -36,26 +36,30 @@ galleryGroups:
   - at: 3
     label: "Admin panel, what the owner runs the store from"
 body:
-  - "1. Context: A client came with a product line and no way to sell it online or see where the business stood day to day."
-  - "2. Problem: Every sale, every stock check, every new customer was invisible to him. No storefront, no dashboard, no record of what was actually moving."
-  - "3. Approach: I built both sides at once: a storefront customers buy from, and an admin panel covering sales, orders, products, branches and an activity log, so nothing changes without a trace. A ready-made e-commerce platform would have gotten a store live faster, but the client needed his own control panel and a design built around his brand, not a template, so I built it full-stack instead."
-  - "4. Result: The build is finished and packaged in Docker as a portable unit; it's parked one step from launch, because the payment gateway and delivery integration need API keys only the client can issue."
-  - "5. Lesson: This is where I first used APIs, payment gateways and delivery interfaces for real, and learned to package a whole app with Docker so it's easy to hand off and move."
+  - "1. Overview: Coffee Shop Website, a client engagement where I was the product designer and the full-stack developer. It is a storefront plus the admin panel that runs it, built full-stack with its own database, UX/UI and Docker packaging."
+  - "2. Problem: The client had a product line and no way to sell it online or see where the business stood day to day. Every sale, every stock check, every new customer was invisible to him."
+  - "3. Research: I worked from what the client already had, his product line, his branches, and the way he described a day of trading, and looked at the ready-made e-commerce platforms he could have signed up for instead. Those would have put a store online quickly, but none of them gave him his own control panel or a design built around his brand, which was what he was asking for."
+  - "4. Process: I built both sides at once, storefront and admin, so the catalogue a customer browses and the products the owner edits are the same records. The template platform is the alternative I rejected, for the reason above. On the storefront an out-of-stock product stays visible but dimmed with its button disabled instead of vanishing from the grid, so the catalogue never silently changes shape; on the admin side an activity log means nothing changes without a trace."
+  - "5. Result: A finished storefront and admin panel, packaged in Docker as a portable unit. The shots below are split into the two sides: what the customer sees, and what the owner runs the shop from."
+  - "6. Impact: The build is complete and parked one step from launch, because the payment gateway and delivery integration need API keys only the client can issue, so there is no live trading figure to report yet."
+  - "7. Takeaway: This is where I first used APIs, payment gateways and delivery interfaces for real, and learned to package a whole app with Docker so it is easy to hand off and move. What I would change: get the gateway and delivery accounts opened at the start of the project rather than the end, since that dependency is what is holding a finished build offline."
 ar:
   # The project's name, not a phrase — it stays Latin in Arabic like Budgettr,
   # so the same name identifies it everywhere on the site.
   title: 'Coffee Shop Website'
   role: 'المنتج والتطوير المتكامل'
-  stack: ['تطوير متكامل', 'قواعد بيانات', Docker, UX/UI]
+  stack: [Full-stack, Database, Docker, UX/UI]
   summary: 'متجر قهوة مختصة مع لوحة الإدارة التي تديره.'
   headline: 'متجر قهوة مختصة مع لوحة الإدارة التي تديره.'
   tags: ['طلب من عميل']
   body:
-    - "١. السياق: جاء عميل يملك خط منتجات ولا يملك طريقة لبيعها عبر الإنترنت ولا لمعرفة وضع متجره يومًا بيوم."
-    - "٢. المشكلة: كانت كل عملية بيع وكل فحص مخزون وكل عميل جديد غير مرئي له. لا متجر، ولا لوحة إدارة، ولا سجل يوضح ما يتحرك فعليًا."
-    - "٣. القرار: بنيت الطرفين معًا: واجهة يشتري منها العميل، ولوحة إدارة تغطي المبيعات والطلبات والمنتجات والفروع مع سجل نشاط، بحيث لا يمر أي تعديل دون أثر. كان بالإمكان استخدام منصة تجارة إلكترونية جاهزة يظهر بها المتجر أسرع، غير أن العميل يحتاج لوحة تحكم خاصة به وتصميمًا يناسب هويته لا قالبًا جاهزًا، فبنيتها متكاملة من الصفر."
-    - "٤. النتيجة: العمل منتهٍ ومغلَّف بـDocker كوحدة متنقلة، وهو واقف عند خطوة واحدة قبل الإطلاق، إذ تحتاج بوابة الدفع وربط التوصيل مفاتيح API لا يصدرها إلا العميل."
-    - "٥. الدرس: هذا أول مشروع استخدمت فيه واجهات API وبوابات الدفع وواجهات التوصيل بصورة حقيقية، وتعلّمت فيه تغليف برنامج كامل بـDocker بحيث يسهل تسليمه ونقله."
+    - "١. نظرة عامة: Coffee Shop Website، عمل لعميل تولّيت فيه التصميم والتطوير المتكامل. وهو واجهة متجر مع لوحة الإدارة التي تديره، مبني بالكامل بقاعدة بياناته الخاصة وتصميم تجربة وواجهة وتغليف بـDocker."
+    - "٢. المشكلة: كان لدى العميل خط منتجات ولا طريقة لبيعه عبر الإنترنت ولا لمعرفة وضع متجره يومًا بيوم. فكل عملية بيع وكل فحص مخزون وكل عميل جديد غير مرئي له."
+    - "٣. البحث والفهم: انطلقت مما يملكه العميل فعلًا، من خط منتجاته وفروعه وطريقة وصفه ليوم بيع كامل، ثم راجعت منصات التجارة الإلكترونية الجاهزة التي كان بإمكانه الاشتراك فيها بدلًا من ذلك. وهي تضع متجرًا على الإنترنت بسرعة، غير أن أيًّا منها لا يمنحه لوحة تحكم خاصة به ولا تصميمًا مبنيًا على هويته، وهو ما كان يطلبه."
+    - "٤. الحل والعملية: بنيت الطرفين معًا، الواجهة ولوحة الإدارة، بحيث يكون الكتالوج الذي يتصفّحه العميل والمنتجات التي يحرّرها صاحب المتجر سجلات واحدة. والمنصة الجاهزة هي البديل الذي رفضته للسبب أعلاه. وفي الواجهة يبقى المنتج غير المتوفر ظاهرًا لكن باهتًا وزرّه معطّل بدل أن يختفي من الشبكة، فلا يتغيّر شكل الكتالوج في صمت؛ وفي لوحة الإدارة سجل نشاط يجعل كل تعديل مصحوبًا بأثره."
+    - "٥. النتيجة: واجهة متجر ولوحة إدارة مكتملتان، مغلَّفتان بـDocker كوحدة متنقلة. والصور أدناه مقسومة على الطرفين: ما يراه العميل، وما يدير منه صاحب المتجر متجره."
+    - "٦. الأثر: العمل منتهٍ وواقف عند خطوة واحدة قبل الإطلاق، إذ تحتاج بوابة الدفع وربط التوصيل مفاتيح API لا يصدرها إلا العميل، فلا يوجد بعد رقم تشغيل حقيقي يُذكر."
+    - "٧. الخلاصة والدروس: هذا أول مشروع استخدمت فيه واجهات API وبوابات الدفع وواجهات التوصيل بصورة حقيقية، وتعلّمت فيه تغليف برنامج كامل بـDocker بحيث يسهل تسليمه ونقله. وما كنت سأغيّره: فتح حسابات البوابة والتوصيل في بداية المشروع لا في نهايته، فهذا الاعتماد هو ما يُبقي عملًا مكتملًا خارج الخدمة."
   captions:
     - 'الرئيسية: الواجهة، وثلاثة مداخل، والأكثر مبيعًا مع الإضافة إلى السلة من البطاقة نفسها، وقصة المنشأ في أربع خطوات.'
     - 'الكتالوج: فلترة بالفئات وبحث وترتيب. يبقى المنتج غير المتوفر ظاهرًا لكن باهتًا وزرّه معطّل، بدل أن يختفي من الشبكة.'
