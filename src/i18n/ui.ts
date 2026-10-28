@@ -227,13 +227,21 @@ const copy = {
         ),
         source: L('Sales Analytics Challenge', 'تحدي تحليل المبيعات'),
       },
+      {
+        // A before-and-after, same as the revenue range above: it arrives
+        // rather than counting.
+        count: null,
+        value: L('7 hrs → 1 min', '٧ ساعات ← دقيقة'),
+        label: L('Time for one billing cycle', 'الوقت لدورة فوترة واحدة'),
+        source: L('Namariq Invoicing', 'Namariq Invoicing'),
+      },
     ],
   },
   evidence: {
     title: L('KPIs', 'مؤشرات الأداء'),
     lead: L(
-      'Six figures, each one from a project on this page.',
-      'ستة أرقام، كل واحد منها من مشروع في هذه الصفحة.',
+      'Seven figures, each one from a project on this page.',
+      'سبعة أرقام، كل واحد منها من مشروع في هذه الصفحة.',
     ),
     sourceLabel: L('Source', 'المصدر'),
   },
@@ -308,6 +316,16 @@ const copy = {
     // gets its own, because none of it is front-desk duty. One array for both
     // locales, so the two timelines always list the same rows in the same order.
     rows: [
+      {
+        when: L('2026', '٢٠٢٦'),
+        // Built on the job and in use at Yanbu, so "internal tool", not freelance.
+        // Same canonical name as its card and page.
+        role: L('Internal tool, Namariq Invoicing', 'أداة داخلية، Namariq Invoicing'),
+        desc: L(
+          "A desktop app that turns the hotel system's export into a billing report for every company in about a minute, down from 7 hours, plus a meals report per company. Designed and built end to end: Python and pandas for the billing rules, Excel output with live formulas, a Tkinter interface packaged as a single .exe.",
+          'تطبيق سطح مكتب يحوّل ملف نظام الفندق إلى تقارير فوترة لجميع الشركات في نحو دقيقة بدل ٧ ساعات، مع تقرير وجبات لكل شركة. صمّمته وبنيته بالكامل: Python وpandas لقواعد الفوترة، ومخرجات Excel بمعادلات حيّة، وواجهة Tkinter في ملف .exe واحد.',
+        ),
+      },
       {
         when: L('2026', '٢٠٢٦'),
         // The project's canonical name, the same string the card, the page title

@@ -68,7 +68,12 @@ const projects = defineCollection({
           })
           .optional(),
         // live site, shown in the detail rail next to the year when present
-        link: z.string().url().optional(),
+        // http(s) only: a javascript: URL would pass .url() and run on click.
+        link: z
+          .string()
+          .url()
+          .refine((u) => /^https?:\/\//i.test(u), 'link must be an http(s) URL')
+          .optional(),
         // Where the thing actually stands. Only the key lives here; both labels
         // live in i18n (detail.statusValue), same as `client`. Left off when the
         // work has no meaningful ship state (a report, a competition entry).

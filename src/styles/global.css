@@ -780,7 +780,7 @@ html.is-scroll-locked body {
   line-height: 1.6;
   color: var(--color-ink-muted);
 }
-/* The stack. Six cards on a loose serpentine path rather than a grid: each one
+/* The stack. Seven cards on a loose serpentine path rather than a grid: each one
    is placed absolutely, tilted a degree or two, and overlaps its neighbour by
    20-35px so the set reads as a handful of cards laid down one after another.
 
@@ -800,9 +800,9 @@ html.is-scroll-locked body {
 .evidence-stack {
   --card-w: 34%;
   --card-h: clamp(250px, 20vw, 272px);
-  /* Both rows plus the offset of the lowest card, derived from the card height
+  /* All three rows down to the bottom of card 7, derived from the card height
      so one variable moves the whole path. */
-  height: calc(var(--card-h) * 2.072);
+  height: calc(var(--card-h) * 3.072 - 20px);
   list-style: none;
   margin: clamp(40px, 7vw, 84px) 0 0;
   padding: 0;
@@ -859,7 +859,7 @@ html.is-scroll-locked body {
    position on the page, never source order — see rule 1 above — which is why
    the numbers below are not sequential: card 6 sits under card 2 because card 2
    is to its right, and over card 1 because it is below it. Solving that
-   ordering for all nine touching pairs is what these six values are. */
+   ordering for all ten touching pairs is what these seven values are. */
 .evidence-item:nth-child(1) {
   --x: 1%;
   --y: 0px;
@@ -895,6 +895,15 @@ html.is-scroll-locked body {
   --y: calc(var(--card-h) - 22px);
   --rot: 0.9deg;
   --z: 2;
+}
+/* Card 7 opens a third row. It catches card 5's bottom edge by 20px, on card 5's
+   trailing half only: its leading half is where the source line sits, and the
+   two tilts meet there. Below card 5, so it goes on top; it clears card 4. */
+.evidence-item:nth-child(7) {
+  --x: 48%;
+  --y: calc(var(--card-h) * 2.072 - 20px);
+  --rot: -1deg;
+  --z: 7;
 }
 .evidence-v {
   font-size: clamp(26px, 3.2vw, 40px);

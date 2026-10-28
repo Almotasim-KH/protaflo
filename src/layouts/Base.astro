@@ -78,7 +78,7 @@ const person = {
     <meta name="twitter:image" content={ogImage} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(person)} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(person).replace(/</g, '\\u003c')} />
 
     {/* Mark JS available so motion elements may hide. Without JS they never do. */}
     <script is:inline>

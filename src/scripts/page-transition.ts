@@ -27,9 +27,9 @@ function bandMarkup(name: string): HTMLElement {
       'padding:0 12px;max-width:min(90vw,14ch);text-align:center;text-wrap:balance">' +
       '<span style="position:absolute;inset:6% -4px;background:var(--color-accent,#E8F544);' +
       'transform:skew(-6deg) rotate(-1deg)"></span>' +
-      '<span style="position:relative">' +
-      name +
-      '</span></div>';
+      '<span style="position:relative"></span></div>';
+    // The name round-trips through sessionStorage, so it goes in as text, never markup.
+    (band.querySelector('span:last-child') as HTMLElement).textContent = name;
   }
   return band;
 }
