@@ -1,12 +1,12 @@
 ---
-title: Namariq Invoicing
+title: Invoicing App
 role: Product, Design & Development
 year: 2026
 category: developing
 tags: [internal]
 order: 7
 summary: Month-end billing for every company, down from 7 hours to one minute.
-cover: ../../../assets/namariq-invoicing/cover.png
+cover: ../../../assets/invoicing-app/cover.png
 # Built on the job, for the front desk, and in daily use at Yanbu. The idea came
 # from a colleague; the design and the build are mine, and the body says so.
 client: internal
@@ -25,8 +25,8 @@ stack: [Python, pandas, Excel, Tkinter, UI/UX]
 # The app windows show only generic file names. The pitch slides are off the
 # page until they are re-exported without the site, system and company count.
 gallery:
-  - ../../../assets/namariq-invoicing/room-invoices.png
-  - ../../../assets/namariq-invoicing/meal-reports.png
+  - ../../../assets/invoicing-app/room-invoices.png
+  - ../../../assets/invoicing-app/meal-reports.png
 captions:
   - "Room invoices: upload the export, pick the month, confirm the dates, Process. The sidebar ticks off each step as it is done."
   - "Meal reports: the kitchen's Packed, ODC and Upgrade records in, with the month read from the sheets rather than the file names."
@@ -40,7 +40,7 @@ body:
   - "4. Result: One run produces every company's report plus a summary that compares them all, and a second run produces meal reports across Packed, ODC, Upgrade and Additional, with 15% VAT included, so clients now see what they ate, day by day. Every report is checked three times: automatically by the app, by hand against the system, and by the client. All data in the screenshots is changed or replaced with non-real values to protect the organisation's and its clients' privacy."
   - "5. Impact: A billing cycle went from about 7 hours of one officer's time to about a minute, and it no longer depends on one person being in. That is 21 hours a month and 252 hours a year at one branch. I presented it to management with an estimate of 756 hours a year across the three sites, and asked to trial it at the other two."
 ar:
-  title: 'Namariq Invoicing'
+  title: 'Invoicing App'
   role: 'المنتج والتصميم والتطوير'
   stack: [Python, pandas, Excel, Tkinter, UI/UX]
   summary: 'فوترة نهاية الشهر لجميع الشركات، من ٧ ساعات إلى دقيقة واحدة.'

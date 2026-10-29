@@ -233,7 +233,7 @@ const copy = {
         count: null,
         value: L('7 hrs → 1 min', '٧ ساعات ← دقيقة'),
         label: L('Time for one billing cycle', 'الوقت لدورة فوترة واحدة'),
-        source: L('Namariq Invoicing', 'Namariq Invoicing'),
+        source: L('Invoicing App', 'Invoicing App'),
       },
     ],
   },
@@ -320,7 +320,7 @@ const copy = {
         when: L('2026', '٢٠٢٦'),
         // Built on the job and in use at Yanbu, so "internal tool", not freelance.
         // Same canonical name as its card and page.
-        role: L('Internal tool, Namariq Invoicing', 'أداة داخلية، Namariq Invoicing'),
+        role: L('Internal tool, Invoicing App', 'أداة داخلية، Invoicing App'),
         desc: L(
           "A desktop app that turns the hotel system's export into a billing report for every company in about a minute, down from 7 hours, plus a meals report per company. Designed and built end to end: Python and pandas for the billing rules, Excel output with live formulas, a Tkinter interface packaged as a single .exe.",
           'تطبيق سطح مكتب يحوّل ملف نظام الفندق إلى تقارير فوترة لجميع الشركات في نحو دقيقة بدل ٧ ساعات، مع تقرير وجبات لكل شركة. صمّمته وبنيته بالكامل: Python وpandas لقواعد الفوترة، ومخرجات Excel بمعادلات حيّة، وواجهة Tkinter في ملف .exe واحد.',
