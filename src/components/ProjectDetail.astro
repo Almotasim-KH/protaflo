@@ -482,6 +482,11 @@ slots.forEach((img, i) => {
     line-height: 1.65;
     color: color-mix(in srgb, var(--color-ink) 85%, var(--color-canvas));
   }
+  /* A step may carry authored line breaks — a short list, a second paragraph —
+     written as \n in the YAML; pre-line keeps them and still wraps long lines. */
+  .step p {
+    white-space: pre-line;
+  }
   .body {
     display: flex;
     flex-direction: column;
